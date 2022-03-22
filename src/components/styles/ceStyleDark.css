@@ -1,0 +1,9 @@
+#editor-output {
+    background-color: var(--dark-mode-main-output-bg-color);
+    color: var(--dark-mode-main-output-text-color);
+}
+
+#output-title {
+    border-bottom: 1px solid var(--dark-mode-main-output-text-color);
+    color: var(--dark-mode-main-output-text-color);
+}

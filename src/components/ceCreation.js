@@ -1,3 +1,5 @@
+import { workerFunction } from "./ceWorker";
+
 /**
  * Create a new CodeMirror editor
  * @param document Base root of the HTML document (useful when using shadow dom)
@@ -24,7 +26,14 @@ export function createCodeMirror(document, language, enableDarkMode = false, ini
     // Create a new worker
     let worker;
     if (typeof (Worker) !== undefined) {
-        worker = new Worker("./ceWorker.js");
+        // Get the body of the worker's function
+        var workerJob = workerFunction.toString().slice(workerFunction.toString().indexOf("{") + 1, workerFunction.toString().lastIndexOf("}"));
+        // Generate a blob from it
+        var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+        // The worker constructor needs an URL: create it from the blob
+        worker = new Worker(window.URL.createObjectURL(workerBlob));
+
+        // Handle the worker's messages
         worker.onmessage = e => {
             enableRunButton();
             if (e.data.error) {
@@ -75,6 +84,5 @@ export function createCodeMirror(document, language, enableDarkMode = false, ini
             "language": currentLanguage,
             "script": editor.state.doc.toString()
         });
-
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "icp-bundle",
   "version": "1.0.0",
-  "description": "icp-bundle is a dependancy that allows a project to import a list of code playgrounds as web components",
+  "description": "icp-bundle is a Javascript plugin for embedding interactive code playgrounds in html pages",
   "repository": {
     "type": "git",
     "url": "git://github.com/lucademenego99/icp-bundle.git"

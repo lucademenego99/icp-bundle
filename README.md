@@ -1,6 +1,6 @@
 # Interactive Code Playgrounds Bundle
 
-Interactive Code Playgrounds Bundle is a dependancy that allows a project to import a list of code playgrounds as web components.
+Interactive Code Playgrounds Bundle is a Javascript plugin for embedding interactive code playgrounds in html pages.
 
 The editor used in these playgrounds is CodeMirror, an in-browser editor distributed as a collection of modules that aren't directly loadable by the browser.
 

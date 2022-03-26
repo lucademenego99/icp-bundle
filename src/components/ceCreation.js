@@ -82,7 +82,8 @@ export function createCodeMirror(document, language, enableDarkMode = false, ini
         // Send to the worker the script to run
         worker.postMessage({
             "language": currentLanguage,
-            "script": editor.state.doc.toString()
+            "script": editor.state.doc.toString(),
+            "input": document.querySelector('#input') ? document.querySelector('#input').value : ""
         });
     }
 }

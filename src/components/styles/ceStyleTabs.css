@@ -19,17 +19,18 @@ body {
 }
 
 #input-container {
+    height: calc(100% - 48px);
     background-color: #282C34;
     text-align: left;
 }
 
 #textarea-container {
     width: 100%;
-    height: calc(85% - 48px);
+    height: calc(100% - max(10%, 30px) - 48px);
     overflow: hidden;
 }
 
-#input-text {
+#input {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -57,7 +58,7 @@ body {
 #output {
     font-family: monospace;
     width: 100%;
-    max-height: calc(80% - 48px);
+    max-height: calc(100% - max(10%, 30px) - 48px);
     overflow: auto;
     color: #FFFEFF;
     font-size: 20px;
@@ -188,15 +189,18 @@ nav p {
 }
 
 .text-spacer {
+    display: flex;
+    align-items: center;
     background-color: #282C34;
     width: fit-content; 
-    height: 15%;
+    height: max(10%, 30px);
 }
 
 .item .text-spacer p {
-    max-height: 100%;
     box-sizing: border-box;
-    padding: 20px 20px 10px 20px;
+    margin: 0 0 0 10px;
+    padding: 0 0 5px 0;
+    max-height: 100%;
     font-size: 20px;
     background-color: #282C34;
     border-bottom: .5px solid #555;
@@ -222,7 +226,7 @@ nav p {
     #output {
         font-size: 15px;
     }
-    #input-text {
+    #input {
         font-size: 15px;
     }
 }
@@ -233,7 +237,7 @@ nav p {
     #output {
         font-size: 13px;
     }
-    #input-text {
+    #input {
         font-size: 13px;
     }
 }

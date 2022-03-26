@@ -15,8 +15,6 @@
 }
 
 #editor-output {
-    background-color: var(--dark-mode-main-output-bg-color);
-    color: var(--dark-mode-main-output-text-color);
     height: 100%;
     width: var(--output-height);
     min-height: 0;
@@ -24,16 +22,12 @@
 }
 
 #output-title-container {
-    height: 7%;
+    height: max(7%, 30px);
     margin-top: 10px;
 }
 
-#output-title {
-    border-bottom: 1px solid var(--dark-mode-main-output-text-color);
-    color: var(--dark-mode-main-output-text-color);
-}
 
 #output-container {
-    height: calc(100% - 30px - 10px);
+    height: calc(100% - max(7%, 30px) - 10px);
     width: 100%;
 }

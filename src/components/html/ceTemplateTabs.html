@@ -9,7 +9,9 @@
         <div id="play-container">
             <button id="run-button">Run Code!</button>
         </div>
+        <!-- Tabs -->
         <ul class="tabs">
+            <!-- Code Tab -->
             <li data-tab-target="#code-container" class="active tab">
                 <div class="col">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -20,6 +22,7 @@
                     <p>Code</p>
                 </div>
             </li>
+            <!-- Input Tab -->
             <li data-tab-target="#input-container" class="tab">
                 <div class="col">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -32,6 +35,7 @@
                     <p>Input</p>
                 </div>
             </li>
+            <!-- Output Tab -->
             <li data-tab-target="#output-container" class="tab">
                 <div class="col">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -46,19 +50,23 @@
             </li>
         </ul>
 
+        <!-- Tabs content -->
         <div class="content">
+            <!-- Code content -->
             <div id="code-container" data-tab-content class="active-item item item1">
                 <div id='editor'>
                 </div>
             </div>
+            <!-- Input content -->
             <div id="input-container" class="item item2" data-tab-content>
                 <div class="text-spacer">
                     <p>If your program takes something as input, add it below</p>
                 </div>
                 <div id="textarea-container">
-                    <textarea name="input-text" id="input-text"></textarea>
+                    <textarea name="input-text" id="input"></textarea>
                 </div>
             </div>
+            <!-- Output content -->
             <div id="output-container" class="item item3" data-tab-content>
                 <div class="text-spacer">
                     <p>Run the program to see the ouput</p>

@@ -17,7 +17,9 @@ This command will generate a file `icp.bundle.js` that can be used in modern web
 
 This file exports the following web components:
 - **`<{language}-editor />`**: base editor, light mode;
+- **`<{language}-editor-input />`**: base editor, light mode with input;
 - **`<{language}-editor-dark />`**: base editor, dark mode;
+- **`<{language}-editor-input-dark />`**: base editor, dark mode with input;
 - **`<{language}-editor-v />`**: vertical editor, light mode;
 - **`<{language}-editor-v-dark />`**: vertical editor, dark mode;
 - **`<{language}-editor-tabs-dark />`**: editor with three tabs for code, input and output, dark mode.

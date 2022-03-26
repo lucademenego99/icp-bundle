@@ -80,19 +80,19 @@ body {
     height: calc(100% - var(--output-height));
 }
 
-#editor-output {
+#editor-output, #editor-input {
     background-color: var(--main-output-bg-color);
     color: var(--main-output-text-color);
     height: var(--output-height);
     min-height: 100px;
 }
 
-#output-title-container {
-    height: 20%;
+#output-title-container, #input-title-container {
+    height: max(20%, 30px);
     display: flex;
     align-items: center;
 }
-#output-title {
+#output-title, #input-title {
     margin: 0;
     height: 60%;
     margin-left: 10px;
@@ -102,12 +102,12 @@ body {
     color: white;
     box-sizing: border-box;
 }
-#output-container {
+#output-container, #input-container {
     overflow: auto;
-    height: 80%;
+    height: calc(100% - max(20%, 30px));
     width: 100%;
 }
-.output-text {
+.output-text, .input-text {
     padding: 3px 0 0 10px;
     margin: 0;
     font-family: monospace;
@@ -225,7 +225,7 @@ body {
 *::-webkit-scrollbar
 {
 	width: 12px;
-	background-color: var(--dark-mode-main-output-bg-color);
+	background-color: var(--main-output-bg-color);
 }
 
 *::-webkit-scrollbar-thumb
@@ -239,6 +239,7 @@ body {
 .rounded-scrollbar::-webkit-scrollbar-track
 {
 	border-radius: 10px;
+    background-color: var(--main-output-bg-color);
 }
 
 .rounded-scrollbar::-webkit-scrollbar-thumb
@@ -277,7 +278,7 @@ body {
 /* Custom Screen properties */
 /* ------------------------------------------------ */
 @media screen and (max-width: 1000px) {
-    #output {
+    #output, #input {
         font-size: 15px;
     }
     #run-button {
@@ -285,7 +286,7 @@ body {
     }
 }
 @media screen and (max-width: 320px) {
-    #output {
+    #output, #input {
         font-size: 15px;
     }
     #run-button {

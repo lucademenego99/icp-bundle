@@ -1,0 +1,37 @@
+<!-- Roboto Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+
+<div id="code-container">
+    <!-- Run Button -->
+    <div id="play-container">
+        <button id="run-button">Run Code!</button>
+    </div>
+    <!-- Complete editor -->
+    <div id="editor-container">
+        <!-- CodeMirror Editor -->
+        <div id="editor"></div>
+        <!-- Input & Output -->
+        <div id="input-output-container">
+            <div id="editor-input">
+                <div id="input-title-container">
+                    <p id="input-title">INPUT</p>
+                </div>
+                <!-- Input -->
+                <div id="input-container">
+                    <textarea name="input-text" id="input" class="input-text rounded-scrollbar"></textarea>
+                </div>
+            </div>
+            <div id="editor-output">
+                <div id="output-title-container">
+                    <p id="output-title">OUTPUT</p>
+                </div>
+                <!-- Output console.log -->
+                <div id="output-container" class="rounded-scrollbar">
+                    <p class="output-text" id="output"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

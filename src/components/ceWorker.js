@@ -1,5 +1,6 @@
-/* Worker Script to run the provided code */
-
+/**
+ * Worker Script to run the provided code
+ */
 export function workerFunction() {
     // Check if the typescript module has already been downloaded
     let typescriptDownloaded = false;
@@ -13,23 +14,17 @@ export function workerFunction() {
         const oldConsoleLog = console.log;
         const oldConsoleAssert = console.assert;
 
+        const logRewrite = (msg, ...optionalParams) => {
+            messages.push(msg + ' ' + optionalParams.join(' '));
+        };
+
         // Rewrite console functions
         console = {};
-        console.log = msg => {
-            messages.push(msg);
-        };
-        console.info = msg => {
-            messages.push(msg);
-        };
-        console.warn = msg => {
-            messages.push(msg);
-        };
-        console.error = msg => {
-            messages.push(msg);
-        };
-        console.debug = msg => {
-            messages.push(msg);
-        };
+        console.log = logRewrite;
+        console.info = logRewrite;
+        console.warn = logRewrite;
+        console.error = logRewrite;
+        console.debug = logRewrite;
         console.assert = msg => {
             if (!msg) {
                 messages.push("Wrong Assertion!")

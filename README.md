@@ -21,7 +21,9 @@ This file exports the following web components:
 - **`<{language}-editor-dark />`**: base editor, dark mode;
 - **`<{language}-editor-input-dark />`**: base editor, dark mode with input;
 - **`<{language}-editor-v />`**: vertical editor, light mode;
+- **`<{language}-editor-input-v />`**: vertical editor, light mode with input;
 - **`<{language}-editor-v-dark />`**: vertical editor, dark mode;
+- **`<{language}-editor-v-input-dark />`**: vertical editor, dark mode with input;
 - **`<{language}-editor-tabs-dark />`**: editor with three tabs for code, input and output, dark mode.
 
 The available languages that can be put inside `{language}` are the following:

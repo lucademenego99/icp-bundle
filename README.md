@@ -6,6 +6,9 @@ The editor used in these playgrounds is CodeMirror, an in-browser editor distrib
 
 Rollup is a tool that takes a given main script (or multiple ones) and produces a new script that has all of the script's dependencies included. This makes it easier to run modern Javascript systems in the browser, and with this approach we are able to export a completely customized CodeMirror instance.
 
+## Examples
+Some examples of this plugin can be found in the repository [icp-slides](https://github.com/lucademenego99/icp-slides). In particular, a presentation of the main elements this plugin exposes is hosted as a Github Pages website in [https://lucademenego99.github.io/icp-slides/editors.html](https://lucademenego99.github.io/icp-slides/editors.html)
+
 ## Installation
 
 The main script that Rollup uses is `src/index.js`. We can easily run Rollup using:

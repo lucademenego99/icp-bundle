@@ -6,6 +6,8 @@ The editor used in these playgrounds is CodeMirror, an in-browser editor distrib
 
 Rollup is a tool that takes a given main script (or multiple ones) and produces a new script that has all of the script's dependencies included. This makes it easier to run modern Javascript systems in the browser, and with this approach we are able to export a completely customized CodeMirror instance.
 
+## Installation
+
 The main script that Rollup uses is `src/index.js`. We can easily run Rollup using:
 ```
 npm install     # Install all the packages
@@ -14,6 +16,8 @@ npm run build   # Build the module
 
 This command will generate a file `icp.bundle.js` that can be used in modern web browsers just by importing it with:
 ```<script src='icp.bundle.js></script>'```
+
+## Web Components
 
 This file exports the following web components:
 - **`<{language}-editor />`**: base editor, light mode;
@@ -27,12 +31,32 @@ This file exports the following web components:
 - **`<{language}-editor-tabs-dark />`**: editor with three tabs for code, input and output, dark mode.
 
 The available languages that can be put inside `{language}` are the following:
-|  | Syntax Highlighting | Lint Checks | Run Code |
-| --- | :---: | :---: | :---: |
-| javascript | ✅ | ✅ | ✅ |
-| typescript | ✅ | ✅ | ✅ |
-| java | ✅ |  |  |
-| cpp | ✅ |  |  |
+|  | Syntax Highlighting | Auto Completion | Lint Checks | Run Code |
+| --- | :---: | :---: | :---: | :---: |
+| javascript | ✅ | ✅ | ✅ | ✅ |
+| typescript | ✅ | ✅ | ✅ | ✅ |
+| java | ✅ |  |  |  |
+| cpp | ✅ |  |  |  |
+
+### Initialize components with text
+You can initialize the previously mentioned components with text by simply specifying the `value` attribute. For example:
+
+```
+<javascript-editor value="console.log('Hello World!');" />
+```
+
+### Read-only components with predefined editable parts
+Sometimes you may want to embed editor components in which only some parts of them are editable. In order to do it, you can use the specially crafted tokens `<EDITABLE>` and `</EDITABLE>`. For example:
+```
+<cpp-editor value="#include <iostream>
+using namespace std;
+int main() {
+    cout << '<EDITABLE>Hello World!</EDITABLE>' << endl;
+    return 0;
+}" />
+```
+
+## Other exposed functions
 
 Apart from these web components, `icp.bundle.js` exposes the following set of functions:
 - `createEditor(element, language, enableDarkMode, initialText)`: create a CodeMirror editor, returning its instance and a languageConfiguration compartment useful to change language at runtime;
@@ -40,5 +64,7 @@ Apart from these web components, `icp.bundle.js` exposes the following set of fu
 - `setTypescript(editor, languageConfiguration)`: change the editor's language to Typescript using the provided compartment;
 - `setCpp(editor, languageConfiguration)`: change the editor's language to C++ using the provided compartment;
 - `setJava(editor, languageConfiguration)`: change the editor's language to Java using the provided compartment.
+
+## Mentions
 
 The typescript plugin included in `src/modules/` has been taken from [prisma/text-editors](https://github.com/prisma/text-editors), as well as `scripts/build-types.mjs`, and they mainly allow us to do spell checking on typescript code.

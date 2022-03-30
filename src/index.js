@@ -1,5 +1,6 @@
 import { Compartment } from "@codemirror/state"
 import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
+import { readOnlyTransactionFilter, editableSelection } from "./modules/readonly"
 import { lintGutter, linter } from "@codemirror/lint"
 import { javascript, esLint } from "@codemirror/lang-javascript"
 import { java } from "@codemirror/lang-java"
@@ -41,6 +42,27 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
     if (enableDarkMode)
         extensions.push(oneDark);
 
+    // Check if we should enable the mode in which we only allow to edit specific parts of the text
+    let editableParts = [];
+    if (initialText.includes('<EDITABLE>')) {
+        extensions.push(readOnlyTransactionFilter());
+
+        // Save all the editable parts of the text inside initialText in an array, where their start is marked with <EDITABLE> and their end is marked with </EDITABLE>
+        let count = 0;  // Count how many times we got a correspondence, to calculate the correct indices of the editable parts
+        let regex = /(?<=<EDITABLE>)(.|\n)*?(?=<\/EDITABLE>)/gm, result;
+        while ((result = regex.exec(initialText)) !== null) {
+            count++;
+            // 9: length of <EDITABLE> - 1 (we will replace it with a whitespace)
+            // 10: length of </EDITABLE> - 1 (we will replace it with a whitespace)
+            editableParts.push({
+                from: result.index - (9 * count) - (10 * (count - 1)),
+                to: result.index + result[0].length - (9 * count) - (10 * (count - 1))
+            });
+        }
+        // Remove the tokens <EDITABLE> and </EDITABLE> from the initialText, replacing them with a whitespace
+        initialText = initialText.replace(/<EDITABLE>/gm, ' ').replace(/<\/EDITABLE>/gm, ' ');
+    }
+
     // Create the editor
     let editor = new EditorView({
         state: EditorState.create({
@@ -49,6 +71,13 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
         }),
         parent: element
     });
+
+    // If the editable mode is enabled, we need to set the editable text selected by the user
+    if (editableParts.length > 0) {
+        editableParts.forEach(part => {
+            editableSelection(editor, part.from, part.to, enableDarkMode);
+        });
+    }
 
     // Return the editor and the languages handler
     return {

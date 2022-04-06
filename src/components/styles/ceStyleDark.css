@@ -1,9 +1,11 @@
-#editor-output, #editor-input {
+#editor-output,
+#editor-input {
     background-color: var(--dark-mode-main-output-bg-color);
     color: var(--dark-mode-main-output-text-color);
 }
 
-#output-title, #input-title {
+#output-title,
+#input-title {
     border-bottom: 1px solid var(--dark-mode-main-output-text-color);
     color: var(--dark-mode-main-output-text-color);
 }
@@ -12,8 +14,7 @@
     color: var(--dark-mode-main-output-text-color);
 }
 
-*::-webkit-scrollbar
-{
-	width: 12px;
-	background-color: var(--dark-mode-main-output-bg-color);
+*::-webkit-scrollbar {
+    width: 12px;
+    background-color: var(--dark-mode-main-output-bg-color);
 }

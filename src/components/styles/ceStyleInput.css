@@ -12,13 +12,16 @@
     height: 80%;
 }
 
-#editor-output, #editor-input {
+#editor-output,
+#editor-input {
     float: left;
     height: 100%;
 }
+
 #editor-output {
     width: 70%;
 }
+
 #editor-input {
     width: 30%;
 }

@@ -52,15 +52,15 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
         let regex = /(?<=<EDITABLE>)(.|\n)*?(?=<\/EDITABLE>)/gm, result;
         while ((result = regex.exec(initialText)) !== null) {
             count++;
-            // 9: length of <EDITABLE> - 1 (we will replace it with a whitespace)
-            // 10: length of </EDITABLE> - 1 (we will replace it with a whitespace)
+            // 10: length of <EDITABLE>
+            // 11: length of </EDITABLE>
             editableParts.push({
-                from: result.index - (9 * count) - (10 * (count - 1)),
-                to: result.index + result[0].length - (9 * count) - (10 * (count - 1))
+                from: result.index - (10 * count) - (11 * (count - 1)),
+                to: result.index + result[0].length - (10 * count) - (11 * (count - 1))
             });
         }
-        // Remove the tokens <EDITABLE> and </EDITABLE> from the initialText, replacing them with a whitespace
-        initialText = initialText.replace(/<EDITABLE>/gm, ' ').replace(/<\/EDITABLE>/gm, ' ');
+        // Remove the tokens <EDITABLE> and </EDITABLE> from the initialText
+        initialText = initialText.replace(/<EDITABLE>/gm, '').replace(/<\/EDITABLE>/gm, '');
     }
 
     // Create the editor
@@ -75,7 +75,7 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
     // If the editable mode is enabled, we need to set the editable text selected by the user
     if (editableParts.length > 0) {
         editableParts.forEach(part => {
-            editableSelection(editor, part.from, part.to, enableDarkMode);
+            editableSelection(editor, part.from, part.to);
         });
     }
 

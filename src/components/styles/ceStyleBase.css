@@ -44,7 +44,7 @@ body {
 }
 
 /* Reset styles that may appear from upper elements (e.g. with reveal.js) */
-#code-container > * {
+#code-container>* {
     margin: 0;
     padding: 0;
     vertical-align: baseline;
@@ -80,19 +80,23 @@ body {
     height: calc(100% - var(--output-height));
 }
 
-#editor-output, #editor-input {
+#editor-output,
+#editor-input {
     background-color: var(--main-output-bg-color);
     color: var(--main-output-text-color);
     height: var(--output-height);
     min-height: 100px;
 }
 
-#output-title-container, #input-title-container {
+#output-title-container,
+#input-title-container {
     height: max(20%, 30px);
     display: flex;
     align-items: center;
 }
-#output-title, #input-title {
+
+#output-title,
+#input-title {
     margin: 0;
     height: 60%;
     margin-left: 10px;
@@ -102,12 +106,16 @@ body {
     color: white;
     box-sizing: border-box;
 }
-#output-container, #input-container {
+
+#output-container,
+#input-container {
     overflow: auto;
     height: calc(100% - max(20%, 30px));
     width: 100%;
 }
-.output-text, .input-text {
+
+.output-text,
+.input-text {
     padding: 3px 0 0 10px;
     margin: 0;
     font-family: monospace;
@@ -119,7 +127,7 @@ body {
 /* ------------------------------------------------ */
 .cm-editor {
     height: 100%;
-    font-size: 20px;
+    font-size: 2vmin;
 }
 
 .cm-scroller {
@@ -128,7 +136,7 @@ body {
 
 /* Run Button Customization */
 /* ------------------------------------------------ */
-#run-button{
+#run-button {
     display: inline-block;
     font-size: 23px;
     font-weight: 400;
@@ -145,12 +153,13 @@ body {
     transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
     box-shadow: 0 2px 25px var(--run-btn-shadow-color);
 }
-    
+
 #run-button:focus {
     outline: 0;
 }
-    
-#run-button:before, #run-button:after{
+
+#run-button:before,
+#run-button:after {
     position: absolute;
     content: '';
     display: block;
@@ -162,47 +171,48 @@ body {
     background-repeat: no-repeat;
 }
 
-#run-button:before{
+#run-button:before {
     display: none;
     top: -75%;
-    background-image:  
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle,  transparent 20%, var(--run-btn-main-color) 20%, transparent 30%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%), 
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle,  transparent 10%, var(--run-btn-main-color) 15%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%);
+    background-image:
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 20%, var(--run-btn-main-color) 20%, transparent 30%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--run-btn-main-color) 15%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%);
     background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
 }
 
-#run-button:after{
+#run-button:after {
     display: none;
     bottom: -75%;
-    background-image:  
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%), 
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle,  transparent 10%, var(--run-btn-main-color) 15%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
-    radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%);
+    background-image:
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--run-btn-main-color) 15%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--run-btn-main-color) 20%, transparent 20%);
     background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
 }
 
-#run-button:active{
+#run-button:active {
     transform: scale(0.9);
     background-color: var(--run-btn-active-color);
     box-shadow: 0 2px 25px var(--run-btn-active-shadow-color);
 }
 
-#run-button.animate:before{
+#run-button.animate:before {
     display: block;
     animation: topBubbles ease-in-out 0.75s forwards;
 }
-#run-button.animate:after{
+
+#run-button.animate:after {
     display: block;
     animation: bottomBubbles ease-in-out 0.75s forwards;
 }
@@ -214,48 +224,45 @@ body {
 
 /* Custom Scrollbar Design */
 /* ------------------------------------------------ */
-*::-webkit-scrollbar-track
-{
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	/* border-radius: 10px; */
-	background-color: var(--dark-mode-main-output-bg-color-light);
+*::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    /* border-radius: 10px; */
+    background-color: var(--dark-mode-main-output-bg-color-light);
 }
 
-*::-webkit-scrollbar
-{
-	width: 12px;
-	background-color: var(--main-output-bg-color);
-}
-
-*::-webkit-scrollbar-thumb
-{
-	/* border-radius: 10px; */
-    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #999999;
-}
-
-.rounded-scrollbar::-webkit-scrollbar-track
-{
-	border-radius: 10px;
+*::-webkit-scrollbar {
+    width: 12px;
     background-color: var(--main-output-bg-color);
 }
 
-.rounded-scrollbar::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
+*::-webkit-scrollbar-thumb {
+    /* border-radius: 10px; */
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #999999;
 }
-  
+
+.rounded-scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: var(--main-output-bg-color);
+}
+
+.rounded-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+}
+
 /* Animations */
 /* ------------------------------------------------ */
 @keyframes topBubbles {
     0% {
         background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
     }
+
     50% {
         background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
     }
+
     100% {
         background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
         background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
@@ -266,9 +273,11 @@ body {
     0% {
         background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
     }
+
     50% {
         background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
     }
+
     100% {
         background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
         background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
@@ -278,17 +287,24 @@ body {
 /* Custom Screen properties */
 /* ------------------------------------------------ */
 @media screen and (max-width: 1000px) {
-    #output, #input {
+
+    #output,
+    #input {
         font-size: 15px;
     }
+
     #run-button {
         font-size: 15px;
     }
 }
+
 @media screen and (max-width: 320px) {
-    #output, #input {
+
+    #output,
+    #input {
         font-size: 15px;
     }
+
     #run-button {
         font-size: 13px;
     }

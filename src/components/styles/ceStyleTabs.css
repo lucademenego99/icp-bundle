@@ -192,7 +192,7 @@ nav p {
     display: flex;
     align-items: center;
     background-color: #282C34;
-    width: fit-content; 
+    width: fit-content;
     height: max(10%, 30px);
 }
 
@@ -223,20 +223,25 @@ nav p {
     .item .text-spacer p {
         font-size: 15px;
     }
+
     #output {
         font-size: 15px;
     }
+
     #input {
         font-size: 15px;
     }
 }
+
 @media screen and (max-width: 320px) {
     .item .text-spacer p {
         font-size: 13px;
     }
+
     #output {
         font-size: 13px;
     }
+
     #input {
         font-size: 13px;
     }

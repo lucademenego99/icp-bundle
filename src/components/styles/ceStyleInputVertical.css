@@ -22,23 +22,28 @@
     height: 100%;
 }
 
-#output-title-container, #input-title-container {
+#output-title-container,
+#input-title-container {
     height: max(7%, 30px);
     margin-top: 10px;
 }
 
-#output-container, #input-container {
+#output-container,
+#input-container {
     height: calc(100% - max(7%, 30px) - 10px);
     width: 100%;
 }
 
-#editor-output, #editor-input {
+#editor-output,
+#editor-input {
     min-height: 0;
     min-width: 100px;
 }
+
 #editor-output {
     height: 70%;
 }
+
 #editor-input {
     height: 30%;
 }

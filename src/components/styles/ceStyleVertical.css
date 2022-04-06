@@ -1,6 +1,6 @@
 #play-container {
     top: unset;
-    right: calc(var(--output-height) + 20px);
+    right: calc(var(--output-height) + 2.2vw);
     bottom: 5%;
 }
 
@@ -22,12 +22,12 @@
 }
 
 #output-title-container {
-    height: max(7%, 30px);
-    margin-top: 10px;
+    height: 3vmin;
+    margin-top: 1vh;
 }
 
 
 #output-container {
-    height: calc(100% - max(7%, 30px) - 10px);
+    height: calc(100% - 3vmin - 1vh);
     width: 100%;
 }

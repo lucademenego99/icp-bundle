@@ -65,7 +65,7 @@ body {
 
 #play-container {
     position: absolute;
-    right: max(3%, 30px);
+    right: 3%;
     top: 5%;
     z-index: 10;
 }
@@ -85,12 +85,11 @@ body {
     background-color: var(--main-output-bg-color);
     color: var(--main-output-text-color);
     height: var(--output-height);
-    min-height: 100px;
 }
 
 #output-title-container,
 #input-title-container {
-    height: max(20%, 30px);
+    height: 3vmin;
     display: flex;
     align-items: center;
 }
@@ -99,8 +98,8 @@ body {
 #input-title {
     margin: 0;
     height: 60%;
-    margin-left: 10px;
-    font-size: 13px;
+    margin-left: .8vw;
+    font-size: 1.6vmin;
     width: fit-content;
     border-bottom: 1px solid white;
     color: white;
@@ -110,16 +109,16 @@ body {
 #output-container,
 #input-container {
     overflow: auto;
-    height: calc(100% - max(20%, 30px));
+    height: calc(100% - 3vmin);
     width: 100%;
 }
 
 .output-text,
 .input-text {
-    padding: 3px 0 0 10px;
+    padding: .1vh 0 0 .6vw;
     margin: 0;
     font-family: monospace;
-    font-size: 20px;
+    font-size: 2vmin;
     white-space: pre-wrap;
 }
 
@@ -138,9 +137,9 @@ body {
 /* ------------------------------------------------ */
 #run-button {
     display: inline-block;
-    font-size: 23px;
+    font-size: 2.2vmin;
     font-weight: 400;
-    padding: 1em 2em;
+    padding: 2vmin 2.5vmin;
     margin-top: 0;
     -webkit-appearance: none;
     appearance: none;
@@ -281,31 +280,5 @@ body {
     100% {
         background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
         background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
-    }
-}
-
-/* Custom Screen properties */
-/* ------------------------------------------------ */
-@media screen and (max-width: 1000px) {
-
-    #output,
-    #input {
-        font-size: 15px;
-    }
-
-    #run-button {
-        font-size: 15px;
-    }
-}
-
-@media screen and (max-width: 320px) {
-
-    #output,
-    #input {
-        font-size: 15px;
-    }
-
-    #run-button {
-        font-size: 13px;
     }
 }

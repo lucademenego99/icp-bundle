@@ -24,8 +24,8 @@ const editableLimitsMark = Decoration.mark({ class: "cm-editable-beforeafter" })
 const editableTheme = EditorView.baseTheme({
     "&light .cm-editable": { backgroundColor: '#cacaca' },
     "&dark .cm-editable": { backgroundColor: '#151a24' },
-    "&light .cm-editable-beforeafter": { backgroundColor: 'white !important' },
-    "&dark .cm-editable-beforeafter": { backgroundColor: '#282c34 !important' },
+    "&light .cm-editable-beforeafter": { backgroundColor: 'rgb(243, 249, 255) !important' },
+    "&dark .cm-editable-beforeafter": { backgroundColor: 'rgb(44, 49, 58) !important' },
 });
 
 /**

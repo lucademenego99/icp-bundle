@@ -26,7 +26,7 @@ body {
 
 #textarea-container {
     width: 100%;
-    height: calc(100% - max(10%, 30px) - 48px);
+    height: calc(100% - 5vmin - 48px);
     overflow: hidden;
 }
 
@@ -43,9 +43,9 @@ body {
     box-shadow: none;
     resize: none;
     color: white;
-    font-size: 20px;
+    font-size: 2vmin;
     box-sizing: border-box;
-    padding: 20px;
+    padding: 2vmin;
     overflow: auto;
 }
 
@@ -58,12 +58,12 @@ body {
 #output {
     font-family: monospace;
     width: 100%;
-    max-height: calc(100% - max(10%, 30px) - 48px);
+    max-height: calc(100% - 5vmin - 48px);
     overflow: auto;
     color: #FFFEFF;
-    font-size: 20px;
+    font-size: 2vmin;
     margin: 0;
-    padding: 10px 20px;
+    padding: 1vmin 2vmin;
     overflow: auto;
 }
 
@@ -118,8 +118,8 @@ body {
 
 #play-container {
     position: absolute;
-    right: max(3%, 30px);
-    bottom: calc(5% + 48px);
+    right: 3%;
+    top: 5%;
     z-index: 10;
 }
 
@@ -128,8 +128,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    right: 24px;
-    bottom: calc(24px + 48px);
+    right: 2vmin;
+    bottom: calc(2vmin + 48px);
 }
 
 .floating-run i {
@@ -193,15 +193,15 @@ nav p {
     align-items: center;
     background-color: #282C34;
     width: fit-content;
-    height: max(10%, 30px);
+    height: 5vmin;
 }
 
 .item .text-spacer p {
     box-sizing: border-box;
-    margin: 0 0 0 10px;
-    padding: 0 0 5px 0;
+    margin: 0 0 0 1.5vmin;
+    padding: 0 0 1vmin 0;
     max-height: 100%;
-    font-size: 20px;
+    font-size: 2vmin;
     background-color: #282C34;
     border-bottom: .5px solid #555;
     color: white;
@@ -215,34 +215,6 @@ nav p {
     width: 100%;
     height: 100%;
     font-weight: bolder;
-    font-size: 3rem;
+    font-size: 2vmin;
     color: rgb(12, 12, 12);
-}
-
-@media screen and (max-width: 1000px) {
-    .item .text-spacer p {
-        font-size: 15px;
-    }
-
-    #output {
-        font-size: 15px;
-    }
-
-    #input {
-        font-size: 15px;
-    }
-}
-
-@media screen and (max-width: 320px) {
-    .item .text-spacer p {
-        font-size: 13px;
-    }
-
-    #output {
-        font-size: 13px;
-    }
-
-    #input {
-        font-size: 13px;
-    }
 }

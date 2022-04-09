@@ -165,5 +165,8 @@ export default function createComponents() {
 
         console.warn("Creating Component java-editor" + additionalName + (enableDarkMode ? '-dark' : ''));
         customElements.define('java-editor' + additionalName + (enableDarkMode ? '-dark' : ''), ceComponentElement(html, styles, enableDarkMode, areTabs, "java"));
+
+        console.warn("Creating Component python-editor" + additionalName + (enableDarkMode ? '-dark' : ''));
+        customElements.define('python-editor' + additionalName + (enableDarkMode ? '-dark' : ''), ceComponentElement(html, styles, enableDarkMode, areTabs, "python"));
     }
 }

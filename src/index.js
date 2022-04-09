@@ -1,10 +1,11 @@
-import { Compartment } from "@codemirror/state"
-import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup"
-import { readOnlyTransactionFilter, editableSelection } from "./modules/readonly"
-import { lintGutter, linter } from "@codemirror/lint"
-import { javascript, esLint } from "@codemirror/lang-javascript"
-import { java } from "@codemirror/lang-java"
-import { cpp } from "@codemirror/lang-cpp"
+import { Compartment } from "@codemirror/state";
+import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup";
+import { readOnlyTransactionFilter, editableSelection } from "./modules/readonly";
+import { lintGutter, linter } from "@codemirror/lint";
+import { javascript, esLint } from "@codemirror/lang-javascript";
+import { java } from "@codemirror/lang-java";
+import { cpp } from "@codemirror/lang-cpp";
+import { python } from "@codemirror/lang-python";
 import { oneDark } from "@codemirror/theme-one-dark";
 import Linter from "eslint4b-prebuilt";
 import { typescript } from "./modules/typescript/index.ts";
@@ -17,7 +18,8 @@ const languageSelection = {
     "javascript": [javascript(), linter(esLint(new Linter())), lintGutter()],
     "typescript": typescript(),
     "cpp": cpp(),
-    "java": java()
+    "java": java(),
+    "python": python(),
 }
 
 /**

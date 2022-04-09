@@ -2,7 +2,7 @@
 
 Interactive Code Playgrounds Bundle is a Javascript plugin for embedding interactive code playgrounds in html pages.
 
-The editor used in these playgrounds is CodeMirror, an in-browser editor distributed as a collection of modules that aren't directly loadable by the browser.
+The editor used in these playgrounds is [CodeMirror](https://codemirror.net/6/), an in-browser editor distributed as a collection of modules that aren't directly loadable by the browser.
 
 Rollup is a tool that takes a given main script (or multiple ones) and produces a new script that has all of the script's dependencies included. This makes it easier to run modern Javascript systems in the browser, and with this approach we are able to export a completely customized CodeMirror instance.
 
@@ -38,6 +38,7 @@ The available languages that can be put inside `{language}` are the following:
 | --- | :---: | :---: | :---: | :---: |
 | javascript | ✅ | ✅ | ✅ | ✅ |
 | typescript | ✅ | ✅ | ✅ | ✅ |
+| python | ✅ |  |  | ✅ |
 | java | ✅ |  |  |  |
 | cpp | ✅ |  |  |  |
 
@@ -71,3 +72,5 @@ Apart from these web components, `icp.bundle.js` exposes the following set of fu
 ## Mentions
 
 The typescript plugin included in `src/modules/` has been taken from [prisma/text-editors](https://github.com/prisma/text-editors), as well as `scripts/build-types.mjs`, and they mainly allow us to do spell checking on typescript code.
+
+In order to run python code directly in the browser [Pyodide](https://pyodide.org/en/stable/) has been used.

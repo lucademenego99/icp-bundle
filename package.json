@@ -22,6 +22,7 @@
     "@codemirror/lang-cpp": "^0.19.1",
     "@codemirror/lang-java": "^0.19.1",
     "@codemirror/lang-javascript": "^0.19.7",
+    "@codemirror/lang-python": "^0.19.5",
     "@codemirror/language": "^0.19.8",
     "@codemirror/lint": "^0.19.6",
     "@codemirror/state": "^0.19.9",

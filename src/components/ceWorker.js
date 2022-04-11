@@ -101,7 +101,8 @@ export function workerFunction() {
                             },
                         });
                     }
-                    output = pyodide.runPython(e.data.script);
+                    await pyodide.loadPackagesFromImports(e.data.script);
+                    ouptut = pyodide.runPython(e.data.script);
                     break;
                 default:
                     console.warn("LANGUAGE NOT AVAILABLE");

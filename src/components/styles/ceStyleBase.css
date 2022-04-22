@@ -63,10 +63,48 @@ body {
     height: 100%;
 }
 
+#message {
+    transition: 500ms;
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    width: 70%;
+    font-family: monospace;
+    font-size: 2vmin;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    background-color: black;
+    color: white;
+}
+
 #play-container {
     position: absolute;
     right: 3%;
     top: 5%;
+    z-index: 10;
+}
+
+#tabs-container {
+    box-sizing: border-box;
+    padding: .3vmin;
+    position: absolute;
+    width: 4.5vmin;
+    height: 4.5vmin;
+    right: 3%;
+    bottom: calc(3% + var(--output-height));
+    z-index: 10;
+}
+
+#copy-container {
+    box-sizing: border-box;
+    padding: .3vmin;
+    position: absolute;
+    width: 4.5vmin;
+    height: 4.5vmin;
+    right: 3%;
+    bottom: calc(6% + 4.5vmin + var(--output-height));
     z-index: 10;
 }
 
@@ -120,6 +158,23 @@ body {
     font-family: monospace;
     font-size: 2vmin;
     white-space: pre-wrap;
+}
+
+svg {
+    transition: transform .2s;
+    cursor: pointer;
+}
+
+svg:hover {
+    transform: scale(1.5);
+}
+
+svg .disabled {
+    fill: #ff4133;
+}
+
+svg .enabled {
+    fill: #33ff3a;
 }
 
 /* CodeMirror Customization */

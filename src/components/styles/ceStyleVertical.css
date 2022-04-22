@@ -9,6 +9,10 @@
     justify-content: space-between;
 }
 
+#message {
+    top: 50%;
+}
+
 #editor {
     height: 100%;
     width: calc(100% - var(--output-height));
@@ -19,6 +23,16 @@
     width: var(--output-height);
     min-height: 0;
     min-width: 100px;
+}
+
+#tabs-container {
+    right: calc(var(--output-height) + 2.2vw);
+    top: 5%;
+}
+
+#copy-container {
+    right: calc(var(--output-height) + 2.2vw);
+    top: calc(8% + 4.5vmin);
 }
 
 #output-title-container {

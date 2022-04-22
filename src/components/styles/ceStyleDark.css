@@ -10,6 +10,10 @@
     color: var(--dark-mode-main-output-text-color);
 }
 
+#editor-input {
+    border-color: var(--main-output-bg-color);
+}
+
 #input {
     color: var(--dark-mode-main-output-text-color);
 }

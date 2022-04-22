@@ -1,4 +1,5 @@
 import { Compartment } from "@codemirror/state";
+import { keymap } from "@codemirror/view";
 import { EditorState, EditorView, basicSetup } from "@codemirror/basic-setup";
 import { readOnlyTransactionFilter, editableSelection } from "./modules/readonly";
 import { lintGutter, linter } from "@codemirror/lint";
@@ -7,6 +8,7 @@ import { java } from "@codemirror/lang-java";
 import { cpp } from "@codemirror/lang-cpp";
 import { python } from "@codemirror/lang-python";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { indentWithTab } from "@codemirror/commands"
 import Linter from "eslint4b-prebuilt";
 import { typescript } from "./modules/typescript/index.ts";
 import createComponents from "./components/ceComponents";
@@ -34,10 +36,14 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
     // Create a compartment to handle language configuration
     let languageConfiguration = new Compartment;
 
+    // Create a compartment to handle tabs handling
+    let tabsConfiguration = new Compartment;
+
     // Define the extensions of the editor
     let extensions = [
         basicSetup,
-        languageConfiguration.of(languageSelection[language])
+        languageConfiguration.of(languageSelection[language]),
+        tabsConfiguration.of([]),
     ];
 
     // Check if the editor should be in dark mode
@@ -83,7 +89,7 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
 
     // Return the editor and the languages handler
     return {
-        editor, languageConfiguration
+        editor, languageConfiguration, tabsConfiguration
     }
 }
 
@@ -125,6 +131,15 @@ function setTypescript(editor, languageConfiguration) {
     });
 }
 
+/**
+ * Handle tabs
+ */
+function setTabsHandling(editor, tabsConfiguration, enabled) {
+    editor.dispatch({
+        effects: tabsConfiguration.reconfigure(enabled ? keymap.of([indentWithTab]) : [])
+    });
+}
+
 // Create the code editor HTML components
 createComponents();
 
@@ -137,4 +152,5 @@ export {
     setJava,
     setJavascript,
     setTypescript,
+    setTabsHandling
 }

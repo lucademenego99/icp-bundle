@@ -123,6 +123,14 @@ body {
     z-index: 10;
 }
 
+#tabs-container {
+    bottom: calc(3% + 48px);
+}
+
+#copy-container {
+    bottom: calc(6% + 4.5vmin + 48px);
+}
+
 .floating-run {
     position: absolute;
     display: flex;

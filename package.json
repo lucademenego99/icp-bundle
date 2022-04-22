@@ -18,6 +18,7 @@
   "dependencies": {},
   "devDependencies": {
     "@codemirror/autocomplete": "^0.19.14",
+    "@codemirror/commands": "^0.19.8",
     "@codemirror/basic-setup": "^0.19.1",
     "@codemirror/lang-cpp": "^0.19.1",
     "@codemirror/lang-java": "^0.19.1",

@@ -17,11 +17,49 @@ export function createCodeMirror(document, language, enableDarkMode = false, ini
     // Get access to the language configuration, useful to change it dynamically
     let languageConfiguration = res.languageConfiguration;
 
+    // Get access to the tabs configuration, useful to change the tabs handling dynamically
+    let tabsEnabled = false;
+    let tabsConfiguration = res.tabsConfiguration;
+
     // Set the current language
     let currentLanguage = language;
 
     // Get Run Code Button
     var runButton = document.querySelector("#run-button");
+
+    /**
+     * Function used to show a given message to the user
+     */
+    function showMessage(message) {
+        var messageContainer = document.querySelector("#message");
+        messageContainer.innerText = message;
+        messageContainer.style.zIndex = 15;
+        messageContainer.style.opacity = 1;
+
+        setTimeout(function () {
+            messageContainer.style.opacity = 0;
+            messageContainer.style.zIndex = -1;
+        }, 1000);
+    }
+
+    // Define the behavior of the copy button when clicked
+    var copyContainer = document.querySelector("#copy-container");
+    copyContainer.addEventListener('click', (e) => {
+        var copyText = editor.state.doc.toString()
+        navigator.clipboard.writeText(copyText);
+        showMessage("Text Copied!");
+    });
+
+    // Define the behavior of the tabs button when clicked
+    var tabsContainer = document.querySelector("#tabs-container");
+    tabsContainer.addEventListener('click', (e) => {
+        tabsEnabled = !tabsEnabled;
+        let svg = document.querySelector("#tabs-svg");
+        svg.classList.toggle("enabled");
+        svg.classList.toggle("disabled");
+        CodeMirror.setTabsHandling(editor, tabsConfiguration, tabsEnabled);
+        showMessage(tabsEnabled ? "Tabs handling enabled" : "Tabs handling disabled");
+    });
 
     // Create a new worker
     let worker;

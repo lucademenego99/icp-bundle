@@ -12,6 +12,11 @@
     height: 80%;
 }
 
+#editor-input {
+    border-right: 1px solid var(--main-output-text-color);
+    width: calc(30% - 1px);
+}
+
 #editor-output,
 #editor-input {
     float: left;
@@ -20,10 +25,6 @@
 
 #editor-output {
     width: 70%;
-}
-
-#editor-input {
-    width: 30%;
 }
 
 #input {

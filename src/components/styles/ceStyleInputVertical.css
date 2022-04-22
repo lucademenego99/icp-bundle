@@ -34,6 +34,11 @@
     width: 100%;
 }
 
+#editor-input {
+    border-bottom: 1px solid var(--main-output-text-color);
+    height: calc(30% - 1px);
+}
+
 #editor-output,
 #editor-input {
     min-height: 0;
@@ -44,8 +49,18 @@
     height: 70%;
 }
 
-#editor-input {
-    height: 30%;
+#tabs-container {
+    right: calc(var(--output-height) + 1.5vw);
+    top: 5%;
+}
+
+#copy-container {
+    right: calc(var(--output-height) + 1.5vw);
+    top: calc(8% + 4.5vmin);
+}
+
+#message {
+    top: 50%;
 }
 
 #input {

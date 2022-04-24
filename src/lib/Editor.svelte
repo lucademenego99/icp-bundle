@@ -5,7 +5,7 @@
      * PROPS
      */
     export let language = "javascript";
-    export let darkmode = false;
+    export let theme = "light";
     export let code = "";
 
     /**
@@ -13,61 +13,51 @@
      */
     import JSTSWorker from "../modules/workers/jstsWorker?worker&inline";
     import { pythonWorkerFunction } from "../modules/workers/pythonWorker";
-    import { Compartment } from "@codemirror/state";
-    import {
-        EditorState,
-        EditorView,
-        basicSetup,
-    } from "@codemirror/basic-setup";
-    import {
-        readOnlyTransactionFilter,
-        editableSelection,
-    } from "../modules/readonly";
-    import { lintGutter } from "@codemirror/lint";
-    import { javascript } from "@codemirror/lang-javascript";
-    import { java } from "@codemirror/lang-java";
-    import { cpp } from "@codemirror/lang-cpp";
-    import { python } from "@codemirror/lang-python";
-    import { oneDark } from "@codemirror/theme-one-dark";
-    import { typescript } from "../modules/typescript/index";
     import { onMount } from "svelte";
+    import { createEditor, setTabsHandling } from "../utils";
+    import type { EditorView } from "@codemirror/view";
+    import type { Compartment } from "@codemirror/state";
 
     /**
      * ELEMENTS
      */
-    let editorElement;
+
+    let editorElement, rootElement, copyContainer, tabsContainer;
 
     /**
      * GLOBAL VARIABLES
      */
-    let worker;
-    let editor;
+
+    let webworker: Worker;
+    let codeMirrorEditor: EditorView, tabsConfiguration: Compartment;
     let runButtonDisabled = false,
         runButtonAnimating = false,
         runButtonRunning = false;
-    let output = "";
-    let outputError = false;
+    let output = "",
+        outputError = false;
+    let tabsEnabled = false;
+    let messageToShow = "",
+        messageShowing = false;
 
-    const languageSelection = {
-        javascript: [javascript(), lintGutter()],
-        typescript: typescript(),
-        cpp: cpp(),
-        java: java(),
-        python: python(),
-    };
-
-    // Disable Run Button
+    /**
+     * Disable the run Button
+     */
     function disableRunButton() {
         runButtonDisabled = true;
         runButtonRunning = true;
     }
 
-    // Enable Run Button
+    /**
+     * Enable the run Button
+     */
     function enableRunButton() {
         runButtonDisabled = false;
         runButtonRunning = false;
     }
 
+    /**
+     * Run provided code
+     */
     function runCode(e) {
         e.preventDefault;
         runButtonAnimating = true;
@@ -75,101 +65,65 @@
             runButtonAnimating = false;
         }, 700);
         disableRunButton();
-        // Send to the worker the script to run
-        worker.postMessage({
+        // Send to the webworker the script to run
+        webworker.postMessage({
             language: language,
-            script: editor.state.doc.toString(),
+            script: codeMirrorEditor.state.doc.toString(),
             input: "",
         });
     }
 
+    /**
+     * Function used to show a given message to the user
+     */
+    function showMessage(message) {
+        messageShowing = true;
+        messageToShow = message;
+        setTimeout(function () {
+            messageShowing = false;
+        }, 1000);
+    }
+
     onMount(() => {
-        /**
-         * Create a CodeMirror editor
-         * @param querySelection DOM elements in which we want to create the editor
-         * @param language Selected language for the editor
-         * @param enableDarkMode Choose whether to enable the dark mode or not
-         * @param initialText Text that should be present in the editor at startup
-         * @returns The codemirror editor instance and a languageConfiguration compartment
-         */
-        function createEditor(
-            element,
-            language,
-            enableDarkMode = false,
-            initialText = ""
-        ) {
-            console.log("ENABLE DARK MODE", enableDarkMode);
-            // Create a compartment to handle language configuration
-            let languageConfiguration = new Compartment();
+        // Set theme CSS properties
+        rootElement.style.setProperty(
+            "--main-output-bg-color",
+            theme == "dark" ? "#f5f5f5" : "#282c34"
+        );
+        rootElement.style.setProperty(
+            "--main-output-text-color",
+            theme == "dark" ? "#cccccc" : "#fffeff"
+        );
+        rootElement.style.setProperty(
+            "--output-text-color",
+            theme == "dark" ? "#000000" : "#fffeff"
+        );
 
-            // Define the extensions of the editor
-            let extensions = [
-                basicSetup,
-                languageConfiguration.of(languageSelection[language]),
-            ];
+        // Define the behavior of the copy button when clicked
+        copyContainer.addEventListener("click", (e) => {
+            var copyText = codeMirrorEditor.state.doc.toString();
+            navigator.clipboard.writeText(copyText);
+            showMessage("Text Copied!");
+        });
 
-            // Check if the editor should be in dark mode
-            if (enableDarkMode) extensions.push(oneDark);
-
-            // Check if we should enable the mode in which we only allow to edit specific parts of the text
-            let editableParts = [];
-            if (initialText.includes("<EDITABLE>")) {
-                extensions.push(readOnlyTransactionFilter());
-
-                // Save all the editable parts of the text inside initialText in an array, where their start is marked with <EDITABLE> and their end is marked with </EDITABLE>
-                let count = 0; // Count how many times we got a correspondence, to calculate the correct indices of the editable parts
-                let regex = /(?<=<EDITABLE>)(.|\n)*?(?=<\/EDITABLE>)/gm,
-                    result;
-                while ((result = regex.exec(initialText)) !== null) {
-                    count++;
-                    // 10: length of <EDITABLE>
-                    // 11: length of </EDITABLE>
-                    editableParts.push({
-                        from: result.index - 10 * count - 11 * (count - 1),
-                        to:
-                            result.index +
-                            result[0].length -
-                            10 * count -
-                            11 * (count - 1),
-                    });
-                }
-                // Remove the tokens <EDITABLE> and </EDITABLE> from the initialText
-                initialText = initialText
-                    .replace(/<EDITABLE>/gm, "")
-                    .replace(/<\/EDITABLE>/gm, "");
-            }
-
-            // Create the editor
-            let editor = new EditorView({
-                state: EditorState.create({
-                    doc: initialText,
-                    extensions: extensions,
-                }),
-                parent: element,
-            });
-
-            // If the editable mode is enabled, we need to set the editable text selected by the user
-            if (editableParts.length > 0) {
-                editableParts.forEach((part) => {
-                    editableSelection(editor, part.from, part.to);
-                });
-            }
-
-            // Return the editor and the languages handler
-            return {
-                editor,
-                languageConfiguration,
-            };
-        }
+        // Define the behavior of the tabs button when clicked
+        tabsContainer.addEventListener("click", (e) => {
+            tabsEnabled = !tabsEnabled;
+            setTabsHandling(codeMirrorEditor, tabsConfiguration, tabsEnabled);
+            showMessage(
+                tabsEnabled ? "Tabs handling enabled" : "Tabs handling disabled"
+            );
+        });
 
         // Create the CodeMirror editor
-        let res = createEditor(editorElement, language, darkmode, code);
+        let res = createEditor(editorElement, language, theme == "dark", code);
 
         // Get access to the editor instance
-        editor = res.editor;
+        codeMirrorEditor = res.editor;
+        tabsConfiguration = res.tabsConfiguration;
 
         if (language == "python") {
-            // Get the body of the worker's function
+            // Get the body of the webworker's function
             var workerJob = pythonWorkerFunction
                 .toString()
                 .slice(
@@ -178,31 +132,40 @@
                 );
             // Generate a blob from it
             var workerBlob = new Blob([workerJob], { type: "text/javascript" });
-            // The worker constructor needs an URL: create it from the blob
-            worker = new Worker(window.URL.createObjectURL(workerBlob));
+            // The webworker constructor needs an URL: create it from the blob
+            webworker = new Worker(window.URL.createObjectURL(workerBlob));
         } else if (language == "javascript" || language == "typescript") {
-            worker = new JSTSWorker();
+            webworker = new JSTSWorker();
         }
 
-        // Handle the worker's messages
-        worker.onmessage = (e) => {
+        // Handle the webworker's messages
+        webworker.onmessage = (message) => {
             enableRunButton();
-            if (e.data.error) {
+            if (message.data.error) {
                 outputError = true;
-                output = e.data.error;
+                output = message.data.error;
             } else {
                 outputError = false;
                 let text = "";
-                if (e.data.debug) text += e.data.debug + "\n\n";
-                if (e.data.result) text += "Result: " + e.data.result;
+                if (message.data.debug) text += message.data.debug + "\n\n";
+                if (message.data.result)
+                    text += "Result: " + message.data.result;
                 output = text;
             }
         };
     });
 </script>
 
+<!-- Workaround to make vite load cm-editor and cm-scroller custom styles -->
 <div style="display: none;" class="cm-editor cm-scroller" />
-<div id="code-container">
+
+<!-- Editor's HTML -->
+<div bind:this={rootElement} id="code-container">
+    <!-- Overlay Message -->
+    <div style={messageShowing ? "opacity: 1;" : "opacity: 0;"} id="message">
+        {messageToShow}
+    </div>
+
     <!-- Run Button -->
     <div id="play-container">
         <button
@@ -215,6 +178,69 @@
             >{runButtonRunning ? "Running..." : "Run Code!"}</button
         >
     </div>
+
+    <!-- Tabs Handling Button -->
+    <div bind:this={tabsContainer} id="tabs-container">
+        <svg
+            version="1.0"
+            xmlns="http://www.w3.org/2000/svg"
+            height="100%"
+            viewBox="0 0 128.000000 128.000000"
+            preserveAspectRatio="xMidYMid meet"
+        >
+            <g
+                id="tabs-svg"
+                transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
+                fill={tabsEnabled ? "#33ff3a" : "#ff4133"}
+                stroke="none"
+            >
+                <path
+                    d="M71 1262 c-19 -10 -43 -34 -53 -53 -17 -31 -18 -70 -18 -569 0 -499
+1 -538 18 -569 10 -19 34 -43 53 -53 31 -17 70 -18 569 -18 499 0 538 1 569
+18 19 10 43 34 53 53 17 31 18 70 18 569 0 499 -1 538 -18 569 -10 19 -34 43
+-53 53 -31 17 -70 18 -569 18 -499 0 -538 -1 -569 -18z m1131 -60 l23 -23 0
+-539 0 -539 -23 -23 -23 -23 -539 0 -539 0 -23 23 -23 23 -2 527 c-2 410 0
+533 10 552 26 50 24 50 589 47 l527 -2 23 -23z"
+                />
+                <path
+                    d="M1016 834 c-3 -9 -6 -52 -6 -97 l0 -81 -90 88 c-76 74 -92 86 -105
+76 -23 -19 -19 -27 42 -91 l56 -59 -365 0 c-313 0 -367 -2 -378 -15 -10 -12
+-10 -18 0 -30 11 -13 65 -15 378 -15 l365 0 -56 -59 c-61 -64 -65 -72 -42 -91
+13 -10 29 2 105 76 l90 88 0 -81 c0 -45 3 -88 6 -97 8 -21 40 -21 48 0 8 20 8
+368 0 388 -3 9 -14 16 -24 16 -10 0 -21 -7 -24 -16z"
+                />
+            </g>
+        </svg>
+    </div>
+
+    <!-- Copy Code Button -->
+    <div bind:this={copyContainer} id="copy-container">
+        <svg
+            version="1.0"
+            xmlns="http://www.w3.org/2000/svg"
+            height="100%"
+            viewBox="0 0 128.000000 128.000000"
+            preserveAspectRatio="xMidYMid meet"
+        >
+            <g
+                transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
+                fill="#000000"
+                stroke="none"
+            >
+                <path
+                    d="M26 1254 l-26 -27 0 -467 0 -467 26 -27 c22 -22 36 -26 80 -26 l54 0
+0 40 0 40 -40 0 -40 0 0 440 0 440 440 0 440 0 0 -40 0 -40 40 0 40 0 0 54 c0
+44 -4 58 -26 80 l-27 26 -467 0 -467 0 -27 -26z"
+                />
+                <path
+                    d="M266 1014 l-26 -27 0 -467 0 -467 26 -27 27 -26 467 0 467 0 27 26
+26 27 0 467 0 467 -26 27 -27 26 -467 0 -467 0 -27 -26z m934 -494 l0 -440
+-440 0 -440 0 0 440 0 440 440 0 440 0 0 -440z"
+                />
+            </g>
+        </svg>
+    </div>
+
     <!-- Complete editor -->
     <div id="editor-container">
         <!-- CodeMirror Editor -->
@@ -238,16 +264,6 @@
     /* Useful variables */
     /* ------------------------------------------------ */
     :host {
-        /* Main Light Mode */
-        --main-output-bg-color: #282c34;
-        --main-output-bg-color-light: #333235;
-        --main-output-text-color: #fffeff;
-
-        /* Dark Mode */
-        --dark-mode-main-output-bg-color: #f5f5f5;
-        --dark-mode-main-output-text-color: black;
-
-        /* Common */
         --error-color: red;
         --run-btn-main-color: #00cc3d;
         --run-btn-active-color: #00aa33;
@@ -299,41 +315,82 @@
         height: calc(100% - var(--output-height));
     }
 
-    #editor-output,
-    #editor-input {
+    #message {
+        transition: 500ms;
+        position: absolute;
+        text-align: center;
+        width: 70%;
+        font-family: monospace;
+        font-size: 2vmin;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: black;
+        color: white;
+    }
+
+    #tabs-container {
+        box-sizing: border-box;
+        padding: 0.3vmin;
+        position: absolute;
+        width: 4.5vmin;
+        height: 4.5vmin;
+        right: 3%;
+        bottom: calc(3% + var(--output-height));
+        z-index: 10;
+    }
+
+    #copy-container {
+        box-sizing: border-box;
+        padding: 0.3vmin;
+        position: absolute;
+        width: 4.5vmin;
+        height: 4.5vmin;
+        right: 3%;
+        bottom: calc(6% + 4.5vmin + var(--output-height));
+        z-index: 10;
+    }
+
+    svg {
+        transition: transform 0.2s;
+        cursor: pointer;
+    }
+
+    svg:hover {
+        transform: scale(1.5);
+    }
+
+    #editor-output {
         background-color: var(--main-output-bg-color);
         color: var(--main-output-text-color);
         height: var(--output-height);
     }
 
-    #output-title-container,
-    #input-title-container {
+    #output-title-container {
         height: 3vmin;
         display: flex;
         align-items: center;
     }
 
-    #output-title,
-    #input-title {
+    #output-title {
         margin: 0;
         height: 60%;
         margin-left: 0.8vw;
         font-size: 1.6vmin;
         width: fit-content;
-        border-bottom: 1px solid white;
-        color: white;
+        border-bottom: 1px solid var(--output-text-color);
+        color: var(--output-text-color);
         box-sizing: border-box;
     }
 
-    #output-container,
-    #input-container {
+    #output-container {
         overflow: auto;
         height: calc(100% - 3vmin);
         width: 100%;
     }
 
-    .output-text,
-    .input-text {
+    .output-text {
+        color: var(--output-text-color);
         padding: 0.1vh 0 0 0.6vw;
         margin: 0;
         font-family: monospace;
@@ -512,7 +569,6 @@
     *::-webkit-scrollbar-track {
         box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        /* border-radius: 10px; */
         background-color: var(--dark-mode-main-output-bg-color-light);
     }
 
@@ -522,7 +578,6 @@
     }
 
     *::-webkit-scrollbar-thumb {
-        /* border-radius: 10px; */
         box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         background-color: #999999;

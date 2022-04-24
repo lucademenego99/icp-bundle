@@ -4,6 +4,7 @@
     /**
      * PROPS
      */
+
     export let language = "javascript";
     export let theme = "light";
     export let code = "";
@@ -11,6 +12,7 @@
     /**
      * IMPORTS
      */
+
     import JSTSWorker from "../modules/workers/jstsWorker?worker&inline";
     import { pythonWorkerFunction } from "../modules/workers/pythonWorker";
     import { onMount } from "svelte";

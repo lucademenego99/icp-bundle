@@ -25,7 +25,7 @@ import {
   displayPartsToString,
   flattenDiagnosticMessageText,
 } from "typescript";
-import { onChangeCallback } from "../change-callback";
+import { onChangeCallback } from "./change-callback";
 import { FileMap, TypescriptProject } from "./project";
 
 export { TypescriptProject };

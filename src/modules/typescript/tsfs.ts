@@ -1,4 +1,4 @@
-import localforage from "localforage";
+import * as localforage from "localforage";
 
 type LibName = "typescript" | "@types/node";
 type FileName = string;

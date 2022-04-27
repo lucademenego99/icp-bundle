@@ -1,12 +1,18 @@
-<svelte:options tag="default-editor" />
+<svelte:options tag="base-editor" />
 
 <script lang="ts">
     /**
      * PROPS
      */
 
-    export let language = "javascript";
-    export let theme = "light";
+    export let language:
+        | "javascript"
+        | "typescript"
+        | "python"
+        | "cpp"
+        | "java" = "javascript";
+    export let type: "normal" | "vertical" = "normal";
+    export let theme: "light" | "dark" = "light";
     export let code = "";
 
     /**
@@ -24,7 +30,10 @@
      * ELEMENTS
      */
 
-    let editorElement, rootElement, copyContainer, tabsContainer;
+    let editorElement: HTMLElement,
+        rootElement: HTMLElement,
+        copyContainer: HTMLElement,
+        tabsContainer: HTMLElement;
 
     /**
      * GLOBAL VARIABLES
@@ -60,8 +69,7 @@
     /**
      * Run provided code
      */
-    function runCode(e) {
-        e.preventDefault;
+    function runCode(_e: Event) {
         runButtonAnimating = true;
         setTimeout(function () {
             runButtonAnimating = false;
@@ -78,7 +86,7 @@
     /**
      * Function used to show a given message to the user
      */
-    function showMessage(message) {
+    function showMessage(message: string) {
         messageShowing = true;
         messageToShow = message;
         setTimeout(function () {
@@ -164,12 +172,23 @@
 <!-- Editor's HTML -->
 <div bind:this={rootElement} id="code-container">
     <!-- Overlay Message -->
-    <div style={messageShowing ? "opacity: 1;" : "opacity: 0;"} id="message">
+    <div
+        style="{messageShowing ? 'opacity: 1;' : 'opacity: 0;'} {type ==
+        'vertical'
+            ? 'top: 50%'
+            : ''}"
+        id="message"
+    >
         {messageToShow}
     </div>
 
     <!-- Run Button -->
-    <div id="play-container">
+    <div
+        id="play-container"
+        style={type == "vertical"
+            ? "right: calc(var(--output-height) + 2.2vw); bottom: 5%;"
+            : "right: 3%; top: 5%;"}
+    >
         <button
             id="run-button"
             on:click={runCode}
@@ -182,7 +201,13 @@
     </div>
 
     <!-- Tabs Handling Button -->
-    <div bind:this={tabsContainer} id="tabs-container">
+    <div
+        bind:this={tabsContainer}
+        style={type == "vertical"
+            ? "right: calc(var(--output-height) + 1vw); top: calc(8% + 4.5vmin);"
+            : ""}
+        id="tabs-container"
+    >
         <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +241,13 @@
     </div>
 
     <!-- Copy Code Button -->
-    <div bind:this={copyContainer} id="copy-container">
+    <div
+        bind:this={copyContainer}
+        style={type == "vertical"
+            ? "right: calc(var(--output-height) + 1vw); top: 5%;"
+            : ""}
+        id="copy-container"
+    >
         <svg
             version="1.0"
             xmlns="http://www.w3.org/2000/svg"
@@ -226,7 +257,7 @@
         >
             <g
                 transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
-                fill="#000000"
+                fill={theme == "dark" ? "#ffffff" : "#000000"}
                 stroke="none"
             >
                 <path
@@ -244,16 +275,43 @@
     </div>
 
     <!-- Complete editor -->
-    <div id="editor-container">
+    <div
+        id="editor-container"
+        style={type == "vertical"
+            ? "display: flex; justify-content: space-between;"
+            : ""}
+    >
         <!-- CodeMirror Editor -->
-        <div bind:this={editorElement} id="editor" />
+        <div
+            bind:this={editorElement}
+            style={type == "vertical"
+                ? "height: 100%; width: calc(100% - var(--output-height));"
+                : ""}
+            id="editor"
+        />
         <!-- Output -->
-        <div id="editor-output">
-            <div id="output-title-container">
+        <div
+            id="editor-output"
+            style={type == "vertical"
+                ? "height: 100%; width: var(--output-height); min-height: 0; min-width: 100px;"
+                : ""}
+        >
+            <div
+                id="output-title-container"
+                style={type == "vertical"
+                    ? "height: 3vmin; margin-top: 1vh;"
+                    : ""}
+            >
                 <p id="output-title">OUTPUT</p>
             </div>
             <!-- Output console.log -->
-            <div id="output-container" class="rounded-scrollbar">
+            <div
+                id="output-container"
+                style={type == "vertical"
+                    ? "height: calc(100% - 3vmin - 1vh);"
+                    : "width: 100%;"}
+                class="rounded-scrollbar"
+            >
                 <p class="output-text {outputError ? 'error' : ''}" id="output">
                     {output}
                 </p>
@@ -302,8 +360,6 @@
 
     #play-container {
         position: absolute;
-        right: 3%;
-        top: 5%;
         z-index: 10;
     }
 
@@ -322,7 +378,9 @@
         position: absolute;
         text-align: center;
         width: 70%;
+        pointer-events: none;
         font-family: monospace;
+        z-index: 20;
         font-size: 2vmin;
         top: 40%;
         left: 50%;

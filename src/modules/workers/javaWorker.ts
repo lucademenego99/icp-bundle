@@ -1,10 +1,10 @@
-import TeaWorker from "./teaWorker?worker&inline";
+// import classlib from './classlib.txt?raw';
 
 let isReady;
 let javaMessages = [];
 let javaErrorMessages = [];
 let codeFinished = true;
-let teaworker, sessionWorker;
+let teaworker;
 
 // Customize the onmessage event
 onmessage = async (message) => {
@@ -31,6 +31,7 @@ onmessage = async (message) => {
                     await delay(250);
                 }
                 if (javaErrorMessages.length > 0) {
+                    javaErrorMessages.pop();
                     const error = javaErrorMessages.join("\n");
                     javaErrorMessages = [];
                     throw new Error(error);
@@ -59,11 +60,9 @@ function delay(time) {
 }
 
 function createTeaWorker(whenReady) {
-    console.log("TEAWORKER BEFORE: ", teaworker);
     if (teaworker === undefined) {
         try {
-            // teaworker = new Worker('http://localhost:8080/java-worker.js');
-            teaworker = new TeaWorker();
+            teaworker = new Worker('/src/modules/workers/teaWorker');
         } catch (e) {
             console.log("TEAWORKER CATCH", e);
         }
@@ -77,11 +76,16 @@ function createTeaWorker(whenReady) {
             }
         })
 
+        // Create a blob out of classlib
+        // const blob = new Blob([classlib], { type: 'application/zip' });
+        // const file = new File([blob], 'classlib');
+        // const url = URL.createObjectURL(blob);
+
         //bootstrap environment
         teaworker.postMessage({
             command: 'load-classlib',
             id: 'didload-classlib',
-            url: 'classlib.txt',
+            url: '/src/modules/workers/classlib.txt',
         })
 
         return true
@@ -290,8 +294,6 @@ function compileAndRun(code, questionID, runCreate = true, compileFailedCallback
             var workerBlob = new Blob([workerjob], { type: "text/javascript" });
             // The worker constructor needs an URL: create it from the blob
             const workerrun = new Worker(URL.createObjectURL(workerBlob));
-
-            sessionWorker = workerrun
 
             const runListener = (ee) => {
                 if (ee.data.command == 'run-completed') {

@@ -315,7 +315,7 @@
                     : "width: 100%;"}
                 class="rounded-scrollbar"
             >
-                <p class="output-text {outputError ? 'error' : ''}" id="output">
+                <p style="{outputError ? 'color: var(--error-color);' : ''}" class="output-text" id="output">
                     {output}
                 </p>
             </div>
@@ -333,12 +333,6 @@
         --run-btn-shadow-color: #00cc3d81;
         --run-btn-active-shadow-color: #00cc3d3d;
         --output-height: 30%;
-    }
-
-    /* Main elements Customization */
-    /* ------------------------------------------------ */
-    .error {
-        color: var(--error-color);
     }
 
     /* Reset styles that may appear from upper elements (e.g. with reveal.js) */

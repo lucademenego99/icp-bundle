@@ -29,6 +29,7 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
     // Define the extensions of the editor
     let extensions = [
         basicSetup,
+        EditorView.lineWrapping,
         languageConfiguration.of(languageSelection[language]),
         tabsConfiguration.of([]),
     ];

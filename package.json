@@ -1,8 +1,23 @@
 {
   "name": "icp-bundle",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "0.0.1",
+  "author": "Luca De Menego <lucademenego99@gmail.com>",
+  "files": [
+    "dist/"
+  ],
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucademenego99/icp-bundle.git"
+  },
+  "homepage": "https://github.com/lucademenego99/icp-bundle#readme",
+  "bugs": {
+    "url": "https://github.com/lucademenego99/icp-bundle/issues"
+  },
+  "keywords": [
+    "webcomponents", "rollup", "svelte", "codemirror", "codemirror6", "playgrounds"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build -c=vite.lib.config.js",

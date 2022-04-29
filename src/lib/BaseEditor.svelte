@@ -20,6 +20,7 @@
      */
 
     import JSTSWorker from "../modules/workers/jstsWorker?worker&inline";
+    import JavaWorker from "../modules/workers/javaWorker?worker";
     import { pythonWorkerFunction } from "../modules/workers/pythonWorker";
     import { onMount } from "svelte";
     import { createEditor, setTabsHandling } from "../utils";
@@ -146,6 +147,8 @@
             webworker = new Worker(window.URL.createObjectURL(workerBlob));
         } else if (language == "javascript" || language == "typescript") {
             webworker = new JSTSWorker();
+        } else if (language == "java") {
+            webworker = new JavaWorker();
         }
 
         // Handle the webworker's messages

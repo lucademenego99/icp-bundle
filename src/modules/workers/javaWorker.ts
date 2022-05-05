@@ -57,7 +57,7 @@ function delay(time) {
 function createTeaWorker(whenReady) {
     if (teaworker === undefined) {
         try {
-            var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.2/dist/base/utils/java/classes.js');main();";
+            var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classes.js');main();";
             var workerBlob = new Blob([workerJob], { type: "text/javascript" });
             teaworker = new Worker(URL.createObjectURL(workerBlob));
         } catch (e) {
@@ -77,7 +77,7 @@ function createTeaWorker(whenReady) {
         teaworker.postMessage({
             command: 'load-classlib',
             id: 'didload-classlib',
-            url: 'https://unpkg.com/icp-bundle@0.0.2/dist/base/utils/java/classlib.txt',
+            url: 'https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classlib.txt',
         })
 
         return true

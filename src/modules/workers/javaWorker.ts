@@ -1,5 +1,3 @@
-// import classlib from './classlib.txt?raw';
-
 let isReady;
 let javaMessages = [];
 let javaErrorMessages = [];
@@ -22,10 +20,7 @@ onmessage = async (message) => {
                 codeFinished = false;
                 compileAndRun(message.data.script, 1, !isReady, ({ message, start, end, severity }) => {
                     console.log("COMPILE FAILED CALLBACK IMPLEMENTATION! ", message);
-                    // codeFinished = true;
-                    // javaMessages = [];
                     javaErrorMessages.push(message);
-                    // throw new Error(message);
                 });
                 while (!codeFinished) {
                     await delay(250);
@@ -62,7 +57,9 @@ function delay(time) {
 function createTeaWorker(whenReady) {
     if (teaworker === undefined) {
         try {
-            teaworker = new Worker('/src/modules/workers/teaWorker');
+            var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.2/dist/base/utils/java/classes.js');main();";
+            var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+            teaworker = new Worker(URL.createObjectURL(workerBlob));
         } catch (e) {
             console.log("TEAWORKER CATCH", e);
         }
@@ -76,16 +73,11 @@ function createTeaWorker(whenReady) {
             }
         })
 
-        // Create a blob out of classlib
-        // const blob = new Blob([classlib], { type: 'application/zip' });
-        // const file = new File([blob], 'classlib');
-        // const url = URL.createObjectURL(blob);
-
         //bootstrap environment
         teaworker.postMessage({
             command: 'load-classlib',
             id: 'didload-classlib',
-            url: '/src/modules/workers/classlib.txt',
+            url: 'https://unpkg.com/icp-bundle@0.0.2/dist/base/utils/java/classlib.txt',
         })
 
         return true
@@ -93,8 +85,6 @@ function createTeaWorker(whenReady) {
 
     return false
 }
-
-
 
 function compileAndRun(code, questionID, runCreate = true, compileFailedCallback = ({ message, start, end, severity }) => { }) {
     if (runCreate) {

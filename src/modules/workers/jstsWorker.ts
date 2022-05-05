@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import { transpile } from 'typescript';
 
 // Global worker variables
 let messages = [];
@@ -41,7 +41,7 @@ onmessage = async (e) => {
              * Typescript
              */
             case 'typescript':
-                output = eval(ts.transpile(e.data.script));
+                output = eval(transpile(e.data.script));
                 break;
 
             default:

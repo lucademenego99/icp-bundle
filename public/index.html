@@ -2,18 +2,38 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICP - Testing page</title>
 </head>
 
 <body>
-    <div style="width: 700px; height: 500px;">
-        <base-editor language="python"></base-editor>
+    <h1>Javascript</h1>
+    <div style="width: 800px; height: 500px;">
+        <base-editor language="javascript" type="vertical" code="console.log('Hello World in Javascript!');">
+        </base-editor>
     </div>
-
-    <script src="../dist/icp-bundle.umd.js"></script>
+    <h1>Typescript</h1>
+    <div style="width: 800px; height: 500px;">
+        <base-editor language="typescript" type="vertical" code="console.log('Hello World in Typescript!');"
+            theme="dark">
+        </base-editor>
+    </div>
+    <h1>Python</h1>
+    <div style="width: 800px; height: 500px;">
+        <base-editor language="python" code="print('Hello World in python!')" theme="dark"></base-editor>
+    </div>
+    <h1>Java</h1>
+    <div style="width: 800px; height: 500px;">
+        <base-editor language="java" code='public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!"); 
+    }
+}' theme="dark"></base-editor>
+    </div>
+    <script src="icp-bundle.umd.js"></script>
+    <script src="/dist/icp-bundle.umd.js"></script>
 </body>
 
 </html>

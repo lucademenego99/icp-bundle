@@ -1,7 +1,7 @@
 {
   "name": "icp-bundle",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.0.3",
   "author": "Luca De Menego <lucademenego99@gmail.com>",
   "files": [
     "dist/"
@@ -16,11 +16,17 @@
     "url": "https://github.com/lucademenego99/icp-bundle/issues"
   },
   "keywords": [
-    "webcomponents", "rollup", "svelte", "codemirror", "codemirror6", "playgrounds"
+    "webcomponents",
+    "rollup",
+    "svelte",
+    "codemirror",
+    "codemirror6",
+    "playgrounds"
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build -c=vite.lib.config.js",
+    "gulp": "gulp",
+    "build": "vite build -c=vite.lib.config.js && vite build -c=vite.offline-lib.config.js",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
@@ -39,8 +45,11 @@
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tsconfig/svelte": "^2.0.1",
     "@typescript/vfs": "^1.3.5",
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1",
     "svelte": "^3.44.0",
     "svelte-check": "^2.2.7",
     "svelte-preprocess": "^4.9.8",

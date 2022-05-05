@@ -20,7 +20,7 @@
      */
 
     import JSTSWorker from "../modules/workers/jstsWorker?worker&inline";
-    import JavaWorker from "../modules/workers/javaWorker?worker";
+    import JavaWorker from "../modules/workers/javaWorker?worker&inline";
     import { pythonWorkerFunction } from "../modules/workers/pythonWorker";
     import { onMount } from "svelte";
     import { createEditor, setTabsHandling } from "../utils";
@@ -315,7 +315,11 @@
                     : "width: 100%;"}
                 class="rounded-scrollbar"
             >
-                <p style="{outputError ? 'color: var(--error-color);' : ''}" class="output-text" id="output">
+                <p
+                    style={outputError ? "color: var(--error-color);" : ""}
+                    class="output-text"
+                    id="output"
+                >
                     {output}
                 </p>
             </div>

@@ -1,7 +1,8 @@
 /**
  * Main Worker Function to run Python Code
  */
-export function pythonWorkerFunction(): void {
+
+export function pythonWorkerFunction() {
     // Global worker variables
     let messages = [];
     let input = '';
@@ -25,11 +26,12 @@ export function pythonWorkerFunction(): void {
         // - result: final result of the script
         try {
             if (!pythonDownloaded) {
-                importScripts('https://cdn.jsdelivr.net/pyodide/v0.19.1/full/pyodide.js');
+                // @ts-ignore
+                importScripts("https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js");
                 pythonDownloaded = true;
                 // @ts-ignore - loadPyodide is imported by the previous importScript
                 pyodide = await loadPyodide({
-                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.19.1/full/",
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.20.0/full/",
                     stdin: () => input,
                     stdout: (text: string): void => {
                         if (pythonInitCompleted) {
@@ -64,8 +66,8 @@ export function pythonWorkerFunction(): void {
     }
 
     /**
- * General Python Error
- */
+    * General Python Error
+    */
     type PythonError = {
         message: string;
         trace: Array<{ line: number, file: string, module: string }>;
@@ -118,3 +120,5 @@ export function pythonWorkerFunction(): void {
         return res
     }
 }
+
+export { }

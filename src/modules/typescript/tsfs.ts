@@ -1,4 +1,8 @@
 import * as localforage from "localforage";
+import * as typescriptMeta from "./types/typescript/meta";
+import * as nodeMeta from "./types/@types/node/meta";
+import * as typescriptData from "./types/typescript/data";
+import * as nodeData from "./types/@types/node/data";
 
 type LibName = "typescript" | "@types/node";
 type FileName = string;
@@ -28,8 +32,8 @@ export class TSFS {
     // Rollup needs us to use static strings for dynamic imports
     const meta =
       libName === "typescript"
-        ? await import("./types/typescript/meta.js")
-        : await import("./types/@types/node/meta.js");
+        ? typescriptMeta
+        : nodeMeta;
 
     // The metadata tells us the version of the library, and gives us a list of file names in the library.
     // If our cache already has this version of the library:
@@ -63,8 +67,8 @@ export class TSFS {
       // Rollup needs us to use static strings for dynamic imports
       const data =
         libName === "typescript"
-          ? await import("./types/typescript/data.js")
-          : await import("./types/@types/node/data.js");
+          ? typescriptData
+          : nodeData;
 
       // Add new things to DB
       const files = Object.entries(data.files);

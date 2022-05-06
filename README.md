@@ -40,8 +40,9 @@ The available languages that can be used are the following:
 | --- | :---: | :---: | :---: | :---: |
 | javascript | ✅ | ✅ | ✅ | ✅ |
 | typescript | ✅ | ✅ | ✅ | ✅ |
+| sql | ✅ | ✅ |  | ✅ |
 | python | ✅ |  |  | ✅ |
-| java | ✅ |  |  |  |
+| java | ✅ |  |  | ✅ |
 | cpp | ✅ |  |  |  |
 
 ### Read-only components with predefined editable parts
@@ -64,6 +65,7 @@ Apart from these web components, the following functions are exposed:
 - `setCpp(editor, languageConfiguration)`: change the editor's language to C++ using the provided compartment;
 - `setJava(editor, languageConfiguration)`: change the editor's language to Java using the provided compartment;
 - `setPython(editor, languageConfiguration)`: change the editor's language to Python using the provided compartment;
+- `setSql(editor, languageConfiguration)`: change the editor's language to SQL using the provided compartment;
 - `setTabsHandling(editor, tabsConfiguration, enabled)`: set whether or not tabs should be handled inside the code editor (they are not by default).
 
 ## Mentions

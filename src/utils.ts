@@ -1,6 +1,7 @@
 import { cpp } from "@codemirror/lang-cpp";
 import { java } from "@codemirror/lang-java";
 import { javascript } from "@codemirror/lang-javascript";
+import { sql } from "@codemirror/lang-sql";
 import { python } from "@codemirror/lang-python";
 import { lintGutter } from "@codemirror/lint";
 import { EditorView, keymap } from "@codemirror/view";
@@ -90,6 +91,7 @@ const languageSelection = {
     cpp: cpp(),
     java: java(),
     python: python(),
+    sql: sql({ upperCaseKeywords: true }),
 };
 
 /**
@@ -120,6 +122,15 @@ function setJavascript(editor, languageConfiguration) {
 }
 
 /**
+ * Use SQL
+ */
+function setSql(editor, languageConfiguration) {
+    editor.dispatch({
+        effects: languageConfiguration.reconfigure(languageSelection['sql'])
+    });
+}
+
+/**
  * Use Typescript
  */
 function setTypescript(editor, languageConfiguration) {
@@ -144,5 +155,6 @@ export {
     setJava,
     setJavascript,
     setTypescript,
+    setSql,
     setTabsHandling
 }

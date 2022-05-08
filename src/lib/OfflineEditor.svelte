@@ -122,7 +122,7 @@
             ],
             edges: {
                 left: type == "vertical" ? true : false,
-                right: true,
+                right: false,
                 bottom: false,
                 top: type == "vertical" ? false : true,
             },

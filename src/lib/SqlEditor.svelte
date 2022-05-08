@@ -137,7 +137,7 @@
             ],
             edges: {
                 left: type == "vertical" ? true : false,
-                right: true,
+                right: false,
                 bottom: false,
                 top: type == "vertical" ? false : true,
             },
@@ -151,7 +151,6 @@
                     Object.assign(event.target.style, {
                         width: `${event.rect.width}px`,
                         height: `${event.rect.height}px`,
-                        // transform: `translate(${x}px, ${y}px)`,
                     });
 
                     // Resize consequently the editorElement
@@ -432,7 +431,7 @@
         --run-btn-active-color: #00aa33;
         --run-btn-shadow-color: #00cc3d81;
         --run-btn-active-shadow-color: #00cc3d3d;
-        --output-height: 40%;
+        --output-height: 30%;
     }
 
     table {

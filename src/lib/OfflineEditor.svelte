@@ -25,6 +25,7 @@
     import { createEditor, setTabsHandling } from "../utils";
     import type { EditorView } from "@codemirror/view";
     import type { Compartment } from "@codemirror/state";
+    import interact from "interactjs";
 
     /**
      * ELEMENTS
@@ -33,7 +34,9 @@
     let editorElement: HTMLElement,
         rootElement: HTMLElement,
         copyContainer: HTMLElement,
-        tabsContainer: HTMLElement;
+        tabsContainer: HTMLElement,
+        outputContainer: HTMLElement,
+        outputTitleContainer: HTMLElement;
 
     /**
      * GLOBAL VARIABLES
@@ -103,6 +106,55 @@
     }
 
     onMount(() => {
+        // Make the outputcontainer resizable
+        interact(outputContainer).resizable({
+            modifiers: [
+                interact.modifiers.restrictSize({
+                    min: {
+                        width: 0,
+                        height: outputTitleContainer.clientHeight,
+                    },
+                    max: {
+                        width: rootElement.clientWidth,
+                        height: rootElement.clientHeight,
+                    },
+                }),
+            ],
+            edges: {
+                left: type == "vertical" ? true : false,
+                right: true,
+                bottom: false,
+                top: type == "vertical" ? false : true,
+            },
+            listeners: {
+                move: function (event) {
+                    let { x, y } = event.target.dataset;
+
+                    x = (parseFloat(x) || 0) + event.deltaRect.left;
+                    y = (parseFloat(y) || 0) + event.deltaRect.top;
+
+                    Object.assign(event.target.style, {
+                        width: `${event.rect.width}px`,
+                        height: `${event.rect.height}px`,
+                        // transform: `translate(${x}px, ${y}px)`,
+                    });
+
+                    // Resize consequently the editorElement
+                    if (type == "normal") {
+                        editorElement.style.height = `${
+                            rootElement.clientHeight - event.rect.height
+                        }px`;
+                    } else {
+                        editorElement.style.width = `${
+                            rootElement.clientWidth - event.rect.width
+                        }px`;
+                    }
+
+                    Object.assign(event.target.dataset, { x, y });
+                },
+            },
+        });
+
         // Set theme CSS properties
         rootElement.style.setProperty(
             "--main-output-bg-color",
@@ -275,7 +327,7 @@
         >
             <g
                 transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
-                fill={theme == "dark" ? "#ffffff" : "#000000"}
+                fill="#00cc3d"
                 stroke="none"
             >
                 <path
@@ -309,12 +361,14 @@
         />
         <!-- Output -->
         <div
+            bind:this={outputContainer}
             id="editor-output"
             style={type == "vertical"
                 ? "height: 100%; width: var(--output-height); min-height: 0; min-width: 100px;"
                 : ""}
         >
             <div
+                bind:this={outputTitleContainer}
                 id="output-title-container"
                 style={type == "vertical"
                     ? "height: 3vmin; margin-top: 1vh;"
@@ -437,6 +491,7 @@
     }
 
     #editor-output {
+        box-sizing: border-box;
         background-color: var(--main-output-bg-color);
         color: var(--main-output-text-color);
         height: var(--output-height);

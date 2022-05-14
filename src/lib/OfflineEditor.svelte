@@ -107,6 +107,8 @@
     onMount(() => {
         // Make editor and output splitted and resizable using split.js
         Split([editorElement, outputContainer], {
+            minSize: 40,
+            gutterSize: 5,
             sizes: [70, 30],
             direction: type == "normal" ? "vertical" : "horizontal"
         });
@@ -395,6 +397,7 @@
     }
 
     .gutter {
+        z-index: 99;
         background-color: rgb(150, 150, 150);
         background-repeat: no-repeat;
         background-position: 50%;
@@ -462,6 +465,7 @@
     }
 
     #editor-output {
+        z-index: 99;
         box-sizing: border-box;
         background-color: var(--main-output-bg-color);
         color: var(--main-output-text-color);

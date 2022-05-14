@@ -452,6 +452,10 @@
         background-color: rgb(150, 150, 150);
         background-repeat: no-repeat;
         background-position: 50%;
+        transition: background-color 1s;
+    }
+    .gutter:hover {
+        background-color: #466be5;
     }
 
     .gutter.gutter-vertical {

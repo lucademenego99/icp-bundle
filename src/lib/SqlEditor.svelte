@@ -18,7 +18,7 @@
     import { createEditor, setTabsHandling } from "../utils";
     import type { EditorView } from "@codemirror/view";
     import type { Compartment } from "@codemirror/state";
-    import interact from "interactjs";
+    import Split from 'split.js';
 
     type Table = {
         columns: string[];
@@ -34,8 +34,7 @@
         copyContainer: HTMLElement,
         tabsContainer: HTMLElement,
         outputElement: HTMLElement,
-        outputContainer: HTMLElement,
-        outputTitleContainer: HTMLElement;
+        outputContainer: HTMLElement;
 
     /**
      * GLOBAL VARIABLES
@@ -121,52 +120,10 @@
     }
 
     onMount(async () => {
-        // Make the outputcontainer resizable
-        interact(outputContainer).resizable({
-            modifiers: [
-                interact.modifiers.restrictSize({
-                    min: {
-                        width: 0,
-                        height: outputTitleContainer.clientHeight,
-                    },
-                    max: {
-                        width: rootElement.clientWidth,
-                        height: rootElement.clientHeight,
-                    },
-                }),
-            ],
-            edges: {
-                left: type == "vertical" ? true : false,
-                right: false,
-                bottom: false,
-                top: type == "vertical" ? false : true,
-            },
-            listeners: {
-                move: function (event) {
-                    let { x, y } = event.target.dataset;
-
-                    x = (parseFloat(x) || 0) + event.deltaRect.left;
-                    y = (parseFloat(y) || 0) + event.deltaRect.top;
-
-                    Object.assign(event.target.style, {
-                        width: `${event.rect.width}px`,
-                        height: `${event.rect.height}px`,
-                    });
-
-                    // Resize consequently the editorElement
-                    if (type == "normal") {
-                        editorElement.style.height = `${
-                            rootElement.clientHeight - event.rect.height
-                        }px`;
-                    } else {
-                        editorElement.style.width = `${
-                            rootElement.clientWidth - event.rect.width
-                        }px`;
-                    }
-
-                    Object.assign(event.target.dataset, { x, y });
-                },
-            },
+        // Make editor and output splitted and resizable using split.js
+        Split([editorElement, outputContainer], {
+            sizes: [70, 30],
+            direction: type == "normal" ? "vertical" : "horizontal"
         });
 
         // Set theme CSS properties
@@ -260,8 +217,8 @@
     });
 </script>
 
-<!-- Workaround to make vite load cm-editor and cm-scroller custom styles -->
-<div style="display: none;" class="cm-editor cm-scroller" />
+<!-- Workaround to make vite load custom styles -->
+<div style="display: none;" class="gutter gutter-vertical gutter-horizontal cm-editor cm-scroller" />
 <div style="display: none"><table><tr><th /><td /></tr></table></div>
 
 <!-- Editor's HTML -->
@@ -373,8 +330,8 @@
     <div
         id="editor-container"
         style={type == "vertical"
-            ? "display: flex; justify-content: space-between;"
-            : ""}
+            ? "display: flex; flex-direction: row; justify-content: space-between;"
+            : "display: flex; flex-direction: column;"}
     >
         <!-- CodeMirror Editor -->
         <div
@@ -393,7 +350,6 @@
                 : ""}
         >
             <div
-                bind:this={outputTitleContainer}
                 id="output-title-container"
                 style={type == "vertical"
                     ? "height: 3vmin; margin-top: 1vh;"
@@ -487,6 +443,22 @@
         height: 100%;
         width: 100%;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+    .gutter {
+        background-color: rgb(150, 150, 150);
+        background-repeat: no-repeat;
+        background-position: 50%;
+    }
+
+    .gutter.gutter-vertical {
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+        cursor: row-resize;
+    }
+
+    .gutter.gutter-horizontal {
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+        cursor: col-resize;
     }
 
     #editor {

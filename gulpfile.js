@@ -9,14 +9,16 @@ export default (cb) => {
             cb(err);
         }
 
-        child_process.exec("cd dist/offline/ && chmod +x ../../zip.com && ../../zip.com -r redbean.com utils icp-bundle.umd.js && ../../zip.com -0 redbean.com index.html && chmod +x redbean.com", (err, stdout, stderr) => {
+        console.log("Build completed! Setting up offline mode");
+
+        child_process.exec("cd dist/offline/ && chmod +x ../../zip.com && ../../zip.com -r redbean.com utils icp-bundle.umd.js reveal.js reveal.css blood.css custom-style.css && ../../zip.com -0 redbean.com index.html && chmod +x redbean.com", (err, stdout, stderr) => {
             if (err) {
                 console.log("[ERROR] zipping dist into redbean.com");
                 cb(err);
             }
 
             console.log("Deleting some files...");
-            del(['dist/base/redbean.com', 'dist/offline/icp-bundle.es.js', 'dist/offline/utils', 'dist/offline/icp-bundle.umd.js', 'dist/offline/index.html']);
+            del(['dist/base/redbean.com', 'dist/base/blood.css', 'dist/base/custom-style.css', 'dist/base/reveal.css', 'dist/base/reveal.js', 'dist/offline/icp-bundle.es.js', 'dist/offline/utils', 'dist/offline/icp-bundle.umd.js', 'dist/offline/index.html', 'dist/offline/blood.css', 'dist/offline/custom-style.css', 'dist/offline/reveal.css', 'dist/offline/reveal.js']);
 
             console.log("Finished!");
             console.log("To run locally without needing an internet connection, run dist/offline/redbean.com and go to http://localhost:8080/");

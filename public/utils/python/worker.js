@@ -44,7 +44,7 @@ onmessage = async (message) => {
             });
         }
         await pyodide.loadPackagesFromImports(message.data.script);
-        let output = pyodide.runPython(message.data.script);
+        let output = await pyodide.runPythonAsync(message.data.script);
 
         const debug = messages.join("\n");
         postMessage({

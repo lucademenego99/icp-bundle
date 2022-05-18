@@ -50,7 +50,7 @@ export function pythonWorkerFunction() {
                 });
             }
             await pyodide.loadPackagesFromImports(message.data.script);
-            let output: string = pyodide.runPython(message.data.script);
+            let output: string = await pyodide.runPythonAsync(message.data.script);
 
             const debug = messages.join("\n");
             postMessage({

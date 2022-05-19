@@ -1,1 +1,68 @@
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Code Playgrounds</title>
+
+    <!-- Main Reveal Stylesheet -->
+    <link rel="stylesheet" href="reveal.css">
+
+    <!-- Blood Reveal Theme Stylesheet -->
+    <link rel="stylesheet" href="blood.css" id="theme">
+
+    <!-- Custom stylesheet to make reveal work with our playgrounds -->
+    <link rel="stylesheet" href="custom-style.css">
+
+    <!-- Bundle containing the code playground web components -->
+    <script src="icp-bundle.umd.js"></script>
+</head>
+
+<body class="h-screen full-page-demo reveal-viewport" data-page="icp" style="transition: transform 0.8s ease 0s;">
+
+    <div class="reveal slide focused has-horizontal-slides ready" role="application" data-transition-speed="default"
+        data-background-transition="fade">
+        <div class="slides">
+            <!-- Content -->
+        </div>
+    </div>
+
+    <!-- Import the main reveal script -->
+    <script src="reveal.js"></script>
+
+    <!-- Initialize reveal -->
+    <script>
+        Reveal.initialize({
+            // Display controls in the bottom right corner
+            controls: true,
+            // Display a presentation progress bar
+            progress: true,
+            // Push each slide change to the browser history
+            history: true,
+            // Enable keyboard shortcuts for navigation
+            keyboard: true,
+            // Enable the slide overview mode
+            overview: false,
+            // Vertical centering of slides
+            center: true,
+            // Loop the presentation
+            loop: false,
+            // Enables touch navigation on devices with touch input
+            touch: true,
+            // Apply a 3D roll to links on hover
+            rollingLinks: true,
+            // Transition style for full page slide backgrounds
+            backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+            // Select a theme
+            theme: 'blood',
+            // Select the type of slides transition
+            transition: 'slide',
+            // IMPORTANT: disable the default layout (centering and scaling) to make the code editors work correctly
+            disableLayout: true
+        });
+    </script>
+</body>
+
+</html>

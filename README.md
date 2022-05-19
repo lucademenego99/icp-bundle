@@ -1,4 +1,4 @@
-# Interactive Code Playgrounds Bundle
+# Interactive Code Playgrounds - Bundle
 
 Interactive Code Playgrounds Bundle is a plugin for embedding interactive code playgrounds in HTML pages.
 

@@ -58,9 +58,10 @@ export function pythonWorkerFunction() {
                 "result": output
             });
         } catch (e) {
-            e = parsePythonError(e).message;
+            e = parsePythonError(e);
             postMessage({
-                "error": e
+                "error": e.message,
+                "line": e.deepest.line + 1,
             });
         }
     }

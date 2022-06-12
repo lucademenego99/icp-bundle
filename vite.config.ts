@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [svelte({
     compilerOptions: {
       customElement: true,
-    }
-  })]
+    },
+  })],
 })

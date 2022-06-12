@@ -36,7 +36,8 @@
         rootElement: HTMLElement,
         copyContainer: HTMLElement,
         tabsContainer: HTMLElement,
-        outputContainer: HTMLElement;
+        outputContainer: HTMLElement,
+        runButtonElement: HTMLElement;
 
     /**
      * GLOBAL VARIABLES
@@ -57,6 +58,7 @@
      * Disable the run Button
      */
     function disableRunButton() {
+        runButtonElement.innerText = "Cancel Run";
         runButtonDisabled = true;
         runButtonRunning = true;
     }
@@ -65,14 +67,22 @@
      * Enable the run Button
      */
     function enableRunButton() {
+        runButtonElement.innerText = "Run Code!";
         runButtonDisabled = false;
         runButtonRunning = false;
     }
-
+ 
     /**
      * Run provided code
      */
-    function runCode(_e: Event) {
+    function runCode(_event: Event) {
+
+        // If the code is already running, interrupt the execution instead
+        if (runButtonRunning) {
+            interruptExecution();   
+            return;
+        }
+
         runButtonAnimating = true;
         setTimeout(function () {
             runButtonAnimating = false;
@@ -95,6 +105,51 @@
         setTimeout(function () {
             messageShowing = false;
         }, 1000);
+    }
+
+    /**
+     * create the web worker that will compile and run the code
+     */
+    function setupWorker() {
+        if (language == "python") {
+            // Get the body of the webworker's function
+            var workerJob = pythonWorkerFunction
+                .toString()
+                .slice(
+                    pythonWorkerFunction.toString().indexOf("{") + 1,
+                    pythonWorkerFunction.toString().lastIndexOf("}")
+                );
+            // Generate a blob from it
+            var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+            // The webworker constructor needs an URL: create it from the blob
+            webworker = new Worker(window.URL.createObjectURL(workerBlob));
+        } else if (language == "javascript" || language == "typescript") {
+            webworker = new JSTSWorker();
+        } else if (language == "java") {
+            webworker = new JavaWorker();
+        }
+
+        // Handle the webworker's messages
+        webworker.onmessage = onWorkerMessage;
+    }
+
+    /**
+     * Handler of the webworker's message
+     * @param message message received from the webworker
+     */
+    function onWorkerMessage(message: any) {
+        enableRunButton();
+        if (message.data.error) {
+            outputError = true;
+            output = language == "python" ? "[line " + message.data.line + "] " + message.data.error : message.data.error;
+        } else {
+            outputError = false;
+            let text = "";
+            if (message.data.debug) text += message.data.debug + "\n\n";
+            if (message.data.result)
+                text += "Result: " + message.data.result;
+            output = text;
+        }
     }
 
     onMount(() => {
@@ -143,40 +198,18 @@
         codeMirrorEditor = res.editor;
         tabsConfiguration = res.tabsConfiguration;
 
-        if (language == "python") {
-            // Get the body of the webworker's function
-            var workerJob = pythonWorkerFunction
-                .toString()
-                .slice(
-                    pythonWorkerFunction.toString().indexOf("{") + 1,
-                    pythonWorkerFunction.toString().lastIndexOf("}")
-                );
-            // Generate a blob from it
-            var workerBlob = new Blob([workerJob], { type: "text/javascript" });
-            // The webworker constructor needs an URL: create it from the blob
-            webworker = new Worker(window.URL.createObjectURL(workerBlob));
-        } else if (language == "javascript" || language == "typescript") {
-            webworker = new JSTSWorker();
-        } else if (language == "java") {
-            webworker = new JavaWorker();
-        }
-
-        // Handle the webworker's messages
-        webworker.onmessage = (message) => {
-            enableRunButton();
-            if (message.data.error) {
-                outputError = true;
-                output = message.data.error;
-            } else {
-                outputError = false;
-                let text = "";
-                if (message.data.debug) text += message.data.debug + "\n\n";
-                if (message.data.result)
-                    text += "Result: " + message.data.result;
-                output = text;
-            }
-        };
+        setupWorker();
     });
+
+    // Allow to interrupt the code's execution
+    function interruptExecution() {
+        console.warn("Interrupting Code Execution");
+        // Terminate the worker without waiting for the end of the execution
+        webworker.terminate();
+        // Re-create the worker
+        setupWorker();
+        enableRunButton();
+    }
 </script>
 
 <!-- Workaround to make vite load custom styles -->
@@ -203,12 +236,12 @@
             : "right: 3%; top: 5%;"}
     >
         <button
+            bind:this="{runButtonElement}"
             id="run-button"
             on:click={runCode}
             class="{runButtonRunning ? 'running' : ''} {runButtonAnimating
                 ? 'animate'
                 : ''}"
-            disabled={runButtonDisabled}
             >{runButtonRunning ? "Running..." : "Run Code!"}</button
         >
     </div>

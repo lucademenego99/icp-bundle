@@ -16,6 +16,18 @@
   <!-- Custom stylesheet to make reveal work with our playgrounds -->
   <link rel="stylesheet" href="sample-style.css">
 
+  <!-- If the user asks for the pdf version, set section height to auto -->
+  <!-- Otherwise reveal.js breaks if the section height is set to 100% -->
+  <script>
+    if (window.location.href.indexOf('?print-pdf') > -1) {
+      // Create a new css element setting the height of .section to none
+      var css = document.createElement("style");
+      css.innerHTML = "section { height: auto; }";
+      // Append the css to the head
+      document.head.appendChild(css);
+    }
+  </script>
+
   <!-- Bundle containing the code playground web components -->
   <script type="module" src="/src/main.ts"></script>
 </head>
@@ -25,15 +37,15 @@
   <div class="reveal slide focused has-horizontal-slides ready" role="application" data-transition-speed="default"
     data-background-transition="fade">
     <div class="slides">
-      <section class="center-slide">
+      <section>
         <h3 class="title">Interactive Code Playgrounds</h3>
         <p class="subtitle">Developed Code Editors</p>
         <div>
-          <p class="bottom-text"><small>The code is available in <a href="https://github.com/lucademenego99/icp-bundle"
-                target="_blank">this github repository</a></small></p>
+          <p><small>The code is available in <a href="https://github.com/lucademenego99/icp-bundle" target="_blank">this
+                github repository</a></small></p>
         </div>
       </section>
-      <section class="center-slide">
+      <section>
         <h3 class="title">Introduction</h3>
         <p>The following <span class="emph">web components</span> are exposed by the library</p>
         <ul style="padding-bottom: 30px;">
@@ -43,16 +55,16 @@
         <p>The base editor can be initialized with the following <span class="emph">languages</span>: Javascript,
           Typescript, Java, Python</p>
       </section>
-      <section class="center-slide">
+      <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="javascript" /&gt;</p>
-        <div style="width: 60vw; height: 60vh">
+        <div class="big-code">
           <base-editor contenteditable="true" language="javascript" id='test' code="console.log('Hello World!')" />
         </div>
       </section>
-      <section class="center-slide">
+      <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="python" <span
             class="emph">theme</span>="dark" /&gt;</p>
-        <div style="width: 60vw; height: 60vh">
+        <div class="big-code">
           <base-editor contenteditable="true" language="python" theme="dark" id='test' code="# This program adds two numbers
 num1 = 1.5
 num2 = 6.3
@@ -62,10 +74,10 @@ sum = num1 + num2
 print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))" />
         </div>
       </section>
-      <section class="center-slide">
+      <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="typescript" <span
             class="emph">type</span>="vertical" /&gt;</p>
-        <div style="width: 60vw; height: 60vh">
+        <div class="big-code">
           <base-editor contenteditable="true" language="typescript" type="vertical" id='test' code="class Greeter {
   greeting: string;
     
@@ -82,10 +94,10 @@ let greeter = new Greeter('World!');
 greeter.greet();" />
         </div>
       </section>
-      <section class="center-slide">
+      <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="java" <span
             class="emph">type</span>="vertical" <span class="emph">theme</span>="dark" /&gt;</p>
-        <div style="width: 60vw; height: 60vh">
+        <div class="big-code">
           <base-editor contenteditable="true" language="java" type="vertical" theme="dark" id='test' code='public class HelloWorld {
   public static void main(String[] args) {
     System.out.println("<EDITABLE>Hello, World</EDITABLE>!"); 
@@ -93,9 +105,9 @@ greeter.greet();" />
 }' />
         </div>
       </section>
-      <section class="center-slide">
+      <section>
         <p class="subtitle">&lt;sql-editor <span class="emph">theme</span>="dark" /&gt;</p>
-        <div style="width: 60vw; height: 60vh">
+        <div class="big-code">
           <sql-editor contenteditable="true" theme="dark" id='test' code="DROP TABLE IF EXISTS employees;
 -- Create the table
 CREATE TABLE employees( id          integer,  name    text,
@@ -142,7 +154,11 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;" />
       // Enable keyboard shortcuts for navigation
       keyboard: true,
       // Enable the slide overview mode
-      overview: false,
+      overview: true,
+      // Set the width of the slides
+      width: "90%",
+      // Set the height of the slides
+      height: "90%",
       // Vertical centering of slides
       center: true,
       // Loop the presentation

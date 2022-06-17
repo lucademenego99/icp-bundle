@@ -16,6 +16,18 @@
     <!-- Custom stylesheet to make reveal work with our playgrounds -->
     <link rel="stylesheet" href="custom-style.css">
 
+    <!-- If the user asks for the pdf version, set section height to auto -->
+    <!-- Otherwise reveal.js breaks if the section height is set to 100% -->
+    <script>
+        if (window.location.href.indexOf('?print-pdf') > -1) {
+            // Create a new css element setting the height of .section to none
+            var css = document.createElement("style");
+            css.innerHTML = "section { height: auto; }";
+            // Append the css to the head
+            document.head.appendChild(css);
+        }
+    </script>
+
     <!-- Bundle containing the code playground web components -->
     <script src="icp-bundle.umd.js"></script>
 </head>
@@ -44,7 +56,11 @@
             // Enable keyboard shortcuts for navigation
             keyboard: true,
             // Enable the slide overview mode
-            overview: false,
+            overview: true,
+            // Set the width of the slides
+            width: "90%",
+            // Set the height of the slides
+            height: "90%",
             // Vertical centering of slides
             center: true,
             // Loop the presentation

@@ -25,7 +25,7 @@
     import { createEditor, setTabsHandling } from "../utils";
     import type { EditorView } from "@codemirror/view";
     import type { Compartment } from "@codemirror/state";
-    import Split from 'split.js';
+    import Split from "split.js";
 
     /**
      * ELEMENTS
@@ -75,10 +75,9 @@
      * Run provided code
      */
     function runCode(_event: Event) {
-
         // If the code is already running, interrupt the execution instead
         if (runButtonRunning) {
-            interruptExecution();   
+            interruptExecution();
             return;
         }
 
@@ -117,7 +116,7 @@
     /**
      * create the web worker that will compile and run the code
      */
-     function setupWorker() {
+    function setupWorker() {
         if (language == "python") {
             try {
                 // webworker = new Worker("./runtime/python/worker.js");
@@ -156,13 +155,15 @@
         enableRunButton();
         if (message.data.error) {
             outputError = true;
-            output = language == "python" ? "[line " + message.data.line + "] " + message.data.error : message.data.error;
+            output =
+                language == "python"
+                    ? "[line " + message.data.line + "] " + message.data.error
+                    : message.data.error;
         } else {
             outputError = false;
             let text = "";
             if (message.data.debug) text += message.data.debug + "\n\n";
-            if (message.data.result)
-                text += "Result: " + message.data.result;
+            if (message.data.result) text += "Result: " + message.data.result;
             output = text;
         }
     }
@@ -173,7 +174,7 @@
             minSize: 40,
             gutterSize: 5,
             sizes: [70, 30],
-            direction: type == "normal" ? "vertical" : "horizontal"
+            direction: type == "normal" ? "vertical" : "horizontal",
         });
 
         // Set theme CSS properties
@@ -207,7 +208,10 @@
         });
 
         // Create the CodeMirror editor
-        let res = createEditor(editorElement, language, theme == "dark", code);
+        let res;
+        if (!codeMirrorEditor) {
+            res = createEditor(editorElement, language, theme == "dark", code);
+        }
 
         // Get access to the editor instance
         codeMirrorEditor = res.editor;
@@ -228,7 +232,10 @@
 </script>
 
 <!-- Workaround to make vite load custom styles -->
-<div style="display: none;" class="gutter gutter-vertical gutter-horizontal cm-editor cm-scroller" />
+<div
+    style="display: none;"
+    class="gutter gutter-vertical gutter-horizontal cm-editor cm-scroller"
+/>
 
 <!-- Editor's HTML -->
 <div bind:this={rootElement} id="code-container">
@@ -251,13 +258,12 @@
             : "right: 3%; top: 5%;"}
     >
         <button
-            bind:this="{runButtonElement}"
+            bind:this={runButtonElement}
             id="run-button"
             on:click={runCode}
             class="{runButtonRunning ? 'running' : ''} {runButtonAnimating
                 ? 'animate'
-                : ''}"
-            >{runButtonRunning ? "Running..." : "Run Code!"}</button
+                : ''}">{runButtonRunning ? "Running..." : "Run Code!"}</button
         >
     </div>
 
@@ -441,12 +447,12 @@
     }
 
     .gutter.gutter-vertical {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
         cursor: row-resize;
     }
 
     .gutter.gutter-horizontal {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
         cursor: col-resize;
     }
 

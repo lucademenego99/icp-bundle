@@ -18,7 +18,7 @@
     import { createEditor, setTabsHandling } from "../utils";
     import type { EditorView } from "@codemirror/view";
     import type { Compartment } from "@codemirror/state";
-    import Split from 'split.js';
+    import Split from "split.js";
 
     type Table = {
         columns: string[];
@@ -125,7 +125,7 @@
             minSize: 40,
             gutterSize: 5,
             sizes: [70, 30],
-            direction: type == "normal" ? "vertical" : "horizontal"
+            direction: type == "normal" ? "vertical" : "horizontal",
         });
 
         // Set theme CSS properties
@@ -179,7 +179,10 @@
         });
 
         // Create the CodeMirror editor
-        let res = createEditor(editorElement, "sql", theme == "dark", code);
+        let res;
+        if (!codeMirrorEditor) {
+            res = createEditor(editorElement, "sql", theme == "dark", code);
+        }
 
         // Get access to the editor instance
         codeMirrorEditor = res.editor;
@@ -220,7 +223,10 @@
 </script>
 
 <!-- Workaround to make vite load custom styles -->
-<div style="display: none;" class="gutter gutter-vertical gutter-horizontal cm-editor cm-scroller" />
+<div
+    style="display: none;"
+    class="gutter gutter-vertical gutter-horizontal cm-editor cm-scroller"
+/>
 <div style="display: none"><table><tr><th /><td /></tr></table></div>
 
 <!-- Editor's HTML -->
@@ -459,12 +465,12 @@
     }
 
     .gutter.gutter-vertical {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
         cursor: row-resize;
     }
 
     .gutter.gutter-horizontal {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
         cursor: col-resize;
     }
 

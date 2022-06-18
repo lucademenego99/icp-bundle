@@ -36,6 +36,7 @@
         rootElement: HTMLElement,
         copyContainer: HTMLElement,
         tabsContainer: HTMLElement,
+        resetContainer: HTMLElement,
         outputContainer: HTMLElement,
         runButtonElement: HTMLElement;
 
@@ -192,6 +193,20 @@
             );
         });
 
+        // Define the behavior of the reset button when clicked
+        resetContainer.addEventListener("click", (e) => {
+            codeMirrorEditor.dispatch({
+                changes: [
+                    {
+                        from: 0,
+                        to: codeMirrorEditor.state.doc.length,
+                        insert: code,
+                    },
+                ],
+            });
+            showMessage("Code resetted!");
+        });
+
         // Create the CodeMirror editor
         let res;
         if (!codeMirrorEditor) {
@@ -228,7 +243,7 @@
     <div
         style="{messageShowing ? 'opacity: 1;' : 'opacity: 0;'} {type ==
         'vertical'
-            ? 'top: 50%'
+            ? 'width: 50%; left: 35%; top: 50%;'
             : ''}"
         id="message"
     >
@@ -256,7 +271,7 @@
     <div
         bind:this={tabsContainer}
         style={type == "vertical"
-            ? "right: calc(var(--output-height) + 1vw); top: calc(8% + 4.5vmin);"
+            ? "right: calc(var(--output-height) + 1vw); top: 8vmin;"
             : ""}
         id="tabs-container"
     >
@@ -270,7 +285,7 @@
             <g
                 id="tabs-svg"
                 transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)"
-                fill={tabsEnabled ? "#33ff3a" : "#ff4133"}
+                fill={tabsEnabled ? "#00cc3d" : "#ff4133"}
                 stroke="none"
             >
                 <path
@@ -296,7 +311,7 @@
     <div
         bind:this={copyContainer}
         style={type == "vertical"
-            ? "right: calc(var(--output-height) + 1vw); top: 5%;"
+            ? "right: calc(var(--output-height) + 1vw); top: 4.5vmin;"
             : ""}
         id="copy-container"
     >
@@ -323,6 +338,26 @@
 -440 0 -440 0 0 440 0 440 440 0 440 0 0 -440z"
                 />
             </g>
+        </svg>
+    </div>
+
+    <!-- Reset Button -->
+    <div
+        bind:this={resetContainer}
+        style={type == "vertical"
+            ? "right: calc(var(--output-height) + 1vw); top: 1vmin;"
+            : ""}
+        id="reset-container"
+    >
+        <svg
+            height="100%"
+            viewBox="0 0 44 42"
+            fill="#ff4133"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M39.875 9H7.09875L12.9162 3.16625L10.625 0.875L0.875 10.625L10.625 20.375L12.9162 18.0838L7.09875 12.25H39.875V38.25H7.375V26.875H4.125V38.25C4.125 39.112 4.46741 39.9386 5.0769 40.5481C5.6864 41.1576 6.51305 41.5 7.375 41.5H39.875C40.737 41.5 41.5636 41.1576 42.1731 40.5481C42.7826 39.9386 43.125 39.112 43.125 38.25V12.25C43.125 11.388 42.7826 10.5614 42.1731 9.9519C41.5636 9.34241 40.737 9 39.875 9V9Z"
+            />
         </svg>
     </div>
 
@@ -463,23 +498,34 @@
 
     #tabs-container {
         box-sizing: border-box;
-        padding: 0.3vmin;
+        padding: 0.5vmin;
         position: absolute;
-        width: 4.5vmin;
-        height: 4.5vmin;
-        right: 3%;
-        bottom: calc(3% + var(--output-height));
+        width: 3.5vmin;
+        height: 3.5vmin;
+        right: 2%;
+        bottom: calc(1vmin + var(--output-height));
         z-index: 10;
     }
 
     #copy-container {
         box-sizing: border-box;
-        padding: 0.3vmin;
+        padding: 0.5vmin;
         position: absolute;
-        width: 4.5vmin;
-        height: 4.5vmin;
-        right: 3%;
-        bottom: calc(6% + 4.5vmin + var(--output-height));
+        width: 3.5vmin;
+        height: 3.5vmin;
+        right: 2%;
+        bottom: calc(4.5vmin + var(--output-height));
+        z-index: 10;
+    }
+
+    #reset-container {
+        box-sizing: border-box;
+        padding: 0.5vmin;
+        position: absolute;
+        width: 3.5vmin;
+        height: 3.5vmin;
+        right: 2%;
+        bottom: calc(8vmin + var(--output-height));
         z-index: 10;
     }
 

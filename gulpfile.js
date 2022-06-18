@@ -24,7 +24,6 @@ export default (cb) => {
 
                     console.log("Finished!");
                     console.log("If you want to set up a single-file distributable web server, use dist/offline/redbean.com and check the icp-create-server repository");
-                    console.log("If you want to run it locally but you have an internet connection, you can just edit dist/base/index.html");
                     console.log("If you want to use the library and deploy to a server, all you need is dist/base/icp-bundle.umd.js");
                     cb();
                 });
@@ -34,7 +33,6 @@ export default (cb) => {
 
                 console.log("Finished!");
                 console.log("If you want to set up a single-file distributable web server, use dist/offline/redbean.com and check the icp-create-server repository");
-                console.log("If you want to run it locally but you have an internet connection, you can just edit dist/base/index.html");
                 console.log("If you want to use the library and deploy to a server, all you need is dist/base/icp-bundle.umd.js");
                 cb();
             }

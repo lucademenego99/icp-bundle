@@ -52,7 +52,13 @@ export function pythonWorkerFunction() {
             await pyodide.loadPackagesFromImports(message.data.script);
             let output: string = await pyodide.runPythonAsync(message.data.script);
 
-            const debug = messages.join("\n");
+            let debug = messages.join("\n");
+            // Limit debug to 100000 characters
+            if (debug.length > 100000) {
+                debug = debug.substring(0, 100000) + "...";
+            }
+            messages = [];
+
             postMessage({
                 "debug": debug,
                 "result": output

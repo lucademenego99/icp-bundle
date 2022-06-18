@@ -37,7 +37,11 @@ onmessage = async (message) => {
                 console.warn("LANGUAGE NOT AVAILABLE");
                 break;
         }
-        const debug = javaMessages.join("\n");
+        let debug = javaMessages.join("\n");
+        // Limit debug to 100000 characters
+        if (debug.length > 100000) {
+            debug = debug.substring(0, 100000) + "...";
+        }
         javaMessages = [];
         postMessage({
             "debug": debug,

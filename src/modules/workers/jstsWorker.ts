@@ -48,6 +48,11 @@ onmessage = async (e) => {
                 console.warn("LANGUAGE NOT AVAILABLE");
                 break;
         }
+
+        // Limit the output to 100000 characters
+        if (output.length > 100000) {
+            output = output.substring(0, 100000) + "...";
+        }
         postMessage({
             "debug": messages.join("\n"),
             "result": output

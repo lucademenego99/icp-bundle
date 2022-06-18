@@ -49,6 +49,7 @@ export function pythonWorkerFunction() {
                     },
                 });
             }
+            pyodide.globals.clear();
             await pyodide.loadPackagesFromImports(message.data.script);
             let output: string = await pyodide.runPythonAsync(message.data.script);
 

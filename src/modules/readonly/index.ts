@@ -13,19 +13,22 @@ import { EditorState, StateField, StateEffect, Transaction, Extension } from "@c
 const editableMark = Decoration.mark({ class: "cm-editable" });
 
 /**
- * CSS class to mark the part before and after editable fields
+ * CSS classes to mark the part before and after editable fields
  */
-const editableLimitsMark = Decoration.mark({ class: "cm-editable-beforeafter" });
+const editableLimitsMarkBefore = Decoration.mark({ class: "cm-editable-before" });
+const editableLimitsMarkAfter = Decoration.mark({ class: "cm-editable-after" });
 
 /**
  * Theme for the editable custom classes, used to mark editable fields
  * The colors automatically switch based on the current type of theme (light/dark)
  */
 const editableTheme = EditorView.baseTheme({
-    "&light .cm-editable": { backgroundColor: '#cacaca' },
-    "&dark .cm-editable": { backgroundColor: '#151a24' },
-    "&light .cm-editable-beforeafter": { backgroundColor: 'rgb(243, 249, 255) !important' },
-    "&dark .cm-editable-beforeafter": { backgroundColor: 'rgb(44, 49, 58) !important' },
+    "&light .cm-editable": { borderTop: '1px solid black', borderBottom: '1px solid black' },
+    "&dark .cm-editable": { borderTop: '1px solid white', borderBottom: '1px solid white' },
+    "&light .cm-editable-before": { backgroundColor: 'rgb(243, 249, 255) !important', borderRight: '2px solid black' },
+    "&light .cm-editable-after": { backgroundColor: 'rgb(243, 249, 255) !important', borderLeft: '2px solid black' },
+    "&dark .cm-editable-before": { backgroundColor: 'rgb(44, 49, 58) !important', borderRight: '2px solid white' },
+    "&dark .cm-editable-after": { backgroundColor: 'rgb(44, 49, 58) !important', borderLeft: '2px solid white' },
 });
 
 /**
@@ -34,9 +37,10 @@ const editableTheme = EditorView.baseTheme({
 const setEditable = StateEffect.define<{ from: number, to: number }>();
 
 /**
- * Custom effect associated to a transaction, that puts a limit to the editable part of the text
+ * Custom effects associated to a transaction, that put a limit to the editable part of the text
  */
-const setEditableBeforeAfter = StateEffect.define<{ from: number, to: number }>();
+const setEditableBefore = StateEffect.define<{ from: number, to: number }>();
+const setEditableAfter = StateEffect.define<{ from: number, to: number }>();
 
 /**
  * Set up a custom set of decorations for editable texts
@@ -69,10 +73,14 @@ const editableFieldBeforeAfter = StateField.define<DecorationSet>({
     update(editableDecorations, transaction) {
         editableDecorations = editableDecorations.map(transaction.changes);
         for (let e of transaction.effects) {
-            if (e.is(setEditableBeforeAfter)) {
+            if (e.is(setEditableBefore)) {
                 editableDecorations = editableDecorations.update({
-                    add: [editableLimitsMark.range(e.value.from, e.value.to)]
-                });
+                    add: [editableLimitsMarkBefore.range(e.value.from, e.value.to)]
+                })
+            } else if (e.is(setEditableAfter)) {
+                editableDecorations = editableDecorations.update({
+                    add: [editableLimitsMarkAfter.range(e.value.from, e.value.to)]
+                })
             }
         }
         return editableDecorations;
@@ -117,7 +125,7 @@ export function editableSelection(view: EditorView, from: number, to: number): b
         effectsEditable.push(StateEffect.appendConfig.of([editableField, editableTheme]));
 
     // Set the decoration for the part before and after the editable text
-    let effectsBeforeAfter: StateEffect<unknown>[] = [setEditableBeforeAfter.of({ from: from - 1, to: from }), setEditableBeforeAfter.of({ from: to, to: to + 1 })];
+    let effectsBeforeAfter: StateEffect<unknown>[] = [setEditableBefore.of({ from: from - 1, to: from }), setEditableAfter.of({ from: to, to: to + 1 })];
     if (!view.state.field(editableFieldBeforeAfter, false))
         effectsBeforeAfter.push(StateEffect.appendConfig.of([editableFieldBeforeAfter, editableTheme]));
 

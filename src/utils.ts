@@ -10,7 +10,7 @@ import { indentWithTab } from "@codemirror/commands";
 import { Compartment, EditorState } from "@codemirror/state";
 import { basicSetup } from "@codemirror/basic-setup";
 import { oneDark } from "@codemirror/theme-one-dark";
-import { editableSelection, readOnlyTransactionFilter } from "./modules/readonly";
+import { editableSelection, notEditableSelection, readOnlyTransactionFilter } from "./modules/readonly";
 
 /**
  * Create a CodeMirror editor
@@ -39,14 +39,16 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
     if (enableDarkMode)
         extensions.push(oneDark);
 
+        let editableParts = [];
+        let notEditableParts = [];
     // Check if we should enable the mode in which we only allow to edit specific parts of the text
-    let editableParts = [];
     if (initialText.includes('<EDITABLE>')) {
         extensions.push(readOnlyTransactionFilter());
 
         // Save all the editable parts of the text inside initialText in an array, where their start is marked with <EDITABLE> and their end is marked with </EDITABLE>
         let count = 0;  // Count how many times we got a correspondence, to calculate the correct indices of the editable parts
         let regex = /(?<=<EDITABLE>)(.|\n)*?(?=<\/EDITABLE>)/gm, result;
+        let notEditableFrom = 0;    // Variable to keep track of the start of the not editable part
         while ((result = regex.exec(initialText)) !== null) {
             count++;
             // 10: length of <EDITABLE>
@@ -55,6 +57,16 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
                 from: result.index - (10 * count) - (11 * (count - 1)),
                 to: result.index + result[0].length - (10 * count) - (11 * (count - 1))
             });
+
+            // Get the ending part of the not editable part using the same calculations used before
+            const notEditableTo = result.index - (10 * count) - (11 * (count - 1));
+            // Keep track of the not editable part
+            notEditableParts.push({
+                from: notEditableFrom,
+                to: notEditableTo
+            });
+            // Update the from variable to keep track of the start of the not editable part
+            notEditableFrom = result.index + result[0].length - (10 * count) - (11 * (count - 1));
         }
         // Remove the tokens <EDITABLE> and </EDITABLE> from the initialText
         initialText = initialText.replace(/<EDITABLE>/gm, '').replace(/<\/EDITABLE>/gm, '');
@@ -69,11 +81,20 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
         parent: element
     });
 
+    // If the editable mode is enabled, we need to set the not editable text's style
+    if (notEditableParts.length > 0) {
+        notEditableParts.forEach(part => {
+            notEditableSelection(editor, part.from, part.to);
+        });
+    }
     // If the editable mode is enabled, we need to set the editable text selected by the user
     if (editableParts.length > 0) {
         editableParts.forEach(part => {
             editableSelection(editor, part.from, part.to);
         });
+
+        // Add the final not editable part of the text: from the last editable part to the end of the text
+        notEditableSelection(editor, editableParts[editableParts.length-1].to, initialText.length);
     }
 
     // Return the editor and the languages handler

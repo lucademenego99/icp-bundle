@@ -164,7 +164,7 @@
             outputError = false;
             let text = "";
             if (message.data.debug) text += message.data.debug + "\n\n";
-            if (message.data.result) text += "Result: " + message.data.result;
+            if (message.data.result) text += "'" + message.data.result + "'";
             output = text;
         }
     }

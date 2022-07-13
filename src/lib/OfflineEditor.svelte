@@ -58,7 +58,6 @@
      * Disable the run Button
      */
     function disableRunButton() {
-        runButtonElement.innerText = "Cancel Run";
         runButtonDisabled = true;
         runButtonRunning = true;
     }
@@ -67,7 +66,6 @@
      * Enable the run Button
      */
     function enableRunButton() {
-        runButtonElement.innerText = "Run Code!";
         runButtonDisabled = false;
         runButtonRunning = false;
     }
@@ -191,6 +189,18 @@
             "--output-text-color",
             theme == "dark" ? "#000000" : "#fffeff"
         );
+        rootElement.style.setProperty(
+            "--run-button-bg-color",
+            theme == "dark" ? "#282C34" : "white"
+        );
+        rootElement.style.setProperty(
+            "--run-button-bg-color-hover",
+            theme == "dark" ? "#2C313A" : "#eeeeee"
+        );
+        rootElement.style.setProperty(
+            "--run-button-text-color",
+            theme == "dark" ? "white" : "black"
+        );
 
         // Define the behavior of the copy button when clicked
         copyContainer.addEventListener("click", (e) => {
@@ -270,16 +280,38 @@
         id="play-container"
         style={type == "vertical"
             ? "right: calc(var(--output-height) + 2.2vw); bottom: 5%;"
-            : "right: 3%; top: 5%;"}
+            : "right: 0; top: -38px;"}
     >
-        <button
-            bind:this={runButtonElement}
-            id="run-button"
-            on:click={runCode}
-            class="{runButtonRunning ? 'running' : ''} {runButtonAnimating
-                ? 'animate'
-                : ''}">{runButtonRunning ? "Running..." : "Run Code!"}</button
-        >
+        <button bind:this={runButtonElement} id="run-button" on:click={runCode}>
+            <p>{runButtonRunning ? "Cancel" : "Run"}</p>
+            {#if runButtonRunning}
+                <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M10 0C4.47 0 0 4.47 0 10C0 15.53 4.47 20 10 20C15.53 20 20 15.53 20 10C20 4.47 15.53 0 10 0ZM15 13.59L13.59 15L10 11.41L6.41 15L5 13.59L8.59 10L5 6.41L6.41 5L10 8.59L13.59 5L15 6.41L11.41 10L15 13.59Z"
+                        fill="#FF4133"
+                    />
+                </svg>
+            {:else}
+                <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M16 8C16 10.1217 15.1571 12.1566 13.6569 13.6569C12.1566 15.1571 10.1217 16 8 16C5.87827 16 3.84344 15.1571 2.34315 13.6569C0.842855 12.1566 0 10.1217 0 8C0 5.87827 0.842855 3.84344 2.34315 2.34315C3.84344 0.842855 5.87827 0 8 0C10.1217 0 12.1566 0.842855 13.6569 2.34315C15.1571 3.84344 16 5.87827 16 8V8ZM6.79 5.093C6.71524 5.03977 6.62726 5.00814 6.53572 5.00159C6.44418 4.99503 6.35259 5.01379 6.27101 5.05583C6.18942 5.09786 6.12098 5.16154 6.07317 5.23988C6.02537 5.31823 6.00006 5.40822 6 5.5V10.5C6.00006 10.5918 6.02537 10.6818 6.07317 10.7601C6.12098 10.8385 6.18942 10.9021 6.27101 10.9442C6.35259 10.9862 6.44418 11.005 6.53572 10.9984C6.62726 10.9919 6.71524 10.9602 6.79 10.907L10.29 8.407C10.3548 8.36075 10.4076 8.29968 10.4441 8.22889C10.4806 8.1581 10.4996 8.07963 10.4996 8C10.4996 7.92037 10.4806 7.8419 10.4441 7.77111C10.4076 7.70031 10.3548 7.63925 10.29 7.593L6.79 5.093V5.093Z"
+                        fill="#00CC3D"
+                    />
+                </svg>
+            {/if}
+        </button>
     </div>
 
     <!-- Tabs Handling Button -->
@@ -607,156 +639,42 @@
     /* Run Button Customization */
     /* ------------------------------------------------ */
     #run-button {
-        display: inline-block;
-        font-size: 2.2vmin;
-        font-weight: 400;
-        padding: 2vmin 2.5vmin;
-        margin-top: 0;
+        display: flex;
+        gap: 0.4rem;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 8px 12px;
         -webkit-appearance: none;
         appearance: none;
-        background-color: var(--run-btn-main-color);
-        color: #fff;
-        border-radius: 4px;
+        background-color: var(--run-button-bg-color);
+        color: var(--run-button-text-color);
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
         border: none;
         cursor: pointer;
         position: relative;
-        transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
-        box-shadow: 0 2px 25px var(--run-btn-shadow-color);
+        transition: background-color 0.2s linear;
+        box-shadow: 2px -7px 17px -5px rgba(0,0,0,0.35);
+        /* transition: transform ease-in 0.1s, box-shadow ease-in 0.25s; */
+        /* box-shadow: 0 2px 25px var(--run-btn-shadow-color); */
+    }
+
+    #run-button p {
+        margin: 0;
+        padding: 0;
+    }
+
+    #run-button:hover {
+        background-color: var(--run-button-bg-color-hover);
+    }
+
+    #run-button svg:hover {
+        transform: none;
     }
 
     #run-button:focus {
         outline: 0;
-    }
-
-    #run-button:before,
-    #run-button:after {
-        position: absolute;
-        content: "";
-        display: block;
-        width: 140%;
-        height: 100%;
-        left: -20%;
-        z-index: -1000;
-        transition: all ease-in-out 0.5s;
-        background-repeat: no-repeat;
-    }
-
-    #run-button:before {
-        display: none;
-        top: -75%;
-        background-image: radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                transparent 20%,
-                var(--run-btn-main-color) 20%,
-                transparent 30%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                transparent 10%,
-                var(--run-btn-main-color) 15%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            );
-        background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%,
-            15% 15%, 10% 10%, 18% 18%;
-    }
-
-    #run-button:after {
-        display: none;
-        bottom: -75%;
-        background-image: radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                transparent 10%,
-                var(--run-btn-main-color) 15%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            ),
-            radial-gradient(
-                circle,
-                var(--run-btn-main-color) 20%,
-                transparent 20%
-            );
-        background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%,
-            20% 20%;
-    }
-
-    #run-button:active {
-        transform: scale(0.9);
-        background-color: var(--run-btn-active-color);
-        box-shadow: 0 2px 25px var(--run-btn-active-shadow-color);
-    }
-
-    #run-button.animate:before {
-        display: block;
-        animation: topBubbles ease-in-out 0.75s forwards;
-    }
-
-    #run-button.animate:after {
-        display: block;
-        animation: bottomBubbles ease-in-out 0.75s forwards;
-    }
-
-    #run-button.running {
-        background-color: #474747;
-        box-shadow: 0 2px 25px #3a3a3a;
     }
 
     /* Custom Scrollbar Design */

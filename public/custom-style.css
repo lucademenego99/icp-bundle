@@ -99,6 +99,15 @@ li:not(:last-child) {
     bottom: 30px;
 }
 
+.slide-context {
+    position: absolute;
+    top: 0;
+    right: 3vw;
+    font-size: 3vmin;
+    font-weight: 100;
+    letter-spacing: .3vmin;
+}
+
 #code-container {
     overflow: hidden !important;
 }

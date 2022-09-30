@@ -25,7 +25,6 @@
   ],
   "scripts": {
     "dev": "vite",
-    "gulp": "gulp",
     "build": "gulp",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"

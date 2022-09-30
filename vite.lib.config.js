@@ -11,7 +11,9 @@ export default defineConfig({
             name: 'InteractiveCodePlaygrounds',
         },
         rollupOptions: {
+            input: ["./src/exports/python.ts", "./src/exports/javascript.ts", "./src/exports/typescript.ts"],
             output: {
+                format: 'iife',
                 inlineDynamicImports: true,
             }
         }

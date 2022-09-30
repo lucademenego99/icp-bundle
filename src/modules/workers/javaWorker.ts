@@ -1,3 +1,5 @@
+import TeaWorkerClasses from './javaClasses.js?worker&inline';
+
 let isReady;
 let javaMessages = [];
 let javaErrorMessages = [];
@@ -18,6 +20,7 @@ onmessage = async (message) => {
              */
             case 'java':
                 codeFinished = false;
+                console.log("JAVA IS READY:", isReady);
                 compileAndRun(message.data.script, 1, !isReady, ({ message, start, end, severity }) => {
                     console.log("COMPILE FAILED CALLBACK IMPLEMENTATION! ", message);
                     javaErrorMessages.push(message);
@@ -59,11 +62,10 @@ function delay(time) {
 }
 
 function createTeaWorker(whenReady) {
+    console.log("Create tea worker");
     if (teaworker === undefined) {
         try {
-            var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classes.js');main();";
-            var workerBlob = new Blob([workerJob], { type: "text/javascript" });
-            teaworker = new Worker(URL.createObjectURL(workerBlob));
+            teaworker = new TeaWorkerClasses();
         } catch (e) {
             console.log("TEAWORKER CATCH", e);
         }
@@ -81,7 +83,7 @@ function createTeaWorker(whenReady) {
         teaworker.postMessage({
             command: 'load-classlib',
             id: 'didload-classlib',
-            url: 'https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classlib.txt',
+            url: new URL('../java/classlib.txt', import.meta.url).href,
         })
 
         return true

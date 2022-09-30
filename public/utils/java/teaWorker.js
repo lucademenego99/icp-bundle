@@ -1,2 +1,0 @@
-importScripts('classes.js');
-main();

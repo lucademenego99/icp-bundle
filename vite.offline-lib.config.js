@@ -11,14 +11,18 @@ export default defineConfig({
             name: 'InteractiveCodePlaygrounds',
         },
         rollupOptions: {
+            input: ["./src/exports/pythonOffline.ts", "./src/exports/javascript.ts", "./src/exports/typescript.ts"],
             output: {
+                format: 'iife',
                 inlineDynamicImports: true,
             }
         }
     },
-    plugins: [svelte({
-        compilerOptions: {
-            customElement: true
-        }
-    })]
+    plugins: [
+        svelte({
+            compilerOptions: {
+                customElement: true
+            }
+        }),
+    ]
 })

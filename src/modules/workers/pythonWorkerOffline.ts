@@ -1,19 +1,21 @@
-/**
- * Main Worker Function to run Python Code
- */
+// @ts-nocheck
 
-export function pythonWorkerFunction() {
-    // Global worker variables
-    let messages = [];
-    let input = '';
+// Global worker variables
+let messages = [];
+let input = '';
 
-    // Python useful variables
-    let pythonDownloaded = false;       // Check if the python module has already been downloaded
-    let pythonInitCompleted = false;    // Check if python has been initialized
-    let pyodide;                        // Pyodide object used to run python scripts
+// Python useful variables
+let pythonDownloaded = false;       // Check if the python module has already been downloaded
+let pythonInitCompleted = false;    // Check if python has been initialized
+let pyodideObj;                     // Pyodide object used to run python scripts
+
+onconnect = async (e) => {
+    const port = e.ports[0];
+
+    port.addEventListener('message', onmessage);
 
     // Customize the onmessage event
-    onmessage = async (message) => {
+    async function onmessage(message) {
         // Array with all console.log results
         messages = [];
 
@@ -26,21 +28,20 @@ export function pythonWorkerFunction() {
         // - result: final result of the script
         try {
             if (!pythonDownloaded) {
-                // @ts-ignore
                 importScripts(message.data.baseUrl + "pyodide.js");
                 pythonDownloaded = true;
                 // @ts-ignore - loadPyodide is imported by the previous importScript
                 pyodide = await loadPyodide({
                     // indexURL: message.data.baseUrl,
                     stdin: () => input,
-                    stdout: (text: string): void => {
+                    stdout: (text) => {
                         if (pythonInitCompleted) {
                             messages.push(text);
                         } else if (text.includes('Python initialization complete')) {
                             pythonInitCompleted = true;
                         }
                     },
-                    stderr: (text: string): void => {
+                    stderr: (text) => {
                         if (pythonInitCompleted) {
                             messages.push(text);
                         } else if (text.includes('Python initialization complete')) {
@@ -49,9 +50,10 @@ export function pythonWorkerFunction() {
                     },
                 });
             }
-            pyodide.globals.clear();
-            await pyodide.loadPackagesFromImports(message.data.script);
-            let output: string = await pyodide.runPythonAsync(message.data.script);
+            pyodideObj.globals.clear();
+            await pyodideObj.loadPackagesFromImports(message.data.script);
+            let output = await pyodideObj.runPythonAsync(message.data.script);
+
 
             let debug = messages.join("\n");
             // Limit debug to 100000 characters
@@ -60,13 +62,14 @@ export function pythonWorkerFunction() {
             }
             messages = [];
 
-            postMessage({
+            port.postMessage({
                 "debug": debug,
                 "result": output
             });
         } catch (e) {
+            console.log("E", e);
             e = parsePythonError(e);
-            postMessage({
+            port.postMessage({
                 "error": e.message,
                 "line": e.deepest.line + 1,
             });
@@ -74,20 +77,11 @@ export function pythonWorkerFunction() {
     }
 
     /**
-    * General Python Error
-    */
-    type PythonError = {
-        message: string;
-        trace: Array<{ line: number, file: string, module: string }>;
-        deepest: { line: number, file: string, module: string };
-    }
-
-    /**
      * Parse the Python error
      * @param err Error message
      * @returns Object containing all the details about the error
      */
-    function parsePythonError(err: Error): PythonError {
+    function parsePythonError(err) {
         const traceback = [];
         let deepest = undefined;
         let msg = '';
@@ -95,7 +89,7 @@ export function pythonWorkerFunction() {
             if (err.message.indexOf('Traceback') >= 0) {
                 const ep =
                     /File\s*"(\S*?)",\s*line\s*(\d*),\s*in\s*(\S.*)|File\s*"(\S*?)",\s*line\s*(\d*)/gm;
-                let m: RegExpExecArray;
+                let m;
 
                 while ((m = ep.exec(err.message)) !== null) {
                     if (m.index === ep.lastIndex) {
@@ -127,6 +121,6 @@ export function pythonWorkerFunction() {
         };
         return res
     }
-}
 
-export { }
+    port.start();
+}

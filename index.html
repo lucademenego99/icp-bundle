@@ -29,7 +29,7 @@
   </script>
 
   <!-- Bundle containing the code playground web components -->
-  <script type="module" src="/src/main.ts"></script>
+  <script type="module" src="/src/exports/full.ts"></script>
 </head>
 
 <body class="h-screen full-page-demo reveal-viewport" data-page="icp" style="transition: transform 0.8s ease 0s;">
@@ -58,27 +58,28 @@
       <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="javascript" /&gt;</p>
         <div class="big-code">
-          <base-editor contenteditable="true" language="javascript" id='test' code="console.log('Hello World!')" />
+          <javascript-editor contenteditable="true" code="console.log('Hello World!')"></javascript-editor>
         </div>
       </section>
       <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="python" <span
             class="emph">theme</span>="dark" /&gt;</p>
         <div class="big-code">
-          <base-editor contenteditable="true" language="python" theme="dark" id='test' code="# This program adds two numbers
+          <python-editor contenteditable="true" theme="dark" code="# This program adds two numbers
 num1 = 1.5
 num2 = 6.3
 
 sum = num1 + num2
 
-print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))" />
+print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))">
+          </python-editor>
         </div>
       </section>
       <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="typescript" <span
             class="emph">type</span>="vertical" /&gt;</p>
         <div class="big-code">
-          <base-editor contenteditable="true" language="typescript" type="vertical" id='test' code="class Greeter {
+          <typescript-editor contenteditable="true" type="vertical" code="class Greeter {
   greeting: string;
     
   constructor(message: string) {
@@ -91,24 +92,24 @@ print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))" />
 }
     
 let greeter = new Greeter('World!');
-greeter.greet();" />
+greeter.greet();"></typescript-editor>
         </div>
       </section>
       <section>
         <p class="subtitle">&lt;base-editor <span class="emph">language</span>="java" <span
             class="emph">type</span>="vertical" <span class="emph">theme</span>="dark" /&gt;</p>
         <div class="big-code">
-          <base-editor contenteditable="true" language="java" type="vertical" theme="dark" id='test' code='public class HelloWorld {
+          <java-editor contenteditable="true" type="vertical" theme="dark" code='public class HelloWorld {
   public static void main(String[] args) {
     System.out.println("<EDITABLE>Hello, World</EDITABLE>!"); 
   }
-}' />
+}'></java-editor>
         </div>
       </section>
       <section>
         <p class="subtitle">&lt;sql-editor <span class="emph">theme</span>="dark" /&gt;</p>
         <div class="big-code">
-          <sql-editor contenteditable="true" theme="dark" id='test' code="DROP TABLE IF EXISTS employees;
+          <sql-editor contenteditable="true" type="vertical" theme="dark" code="DROP TABLE IF EXISTS employees;
 -- Create the table
 CREATE TABLE employees( id          integer,  name    text,
                           designation text,     manager integer,
@@ -133,7 +134,7 @@ INSERT INTO employees VALUES (14,'ROOSEVELT','CPA',9,'1995-10-12',35000,NULL,1);
 
 -- Select
 SELECT designation,COUNT(*) AS nbr, (AVG(salary)) AS avg_salary FROM employees GROUP BY designation ORDER BY avg_salary DESC;
-SELECT name,hired_on FROM employees ORDER BY hired_on;" />
+SELECT name,hired_on FROM employees ORDER BY hired_on;"></sql-editor>
         </div>
       </section>
     </div>

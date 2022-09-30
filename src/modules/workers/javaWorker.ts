@@ -1,10 +1,10 @@
-import TeaWorkerClasses from './javaClasses.js?worker&inline';
-
 let isReady;
 let javaMessages = [];
 let javaErrorMessages = [];
 let codeFinished = true;
 let teaworker;
+let offline = false;
+let baseUrl;
 
 // Customize the onmessage event
 onmessage = async (message) => {
@@ -14,13 +14,14 @@ onmessage = async (message) => {
     // - result: final result of the script
     try {
         let output;
+        offline = message.data.offline;
+        baseUrl = message.data.baseUrl;
         switch (message.data.language) {
             /**
              * Javascript
              */
             case 'java':
                 codeFinished = false;
-                console.log("JAVA IS READY:", isReady);
                 compileAndRun(message.data.script, 1, !isReady, ({ message, start, end, severity }) => {
                     console.log("COMPILE FAILED CALLBACK IMPLEMENTATION! ", message);
                     javaErrorMessages.push(message);
@@ -62,10 +63,17 @@ function delay(time) {
 }
 
 function createTeaWorker(whenReady) {
-    console.log("Create tea worker");
     if (teaworker === undefined) {
         try {
-            teaworker = new TeaWorkerClasses();
+            if (!offline) {
+                var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classes.js');main();";
+                var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+                teaworker = new Worker(URL.createObjectURL(workerBlob));
+            } else {
+                // var workerJob = "importScripts('" + baseUrl + "classes.js');main();";
+                // var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+                teaworker = new Worker(baseUrl + "teaWorker.js");
+            }
         } catch (e) {
             console.log("TEAWORKER CATCH", e);
         }

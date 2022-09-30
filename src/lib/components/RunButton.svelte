@@ -259,11 +259,15 @@
                 document.location.host +
                 document.location.pathname;
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
-            baseUrl += "/utils/python/pyodide/";
+            baseUrl +=
+                language == "python"
+                    ? "/utils/python/pyodide/"
+                    : "/utils/java/";
         }
 
         // Define the message to send to the worker
         const message = {
+            offline: offline,
             language: language,
             script: editor.state.doc.toString(),
             input: "",

@@ -6,13 +6,23 @@
     export let code = "";
 
     import BaseEditor from "./BaseEditor.svelte";
-    import PythonWorker from "../modules/workers/pythonWorker?url";
+    import { pythonWorkerCode } from "../modules/workers/pythonWorker";
     import { onMount } from "svelte";
 
     let webworker: SharedWorker;
 
     onMount(() => {
-        webworker = new SharedWorker(PythonWorker);
+        // Get the body of the webworker's function
+        var workerJob = pythonWorkerCode
+            .toString()
+            .slice(
+                pythonWorkerCode.toString().indexOf("{") + 1,
+                pythonWorkerCode.toString().lastIndexOf("}")
+            );
+        // Generate a blob from it
+        var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+        // The webworker constructor needs an URL: create it from the blob
+        webworker = new SharedWorker(window.URL.createObjectURL(workerBlob));
     });
 </script>
 

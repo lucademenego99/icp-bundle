@@ -13,7 +13,7 @@ function cleanup(cb) {
 
 export default (cb) => {
     console.log("Building the project - this may take a while (approx. 5-6 minutes)...");
-    child_process.exec('vite build -c=build-config/vite.full.js && vite build -c=build-config/vite.python.js && vite build -c=build-config/vite.javascript.js && vite build -c=build-config/vite.typescript.js && vite build -c=build-config/vite.java.js && vite build -c=build-config/vite.sql.js && vite build -c=build-config/vite.full-offline.js && vite build -c=build-config/vite.python-offline.js', (err, stdout, stderr) => {
+    child_process.exec('vite build -c=build-config/vite.full.js && vite build -c=build-config/vite.python.js && vite build -c=build-config/vite.javascript.js && vite build -c=build-config/vite.typescript.js && vite build -c=build-config/vite.java.js && vite build -c=build-config/vite.sql.js && vite build -c=build-config/vite.full-offline.js && vite build -c=build-config/vite.python-offline.js && vite build -c=build-config/vite.java-offline.js', (err, stdout, stderr) => {
         if (err) {
             console.log("[ERROR] building the project");
             cb(err);

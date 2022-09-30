@@ -49,21 +49,21 @@
         <h3 class="title">Introduction</h3>
         <p>The following <span class="emph">web components</span> are exposed by the library</p>
         <ul style="padding-bottom: 30px;">
-          <li>&lt;base-editor /&gt;</li>
+          <li>&lt;javascript-editor /&gt;</li>
+          <li>&lt;python-editor /&gt;</li>
+          <li>&lt;typescript-editor /&gt;</li>
+          <li>&lt;java-editor /&gt;</li>
           <li>&lt;sql-editor /&gt;</li>
         </ul>
-        <p>The base editor can be initialized with the following <span class="emph">languages</span>: Javascript,
-          Typescript, Java, Python</p>
       </section>
       <section>
-        <p class="subtitle">&lt;base-editor <span class="emph">language</span>="javascript" /&gt;</p>
+        <p class="subtitle">&lt;javascript-editor /&gt;</p>
         <div class="big-code">
           <javascript-editor contenteditable="true" code="console.log('Hello World!')"></javascript-editor>
         </div>
       </section>
       <section>
-        <p class="subtitle">&lt;base-editor <span class="emph">language</span>="python" <span
-            class="emph">theme</span>="dark" /&gt;</p>
+        <p class="subtitle">&lt;python-editor <span class="emph">theme</span>="dark" /&gt;</p>
         <div class="big-code">
           <python-editor contenteditable="true" theme="dark" code="# This program adds two numbers
 num1 = 1.5
@@ -76,8 +76,7 @@ print('The sum of {0} and {1} is {2}'.format(num1, num2, sum))">
         </div>
       </section>
       <section>
-        <p class="subtitle">&lt;base-editor <span class="emph">language</span>="typescript" <span
-            class="emph">type</span>="vertical" /&gt;</p>
+        <p class="subtitle">&lt;typescript-editor <span class="emph">type</span>="vertical" /&gt;</p>
         <div class="big-code">
           <typescript-editor contenteditable="true" type="vertical" code="class Greeter {
   greeting: string;
@@ -96,10 +95,9 @@ greeter.greet();"></typescript-editor>
         </div>
       </section>
       <section>
-        <p class="subtitle">&lt;base-editor <span class="emph">language</span>="java" <span
-            class="emph">type</span>="vertical" <span class="emph">theme</span>="dark" /&gt;</p>
+        <p class="subtitle">&lt;java-editor <span class="emph">theme</span>="dark" /&gt;</p>
         <div class="big-code">
-          <java-editor contenteditable="true" type="vertical" theme="dark" code='public class HelloWorld {
+          <java-editor contenteditable="true" theme="dark" code='public class HelloWorld {
   public static void main(String[] args) {
     System.out.println("<EDITABLE>Hello, World</EDITABLE>!"); 
   }
@@ -107,9 +105,9 @@ greeter.greet();"></typescript-editor>
         </div>
       </section>
       <section>
-        <p class="subtitle">&lt;sql-editor <span class="emph">theme</span>="dark" /&gt;</p>
+        <p class="subtitle">&lt;sql-editor <span class="emph">type</span>="vertical" /&gt;</p>
         <div class="big-code">
-          <sql-editor contenteditable="true" type="vertical" theme="dark" code="DROP TABLE IF EXISTS employees;
+          <sql-editor contenteditable="true" type="vertical" code="DROP TABLE IF EXISTS employees;
 -- Create the table
 CREATE TABLE employees( id          integer,  name    text,
                           designation text,     manager integer,

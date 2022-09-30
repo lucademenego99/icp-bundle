@@ -3,6 +3,8 @@ let javaMessages = [];
 let javaErrorMessages = [];
 let codeFinished = true;
 let teaworker;
+let offline = false;
+let baseUrl;
 
 // Customize the onmessage event
 onmessage = async (message) => {
@@ -12,6 +14,8 @@ onmessage = async (message) => {
     // - result: final result of the script
     try {
         let output;
+        offline = message.data.offline;
+        baseUrl = message.data.baseUrl;
         switch (message.data.language) {
             /**
              * Javascript
@@ -61,9 +65,15 @@ function delay(time) {
 function createTeaWorker(whenReady) {
     if (teaworker === undefined) {
         try {
-            var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classes.js');main();";
-            var workerBlob = new Blob([workerJob], { type: "text/javascript" });
-            teaworker = new Worker(URL.createObjectURL(workerBlob));
+            if (!offline) {
+                var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classes.js');main();";
+                var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+                teaworker = new Worker(URL.createObjectURL(workerBlob));
+            } else {
+                // var workerJob = "importScripts('" + baseUrl + "classes.js');main();";
+                // var workerBlob = new Blob([workerJob], { type: "text/javascript" });
+                teaworker = new Worker(baseUrl + "teaWorker.js");
+            }
         } catch (e) {
             console.log("TEAWORKER CATCH", e);
         }
@@ -81,7 +91,7 @@ function createTeaWorker(whenReady) {
         teaworker.postMessage({
             command: 'load-classlib',
             id: 'didload-classlib',
-            url: 'https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classlib.txt',
+            url: new URL('../java/classlib.txt', import.meta.url).href,
         })
 
         return true

@@ -28,29 +28,10 @@ onmessage = async (e) => {
     // - debug: console.log results
     // - result: final result of the script
     try {
-        let output;
-        switch (e.data.language) {
-            /**
-             * Javascript
-             */
-            case 'javascript':
-                output = eval(e.data.script);
-                break;
-
-            /**
-             * Typescript
-             */
-            case 'typescript':
-                output = eval(transpile(e.data.script));
-                break;
-
-            default:
-                console.warn("LANGUAGE NOT AVAILABLE");
-                break;
-        }
+        let output = Function(transpile(e.data.script))();
 
         // Limit the output to 100000 characters
-        if (output.length > 100000) {
+        if (output && output.length > 100000) {
             output = output.substring(0, 100000) + "...";
         }
         postMessage({

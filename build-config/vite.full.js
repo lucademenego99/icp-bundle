@@ -4,10 +4,12 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 // https://vitejs.dev/config/
 export default defineConfig({
     build: {
-        outDir: './dist/offline/',
+        outDir: 'dist/base/',
         emptyOutDir: true,
         lib: {
-            entry: './src/main-offline.ts',
+            entry: 'src/exports/full.ts',
+            formats: ['iife'],
+            fileName: 'full',
             name: 'InteractiveCodePlaygrounds',
         },
         rollupOptions: {

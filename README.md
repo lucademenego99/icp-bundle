@@ -4,75 +4,92 @@ Interactive Code Playgrounds Bundle is a plugin for embedding interactive code p
 
 The editor used in these playgrounds is [CodeMirror6](https://codemirror.net/6/), an in-browser editor distributed as a collection of modules.
 
-The project is based on [Svelte](https://github.com/sveltejs/svelte), a compiler converting the exposed components in efficient JavaScript. The build, instead, is performed through [Vite](https://github.com/vitejs/vite) and the [gulp](https://github.com/gulpjs/gulp) tool.
+The project is based on [Svelte](https://github.com/sveltejs/svelte), a tool for building web applications. The actual build step is performed through [Vite](https://github.com/vitejs/vite) and the [gulp](https://github.com/gulpjs/gulp) tool.
+
+The most computationally expensive tasks the bundle does are performed using [Web Workers and SharedWorkers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
 
 ## Examples
 Some examples of this plugin can be found in the repository [icp-slides](https://github.com/lucademenego99/icp-slides). In particular, a presentation of the main elements this plugin exposes is hosted as a Github Pages website in [https://lucademenego99.github.io/icp-slides/editors.html](https://lucademenego99.github.io/icp-slides/editors.html)
 
-## Installation
+## Building from source
 
-The main script that Vite uses is `src/main.ts`. First of all, install all the packages:
+Install all the packages:
 ```
 npm install
 ```
 
-Then you can build the module with:
+Build the module:
 ```
-npm run gulp
+npm run build
 ```
 
-or run a demo with:
+or run a demo:
 ```
 npm run dev
 ```
 
-The build command will generate two folders:
-- **base**: build comprehending the files `dist/icp-bundle.es.js`, `dist/icp-bundle.umd.js`, a folder `utils` containing all the assets the bundle needs and an example HTML page;
-- **offline**: a specially crafted build that can be distributed to be run without an internet connection. [redbean.com](https://redbean.dev/) is a simple HTTP server that exposes the current folder. It can be executed on Linux, MacOS, Windows, FreeBSD, OpenBSD and NetBSD thanks to the [Cosmopolitan project](https://github.com/jart/cosmopolitan).
+The build command will generate a `dist/base` folder with the following files:
+- `*.iife.js`: script to be included inside the HTML page using ICP; to reduce the size of the bundle to be downloaded, please use the file corresponding to the language you want to use;
+- `redbean.com`: a redbean web-server ready to be customized to serve ICP slides. [redbean](https://redbean.dev/) is a simple HTTP server that exposes the current folder. It can be executed on Linux, MacOS, Windows, FreeBSD, OpenBSD and NetBSD thanks to the [Cosmopolitan project](https://github.com/jart/cosmopolitan). Please see [icp-create-server](https://github.com/lucademenego99/icp-create-server) for more information on how to use it;
+- `example.html`: an example showcasing the main elements exported by the library;
+- various css files: styles to make the slides work.
 
-To use the exposed web components and functions in an HTML page you can simply import the script:
-```<script src='icp-bundle.umd.js></script>'```
 
-## Web Components
+## Exported Web Components
 
-The bundle exports the following web components:
-- **`<base-editor language="{CHOSEN_LANGUAGE}" code="{INITIAL_TEXT}" theme="{light} or {dark}" type="{normal} or {vertical}" />`**;
-- **`<sql-editor code="{INITIAL_TEXT}" theme="{light} or {dark}" type="{normal} or {vertical}" />`**.
+The build phase creates the following web components:
+- `<javascript-editor></javascript-editor>`;
+- `<typescript-editor></typescript-editor>`;
+- `<python-editor></python-editor>`;
+- `<java-editor></java-editor>`;
+- `<sql-editor></sql-editor>`.
 
-The available languages that can be used in the **base-editor** are the following:
+Every component has a set of properties that can be passed inside the tags:
+- `code`: the initial code snippet the playground should contain;
+- `theme`: *light* or *dark*;
+- `type`: *normal* or *vertical*.
+
+To access these components you need to import a bundle in your HTML page. Which bundle to add depends on the language you want to use:
+- all the languages: `dist/base/full.iife.js`;
+- specific language: `dist/base/{language}.iife.js`.
+
+At the moment the latest version is published on npm, so you can access it using the CDN you prefer. For instance:
+```
+<script src="https://unpkg.com/icp-bundle/dist/base/python.iife.js"></script>
+```
+
+
+The available languages that can be used in the editors are the following:
 |  | Syntax Highlighting | Auto Completion | Lint Checks | Run Code |
 | --- | :---: | :---: | :---: | :---: |
 | javascript | ✅ | ✅ | ✅ | ✅ |
 | typescript | ✅ | ✅ | ✅ | ✅ |
 | python | ✅ |  |  | ✅ |
 | java | ✅ |  |  | ✅ |
-| cpp | ✅ |  |  |  |
-
-The **sql-editor**, instead, provides the following features:
-|  | Syntax Highlighting | Auto Completion | Lint Checks | Run Code |
-| --- | :---: | :---: | :---: | :---: |
 | sql | ✅ | ✅ |  | ✅ |
 
 ### Read-only components with predefined editable parts
 Sometimes you may want to embed editor components in which only some parts of them are editable. In order to do it, you can use the specially crafted tokens `<EDITABLE>` and `</EDITABLE>`. For example:
 ```
-<base-editor language="python" code="print('<EDITABLE>Hello World!</EDITABLE>')" />
+<python-editor code="print('<EDITABLE>Hello World!</EDITABLE>')" />
 ```
 
 ## Other exposed functions
 
 Apart from these web components, the following functions are exposed:
-- `createEditor(element, language, enableDarkMode, initialText)`: create a CodeMirror editor, returning its instance and a languageConfiguration compartment useful to change language at runtime;
-- `setJavascript(editor, languageConfiguration)`: change the editor's language to Javascript using the provided compartment;
-- `setTypescript(editor, languageConfiguration)`: change the editor's language to Typescript using the provided compartment;
-- `setCpp(editor, languageConfiguration)`: change the editor's language to C++ using the provided compartment;
-- `setJava(editor, languageConfiguration)`: change the editor's language to Java using the provided compartment;
-- `setPython(editor, languageConfiguration)`: change the editor's language to Python using the provided compartment;
-- `setSql(editor, languageConfiguration)`: change the editor's language to SQL using the provided compartment;
+- `createEditor(element, language, enableDarkMode, initialText)`: create a CodeMirror editor, returning its instance and a languageConfiguration compartment;
 - `setTabsHandling(editor, tabsConfiguration, enabled)`: set whether or not tabs should be handled inside the code editor (they are not by default).
+
+They can be called using one of the exported names from Javascript:
+- `InteractiveCodePlaygrounds` (if `full.iife.js` has been imported);
+- `JavascriptCodePlaygrounds` (if `javascript.iife.js` has been imported);
+- `TypescriptCodePlaygrounds` (if `typescript.iife.js` has been imported);
+- `PythonCodePlaygrounds` (if `python.iife.js` has been imported);
+- `JavaCodePlaygrounds` (if `java.iife.js` has been imported);
+- `SqlCodePlaygrounds` (if `sql.iife.js` has been imported).
 
 ## Mentions
 - the typescript plugin included in `src/modules/` has been taken from [prisma/text-editors](https://github.com/prisma/text-editors)
-- run java code directly in the browser: [teavm-javac](https://github.com/frankbauer/teavm-javac) from [frankbauer](https://github.com/frankbauer)'s fork
-- run python code directly in the browser: [pyodide](https://pyodide.org/en/stable/)
-- run sql code directly in the browser: [sql.js](https://github.com/sql-js/sql.js/)
+- run java code in the browser: [teavm-javac](https://github.com/frankbauer/teavm-javac) from [frankbauer](https://github.com/frankbauer)'s fork
+- run python code in the browser: [pyodide](https://pyodide.org/en/stable/)
+- run sql code in the browser: [sql.js](https://github.com/sql-js/sql.js/)

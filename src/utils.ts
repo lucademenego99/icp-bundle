@@ -39,8 +39,8 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
     if (enableDarkMode)
         extensions.push(oneDark);
 
-        let editableParts = [];
-        let notEditableParts = [];
+    let editableParts = [];
+    let notEditableParts = [];
     // Check if we should enable the mode in which we only allow to edit specific parts of the text
     if (initialText.includes('<EDITABLE>')) {
         extensions.push(readOnlyTransactionFilter());
@@ -94,7 +94,7 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
         });
 
         // Add the final not editable part of the text: from the last editable part to the end of the text
-        notEditableSelection(editor, editableParts[editableParts.length-1].to, initialText.length);
+        notEditableSelection(editor, editableParts[editableParts.length - 1].to, initialText.length);
     }
 
     // Return the editor and the languages handler
@@ -116,51 +116,6 @@ const languageSelection = {
 };
 
 /**
- * Use C++
- */
-function setCpp(editor, languageConfiguration) {
-    editor.dispatch({
-        effects: languageConfiguration.reconfigure(languageSelection['cpp'])
-    });
-}
-
-/**
- * Use Java
- */
-function setJava(editor, languageConfiguration) {
-    editor.dispatch({
-        effects: languageConfiguration.reconfigure(languageSelection['java'])
-    });
-}
-
-/**
- * Use Javascript
- */
-function setJavascript(editor, languageConfiguration) {
-    editor.dispatch({
-        effects: languageConfiguration.reconfigure(languageSelection['javascript'])
-    });
-}
-
-/**
- * Use SQL
- */
-function setSql(editor, languageConfiguration) {
-    editor.dispatch({
-        effects: languageConfiguration.reconfigure(languageSelection['sql'])
-    });
-}
-
-/**
- * Use Typescript
- */
-function setTypescript(editor, languageConfiguration) {
-    editor.dispatch({
-        effects: languageConfiguration.reconfigure(languageSelection['typescript'])
-    });
-}
-
-/**
  * Handle tabs
  */
 function setTabsHandling(editor, tabsConfiguration, enabled) {
@@ -172,10 +127,5 @@ function setTabsHandling(editor, tabsConfiguration, enabled) {
 export {
     createEditor,
     languageSelection,
-    setCpp,
-    setJava,
-    setJavascript,
-    setTypescript,
-    setSql,
     setTabsHandling
 }

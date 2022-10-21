@@ -6,6 +6,7 @@
   "files": [
     "dist/"
   ],
+  "main": "dist/full.iife.js",
   "type": "module",
   "repository": {
     "type": "git",

@@ -108,6 +108,10 @@ li:not(:last-child) {
     letter-spacing: .3vmin;
 }
 
+.ql-hidden {
+    display: none;
+}
+
 #code-container {
     overflow: hidden !important;
 }

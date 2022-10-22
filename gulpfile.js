@@ -6,7 +6,7 @@ function cleanup(cb) {
     del(['dist/base/index.html', 'dist/base/full-offline.iife.js']);
 
     console.log("Finished!");
-    console.log("If you want to set up a single-file distributable web server, use dist/offline/redbean.com and check the icp-create-server repository");
+    console.log("If you want to set up a single-file distributable web server, use dist/base/redbean.com and check the icp-create-server repository");
     console.log("If you want to use the library and deploy to a server, all you need is dist/base/icp-bundle.js");
     cb();
 }

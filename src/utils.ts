@@ -33,6 +33,19 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
         EditorView.lineWrapping,
         languageConfiguration.of(languageSelection[language]),
         tabsConfiguration.of([]),
+        // Fire a Custom Event 'changedcode' whenever the code changes
+        EditorView.updateListener.of((v) => {
+            if (v.docChanged) {
+                element.dispatchEvent(new CustomEvent('changedcode', {
+                    detail: {
+                        content: v.state.doc.toString()
+                    },
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true,
+                }));
+            }
+        })
     ];
 
     // Check if the editor should be in dark mode

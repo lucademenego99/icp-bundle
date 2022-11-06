@@ -3,7 +3,7 @@ import child_process from 'child_process';
 
 function cleanup(cb) {
     console.log("Deleting some files...");
-    del(['dist/base/index.html', 'dist/base/full-offline.iife.js']);
+    del(['dist/base/index.html']);
 
     console.log("Finished!");
     console.log("If you want to set up a single-file distributable web server, use dist/base/redbean.com and check the icp-create-server repository");

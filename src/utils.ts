@@ -7,7 +7,7 @@ import { lintGutter } from "@codemirror/lint";
 import { EditorView, keymap } from "@codemirror/view";
 import { typescript } from "./modules/typescript";
 import { indentWithTab } from "@codemirror/commands";
-import { Compartment, EditorState } from "@codemirror/state";
+import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { basicSetup } from "@codemirror/basic-setup";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { editableSelection, notEditableSelection, readOnlyTransactionFilter } from "./modules/readonly";
@@ -33,6 +33,17 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
         EditorView.lineWrapping,
         languageConfiguration.of(languageSelection[language]),
         tabsConfiguration.of([]),
+        // Fire event execute when clicking CTRL+ENTER
+        Prec.highest(
+            keymap.of([{
+            key: "Ctrl-Enter",
+            run: () => {
+                // Fire a Custom Event 'execute'
+                element.dispatchEvent(new CustomEvent('execute'));
+                return true;
+            }
+            }])
+        ),
         // Fire a Custom Event 'changedcode' whenever the code changes
         EditorView.updateListener.of((v) => {
             if (v.docChanged) {

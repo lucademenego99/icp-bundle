@@ -4,7 +4,7 @@
     /**
      * IMPORTS
      */
-    import { onMount } from "svelte";
+    import { executeRequest, editorToExecute } from "../../stores";
     import type { EditorView } from "@codemirror/view";
 
     type Table = {
@@ -55,6 +55,17 @@
     }
 
     $: {
+        if ($executeRequest) {
+            // Check if the execution request arrives from this editor
+            if (editor.dom.isEqualNode($editorToExecute)) {
+                // If so, execute the code and reset the executeRequest store variable
+                runCode(null);
+                $executeRequest = false;
+            }
+        }
+    }
+
+    $: {
         if (webworker) {
             console.log(webworker);
             // Handle the webworker's messages
@@ -71,13 +82,6 @@
     /**
      * FUNCTIONS
      */
-
-    /**
-     * Setup the worker responsible for executing code when mounting the component
-     */
-    onMount(() => {
-        // setupWorker();
-    });
 
     /**
      * Create an HTML table from the output of a SQL.js query
@@ -160,8 +164,6 @@
         } else {
             (webworker as Worker).terminate();
         }
-        // Re-create the worker
-        // setupWorker();
         runButtonRunning = false;
     }
 

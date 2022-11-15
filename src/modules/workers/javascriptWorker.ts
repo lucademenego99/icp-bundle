@@ -3,7 +3,6 @@ let messages = [];
 
 // Customize the onmessage event
 onmessage = async (e) => {
-    console.log("MESSAGE RECEIVED:", e);
     // Array with all console.log results
     messages = [];
 

@@ -9,6 +9,7 @@
     import { createEditor } from "../../utils";
     import type { EditorView } from "@codemirror/view";
     import type { Compartment } from "@codemirror/state";
+    import { executeRequest, editorToExecute } from "../../stores";
 
     /**
      * PROPS
@@ -63,6 +64,10 @@
      */
 
     onMount(() => {
+        editorElement.addEventListener("execute", () => {
+            $editorToExecute = editorElement.firstChild as HTMLElement;
+            $executeRequest = true;
+        });
         // Make editor and output splitted and resizable using split.js
         Split([editorElement, outputContainer], {
             minSize: 40,

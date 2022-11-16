@@ -57,7 +57,7 @@
     $: {
         if ($executeRequest) {
             // Check if the execution request arrives from this editor
-            if (editor.dom.isEqualNode($editorToExecute)) {
+            if (editor && editor.dom.isEqualNode($editorToExecute)) {
                 // If so, execute the code and reset the executeRequest store variable
                 runCode(null);
                 $executeRequest = false;

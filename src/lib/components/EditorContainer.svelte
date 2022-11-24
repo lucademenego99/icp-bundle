@@ -38,13 +38,14 @@
     /**
      * VARIABLES
      */
-    let codeMirrorEditor: EditorView, tabsConfiguration: Compartment;
+    let codeMirrorEditor: EditorView, tabsConfiguration: Compartment, editableFilterConfiguration: Compartment;
 
     $: {
         const event = new CustomEvent("editormsg", {
             detail: {
                 editor: codeMirrorEditor,
                 tabsConfiguration,
+                editableFilterConfiguration
             },
             bubbles: true,
             cancelable: true,
@@ -85,6 +86,7 @@
         // Get access to the editor instance
         codeMirrorEditor = res.editor;
         tabsConfiguration = res.tabsConfiguration;
+        editableFilterConfiguration = res.editableFilterConfiguration;
     });
 </script>
 

@@ -40,7 +40,7 @@
     /**
      * GLOBAL VARIABLES
      */
-    let codeMirrorEditor: EditorView, tabsConfiguration: Compartment;
+    let codeMirrorEditor: EditorView, tabsConfiguration: Compartment, editableFilterConfiguration: Compartment;
     let output = "",
         outputError = false;
     let messageToShow = "",
@@ -121,6 +121,7 @@
         {type}
         editor={codeMirrorEditor}
         tabsconf={tabsConfiguration}
+        editableconf={editableFilterConfiguration}
         {code}
         on:showmsg={(event) => {
             showMessage(event.detail);
@@ -151,6 +152,7 @@
         on:editormsg={(event) => {
             codeMirrorEditor = event.detail.editor;
             tabsConfiguration = event.detail.tabsConfiguration;
+            editableFilterConfiguration = event.detail.editableFilterConfiguration;
         }}
     />
 </div>

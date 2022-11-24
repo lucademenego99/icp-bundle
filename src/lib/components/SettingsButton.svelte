@@ -7,7 +7,8 @@
     import type { Compartment } from "@codemirror/state";
     import type { EditorView } from "@codemirror/view";
     import { onMount } from "svelte";
-    import { setTabsHandling } from "../../utils";
+    import { setEditableFilter, setTabsHandling } from "../../utils";
+    import LockUnlockIcon from "./LockUnlockIcon.svelte";
 
     /**
      * PROPS
@@ -15,6 +16,7 @@
     export let type: "normal" | "vertical" = "normal";
     export let editor: EditorView;
     export let tabsconf: Compartment;
+    export let editableconf: Compartment;
     export let code: string;
 
     /**
@@ -24,11 +26,14 @@
     let copyContainer: HTMLElement;
     let tabsContainer: HTMLElement;
     let resetContainer: HTMLElement;
+    let textLockedContainer: HTMLElement;
 
     /**
      * VARIABLES
      */
     let tabsEnabled = false;
+
+    let isTextLocked = true;
 
     /**
      * FUNCTIONS
@@ -52,6 +57,7 @@
      * On mount, add the event listeners for every button
      */
     onMount(() => {
+        console.log("onMount", code);
         // Define the behavior of the copy button when clicked
         copyContainer.addEventListener("click", (e) => {
             var copyText = editor.state.doc.toString();
@@ -70,16 +76,28 @@
 
         // Define the behavior of the reset button when clicked
         resetContainer.addEventListener("click", (e) => {
+            console.log("reset", code);
             editor.dispatch({
                 changes: [
                     {
                         from: 0,
                         to: editor.state.doc.length,
-                        insert: code,
+                        insert: code.replaceAll("<EDITABLE>", "").replaceAll("</EDITABLE>", ""),
                     },
                 ],
             });
             showMessage("Code resetted!");
+        });
+
+        // Define the behavior of the text locked button when clicked
+        textLockedContainer.addEventListener("click", (e) => {
+            isTextLocked = !isTextLocked;
+            setEditableFilter(editor, editableconf, code, isTextLocked);
+            showMessage(
+                isTextLocked
+                    ? "Text locked"
+                    : "Text unlocked"
+            );
         });
     });
 </script>
@@ -173,6 +191,13 @@
                 />
             </svg>
         </div>
+        <div
+            bind:this={textLockedContainer}
+            class="menu-item"
+            style="background-color: {isTextLocked ? '#ff4133' : '#00cc3d'}"
+        >
+            <lockunlock-icon isLocked={isTextLocked} />
+        </div>
     </div>
 </div>
 
@@ -217,6 +242,9 @@
     .menu-item:nth-child(5) {
         transition-duration: 190ms;
     }
+    .menu-item:nth-child(6) {
+        transition-duration: 250ms;
+    }
     .settings-button {
         z-index: 2;
         transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -246,5 +274,9 @@
     .menu-open:checked ~ .menu-item:nth-child(5) {
         transition-duration: 320ms;
         transform: translate3d(0, -50px, 0);
+    }
+    .menu-open:checked ~ .menu-item:nth-child(6) {
+        transition-duration: 400ms;
+        transform: translate3d(0, -100px, 0);
     }
 </style>

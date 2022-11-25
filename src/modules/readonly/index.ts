@@ -1,4 +1,4 @@
-import { EditorView, Decoration, DecorationSet, keymap } from "@codemirror/view"
+import { EditorView, Decoration, DecorationSet } from "@codemirror/view"
 import { EditorState, StateField, StateEffect, Transaction, Extension } from "@codemirror/state"
 
 /**
@@ -134,9 +134,34 @@ export function readOnlyTransactionFilter(): Extension {
             transaction.changes.iterChangedRanges((chFrom, chTo) => {
                 editableRangeSet!.between(chFrom, chTo, (roFrom, roTo) => {
                     if (chFrom >= roFrom && chTo <= roTo) allowEdit = true;
+                    else if (chFrom <= roFrom && chTo >= roFrom && transaction.newDoc.toString().indexOf("<EDITABLE>") != -1) {
+                        // Get the transaction newDoc string
+                        let text = transaction.newDoc.toString();
+                        // Get text between <EDITABLE> and </EDITABLE> from text
+                        let editableText = text.substring(text.indexOf("<EDITABLE>", roFrom) + "<EDITABLE>".length, text.indexOf("</EDITABLE>", roFrom));
+
+                        // if editableText.length < roTo - roFrom, append to it the text between roTo and chTo
+                        if (editableText.length < roTo - roFrom) {
+                            // append roTo - editableText.length blank characters to editableText
+                            editableText += "".repeat(roTo - editableText.length - roFrom);
+                        }
+
+                        // Create a new transaction
+                        let newTransaction = transaction.startState.update({
+                            changes: {
+                                from: roFrom,
+                                to: roTo,
+                                insert: editableText
+                            }
+                        });
+                        transaction = newTransaction;
+                        allowEdit = true;
+                    }
                 })
             })
-            if (!allowEdit) return [];
+            if (!allowEdit) {
+                return [];
+            }
         }
         return transaction;
     });

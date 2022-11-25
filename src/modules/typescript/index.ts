@@ -17,7 +17,7 @@ import {
   StateField,
   TransactionSpec,
 } from "@codemirror/state";
-import { hoverTooltip, Tooltip } from "@codemirror/tooltip";
+import { hoverTooltip, Tooltip } from "@codemirror/view";
 import { EditorView } from "@codemirror/view";
 import throttle from "lodash/throttle";
 import {

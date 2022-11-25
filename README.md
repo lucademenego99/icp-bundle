@@ -62,9 +62,9 @@ At the moment the latest version is published on npm, so you can access it using
 The available languages that can be used in the editors are the following:
 |  | Syntax Highlighting | Auto Completion | Lint Checks | Run Code |
 | --- | :---: | :---: | :---: | :---: |
-| javascript | ✅ | ✅ | ✅ | ✅ |
+| javascript | ✅ | ✅ |  | ✅ |
 | typescript | ✅ | ✅ | ✅ | ✅ |
-| python | ✅ |  |  | ✅ |
+| python | ✅ | ✅ |  | ✅ |
 | java | ✅ |  |  | ✅ |
 | sql | ✅ | ✅ |  | ✅ |
 

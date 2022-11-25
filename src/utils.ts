@@ -1,4 +1,3 @@
-import { cpp } from "@codemirror/lang-cpp";
 import { java } from "@codemirror/lang-java";
 import { javascript } from "@codemirror/lang-javascript";
 import { sql } from "@codemirror/lang-sql";
@@ -8,7 +7,7 @@ import { EditorView, keymap } from "@codemirror/view";
 import { typescript } from "./modules/typescript";
 import { indentWithTab } from "@codemirror/commands";
 import { Compartment, EditorState, Prec } from "@codemirror/state";
-import { basicSetup } from "@codemirror/basic-setup";
+import { basicSetup } from "codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { editableSelection, notEditableSelection, readOnlyTransactionFilter } from "./modules/readonly";
 
@@ -136,7 +135,6 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
 const languageSelection = {
     javascript: [javascript(), lintGutter()],
     typescript: typescript(),
-    cpp: cpp(),
     java: java(),
     python: python(),
     sql: sql({ upperCaseKeywords: true }),
@@ -204,20 +202,26 @@ function setEditableFilter(editor, editableFilterConfiguration, code, enabled) {
             notEditableSelection(editor, editableParts[editableParts.length - 1].to, code.length);
         }
         editor.dispatch({
-                    changes: [
-                        {
-                            from: 0,
-                            to: editor.state.doc.length,
-                            insert: code,
-                        },
-                    ],
-                });
+            changes: [
+                {
+                    from: 0,
+                    to: editor.state.doc.length,
+                    insert: code,
+                },
+            ],
+        });
     } else {
-        // Clear all effects on editor
         editor.dispatch({
-            effects: []
+            changes: [
+                {
+                    from: 0,
+                    to: editor.state.doc.length,
+                    insert: code.replace(/<EDITABLE>/gm, '').replace(/<\/EDITABLE>/gm, ''),
+                },
+            ],
         });
     }
+    
 }
 
 export {

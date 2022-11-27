@@ -175,10 +175,8 @@ function setEditableFilter(editor, editableFilterConfiguration, code, enabled) {
         effects: editableFilterConfiguration.reconfigure(enabled ? readOnlyTransactionFilter() : [])
     });
     if (enabled) {
-        console.log('Editable filter enabled');
         let editableParts = [];
         let notEditableParts = [];
-        console.log('Initial text', code);
         // Save all the editable parts of the text inside code in an array, where their start is marked with <EDITABLE> and their end is marked with </EDITABLE>
         let count = 0;  // Count how many times we got a correspondence, to calculate the correct indices of the editable parts
         let regex = /(?<=<EDITABLE>)(.|\n)*?(?=<\/EDITABLE>)/gm, result;

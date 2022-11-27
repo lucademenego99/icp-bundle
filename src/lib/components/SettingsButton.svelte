@@ -22,6 +22,7 @@
      * ELEMENTS
      */
     let ref: HTMLElement;
+    let settingsButtonContainer: HTMLElement;
     let copyContainer: HTMLElement;
     let tabsContainer: HTMLElement;
     let resetContainer: HTMLElement;
@@ -60,6 +61,7 @@
         copyContainer.addEventListener("click", (e) => {
             var copyText = editor.state.doc.toString();
             navigator.clipboard.writeText(copyText);
+            settingsButtonContainer.click();
             showMessage("Text Copied!");
         });
 
@@ -67,6 +69,7 @@
         tabsContainer.addEventListener("click", (e) => {
             tabsEnabled = !tabsEnabled;
             setTabsHandling(editor, tabsconf, tabsEnabled);
+            settingsButtonContainer.click();
             showMessage(
                 tabsEnabled ? "Tabs handling enabled" : "Tabs handling disabled"
             );
@@ -83,7 +86,8 @@
                     },
                 ],
             });
-            showMessage("Code resetted!");
+            settingsButtonContainer.click();
+            showMessage("Code reset!");
         });
 
         // Define the behavior of the text locked button when clicked
@@ -117,6 +121,7 @@
             class="menu-open"
             name="menu-open"
             id="menu-open"
+            bind:this={settingsButtonContainer}
         />
         <label id="settings-button" class="settings-button" for="menu-open">
             <svg

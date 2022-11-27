@@ -100,11 +100,11 @@ function createTeaWorker(whenReady) {
     return false
 }
 
-function compileAndRun(code, questionID, runCreate = true, compileFailedCallback = ({ message, start, end, severity }) => { }) {
+function compileAndRun(code, questionID, runCreate = true, compileFailedCallback) {
     if (runCreate) {
         if (
             createTeaWorker(() => {
-                compileAndRun(code, false);
+                compileAndRun(code, questionID, false, compileFailedCallback);
             })
         ) {
             return
@@ -140,52 +140,48 @@ function compileAndRun(code, questionID, runCreate = true, compileFailedCallback
 
     const myListener = (e) => {
         if (e.data.command == 'diagnostic') {
-            if (compileFailedCallback) {
-                compileFailedCallback({
-                    message: e.data.text,
-                    start: {
-                        line: e.data.lineNumber,
-                        column: 0,
-                    },
-                    end: {
-                        line: e.data.lineNumber,
-                        column: 0,
-                    },
-                    severity:
-                        e.data.severity == 'ERROR'
-                            ? "Error"
-                            : "Warning",
-                })
-            }
+            compileFailedCallback({
+                message: e.data.text,
+                start: {
+                    line: e.data.lineNumber,
+                    column: 0,
+                },
+                end: {
+                    line: e.data.lineNumber,
+                    column: 0,
+                },
+                severity:
+                    e.data.severity == 'ERROR'
+                        ? "Error"
+                        : "Warning",
+            })
 
             const msg = e.data.text + '\n'
             if (e.data.severity == 'ERROR') {
-                console.log("ERR", msg);
+                console.log("ERR 1", msg);
             } else {
                 console.log("INFO", msg);
             }
         } else if (e.data.command == 'compiler-diagnostic') {
-            if (compileFailedCallback) {
-                compileFailedCallback({
-                    message: e.data.message,
-                    start: {
-                        line: e.data.startLineNumber,
-                        column: e.data.startColumn,
-                    },
-                    end: {
-                        line: e.data.endLineNumber,
-                        column: e.data.endColumn,
-                    },
-                    severity:
-                        e.data.kind == 'ERROR'
-                            ? "Error"
-                            : "Warning",
-                })
-            }
+            compileFailedCallback({
+                message: e.data.message,
+                start: {
+                    line: e.data.startLineNumber,
+                    column: e.data.startColumn,
+                },
+                end: {
+                    line: e.data.endLineNumber,
+                    column: e.data.endColumn,
+                },
+                severity:
+                    e.data.kind == 'ERROR'
+                        ? "Error"
+                        : "Warning",
+            })
 
             const msg = e.data.humanReadable + '\n'
             if (e.data.kind == 'ERROR') {
-                console.log("ERR", msg);
+                console.log("ERR 2", msg);
             } else {
                 console.log("INFO", msg);
             }

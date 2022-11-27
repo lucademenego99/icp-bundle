@@ -38,14 +38,18 @@
     /**
      * VARIABLES
      */
-    let codeMirrorEditor: EditorView, tabsConfiguration: Compartment, editableFilterConfiguration: Compartment;
+    let codeMirrorEditor: EditorView,
+        tabsConfiguration: Compartment,
+        editableFilterConfiguration: Compartment,
+        darkModeConfiguration: Compartment;
 
     $: {
         const event = new CustomEvent("editormsg", {
             detail: {
                 editor: codeMirrorEditor,
                 tabsConfiguration,
-                editableFilterConfiguration
+                editableFilterConfiguration,
+                darkModeConfiguration,
             },
             bubbles: true,
             cancelable: true,
@@ -87,6 +91,7 @@
         codeMirrorEditor = res.editor;
         tabsConfiguration = res.tabsConfiguration;
         editableFilterConfiguration = res.editableFilterConfiguration;
+        darkModeConfiguration = res.darkModeConfiguration;
     });
 </script>
 

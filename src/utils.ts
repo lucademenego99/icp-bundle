@@ -29,12 +29,15 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
 
     let editableFilterConfiguration = new Compartment;
 
+    let darkModeConfiguration = new Compartment;
+
     // Define the extensions of the editor
     let extensions = [
         basicSetup,
         EditorView.lineWrapping,
         languageConfiguration.of(languageSelection[language]),
         tabsConfiguration.of([]),
+        darkModeConfiguration.of(enableDarkMode ? oneDark : []),
         // Fire event execute when clicking CTRL+ENTER
         Prec.highest(
             keymap.of([{
@@ -60,10 +63,6 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
             }
         })
     ];
-
-    // Check if the editor should be in dark mode
-    if (enableDarkMode)
-        extensions.push(oneDark);
 
     let editableParts = [];
     let notEditableParts = [];
@@ -125,7 +124,7 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
 
     // Return the editor and the languages handler
     return {
-        editor, languageConfiguration, tabsConfiguration, editableFilterConfiguration
+        editor, languageConfiguration, tabsConfiguration, editableFilterConfiguration, darkModeConfiguration
     }
 }
 
@@ -141,7 +140,10 @@ const languageSelection = {
 };
 
 /**
- * Handle tabs
+ * Tabs handling configuration
+ * @param editor The editor instance
+ * @param tabsConfiguration The tabs configuration compartment
+ * @param enabled Whether to enable or disable the tabs handling
  */
 function setTabsHandling(editor, tabsConfiguration, enabled) {
     editor.dispatch({
@@ -149,6 +151,25 @@ function setTabsHandling(editor, tabsConfiguration, enabled) {
     });
 }
 
+/**
+ * Set the theme
+ * @param editor The editor instance
+ * @param darkModeConfiguration The compartment that handles the dark mode
+ * @param enabled Whether to enable the dark mode or not
+ */
+function setDarkMode(editor, darkModeConfiguration, enabled) {
+    editor.dispatch({
+        effects: darkModeConfiguration.reconfigure(enabled ? oneDark : [])
+    });
+}
+
+/**
+ * Update the editable filter - this function is called when the user decides to unlock or lock again the non-editable parts of the code
+ * @param editor The editor instance
+ * @param editableFilterConfiguration The compartment that handles the editable filter
+ * @param code The code that should be present in the editor
+ * @param enabled whether to enable or disable the editable filter
+ */
 function setEditableFilter(editor, editableFilterConfiguration, code, enabled) {
     editor.dispatch({
         effects: editableFilterConfiguration.reconfigure(enabled ? readOnlyTransactionFilter() : [])
@@ -183,8 +204,6 @@ function setEditableFilter(editor, editableFilterConfiguration, code, enabled) {
         }
         // Remove the tokens <EDITABLE> and </EDITABLE> from the code
         code = code.replace(/<EDITABLE>/gm, '').replace(/<\/EDITABLE>/gm, '');
-
-        console.log(editableParts, notEditableParts)
 
         // If the editable mode is enabled, we need to set the not editable text's style
         if (notEditableParts.length > 0) {
@@ -228,5 +247,6 @@ export {
     createEditor,
     languageSelection,
     setTabsHandling,
-    setEditableFilter
+    setEditableFilter,
+    setDarkMode
 }

@@ -31,6 +31,8 @@
     import SettingsButton from "./components/SettingsButton.svelte";
     import OverlayMessage from "./components/OverlayMessage.svelte";
     import EditorContainer from "./components/EditorContainer.svelte";
+    import { setDarkMode } from "../utils";
+    import ThemeSwitch from "./components/ThemeSwitch.svelte";
 
     /**
      * ELEMENTS
@@ -40,7 +42,10 @@
     /**
      * GLOBAL VARIABLES
      */
-    let codeMirrorEditor: EditorView, tabsConfiguration: Compartment;
+    let codeMirrorEditor: EditorView,
+        tabsConfiguration: Compartment,
+        editableFilterConfiguration: Compartment,
+        darkModeConfiguration: Compartment;
     let output = "",
         outputError = false;
     let messageToShow = "",
@@ -62,65 +67,87 @@
     }
 
     /**
-     * On mount, set theme CSS properties
+     * Change the current theme, enabling or disabling the dark mode
+     * @param darkMode whether the dark mode should be enabled or not
      */
-    onMount(() => {
-        rootElement.style.setProperty(
-            "--main-output-bg-color",
-            theme == "dark" ? "#f5f5f5" : "#282c34"
-        );
-        rootElement.style.setProperty(
-            "--main-output-text-color",
-            theme == "dark" ? "#cccccc" : "#fffeff"
-        );
-        rootElement.style.setProperty(
-            "--output-text-color",
-            theme == "dark" ? "#000000" : "#fffeff"
-        );
-        rootElement.style.setProperty(
-            "--run-button-bg-color",
-            theme == "dark" ? "#282C34" : "white"
-        );
-        rootElement.style.setProperty(
-            "--run-button-bg-color-hover",
-            theme == "dark" ? "#2C313A" : "#eeeeee"
-        );
-        rootElement.style.setProperty(
-            "--run-button-text-color",
-            theme == "dark" ? "white" : "black"
-        );
-        rootElement.style.setProperty(
-            "--table-th-color",
-            theme == "dark" ? "#dddddd" : "#dddddd"
-        );
-        rootElement.style.setProperty(
-            "--table-tr-even-color",
-            theme == "dark" ? "#e8e8e8" : "#404652"
-        );
-        rootElement.style.setProperty(
-            "--table-tr-hover-color",
-            theme == "dark" ? "#dddddd" : "#333842"
-        );
-        rootElement.style.setProperty(
-            "--table-th-background-color",
-            theme == "dark" ? "#362f4b" : "#362f4b"
-        );
-        rootElement.style.setProperty(
-            "--table-th-text-color",
-            theme == "dark" ? "white" : "white"
-        );
-    });
+    function setTheme(darkMode: boolean) {
+        theme = darkMode ? "dark" : "light";
+        setDarkMode(codeMirrorEditor, darkModeConfiguration, darkMode);
+    }
+
+    /**
+     * Listen to changes on the theme value. If there is a change,
+     * update the CSS variables accordingly
+    */
+    $: {
+        if (rootElement) {
+            rootElement.style.setProperty(
+                "--main-output-bg-color",
+                theme == "dark" ? "#333842" : "#f5f5f5"
+            );
+            rootElement.style.setProperty(
+                "--main-output-text-color",
+                theme == "dark" ? "#cccccc" : "#303030"
+            );
+            rootElement.style.setProperty(
+                "--output-text-color",
+                theme == "dark" ? "#eeeeee" : "#303030"
+            );
+            rootElement.style.setProperty(
+                "--run-button-bg-color",
+                theme == "dark" ? "#333842" : "white"
+            );
+            rootElement.style.setProperty(
+                "--run-button-bg-color-hover",
+                theme == "dark" ? "#2C313A" : "#eeeeee"
+            );
+            rootElement.style.setProperty(
+                "--run-button-text-color",
+                theme == "dark" ? "white" : "black"
+            );
+            rootElement.style.setProperty(
+                "--table-th-color",
+                theme == "dark" ? "#dddddd" : "#dddddd"
+            );
+            rootElement.style.setProperty(
+                "--table-tr-even-color",
+                theme == "dark" ? "#404652" : "#e8e8e8"
+            );
+            rootElement.style.setProperty(
+                "--table-tr-hover-color",
+                theme == "dark" ? "#252930" : "#cccccc"
+            );
+            rootElement.style.setProperty(
+                "--table-th-background-color",
+                theme == "dark" ? "#362f4b" : "#362f4b"
+            );
+            rootElement.style.setProperty(
+                "--table-th-text-color",
+                theme == "dark" ? "white" : "white"
+            );
+            rootElement.style.setProperty(
+                "--theme-color",
+                theme == "dark" ? "#cccccc" : "#ffee00"
+            );
+        }
+    }
 </script>
 
 <!-- Editor's HTML -->
 <div bind:this={rootElement} id="code-container">
     <overlay-message {type} show={messageShowing} message={messageToShow} />
 
+    <!-- Button allowing the user to toggle the current theme (light / dark) -->
+    <theme-switch {theme} {type} on:changedtheme={(event) => {
+        setTheme(event.detail.darkMode);
+    }} />
+
     <!-- Settings Button: copy, reset, allow tabs -->
     <settings-button
         {type}
         editor={codeMirrorEditor}
         tabsconf={tabsConfiguration}
+        editableconf={editableFilterConfiguration}
         {code}
         on:showmsg={(event) => {
             showMessage(event.detail);
@@ -151,6 +178,9 @@
         on:editormsg={(event) => {
             codeMirrorEditor = event.detail.editor;
             tabsConfiguration = event.detail.tabsConfiguration;
+            editableFilterConfiguration =
+                event.detail.editableFilterConfiguration;
+            darkModeConfiguration = event.detail.darkModeConfiguration;
         }}
     />
 </div>

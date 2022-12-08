@@ -7,7 +7,7 @@
     import type { Compartment } from "@codemirror/state";
     import type { EditorView } from "@codemirror/view";
     import { onMount } from "svelte";
-    import { setTabsHandling } from "../../utils";
+    import { setEditableFilter, setTabsHandling } from "../../utils";
 
     /**
      * PROPS
@@ -15,20 +15,25 @@
     export let type: "normal" | "vertical" = "normal";
     export let editor: EditorView;
     export let tabsconf: Compartment;
+    export let editableconf: Compartment;
     export let code: string;
 
     /**
      * ELEMENTS
      */
     let ref: HTMLElement;
+    let settingsButtonContainer: HTMLElement;
     let copyContainer: HTMLElement;
     let tabsContainer: HTMLElement;
     let resetContainer: HTMLElement;
+    let textLockedContainer: HTMLElement;
 
     /**
      * VARIABLES
      */
     let tabsEnabled = false;
+
+    let isTextLocked = true;
 
     /**
      * FUNCTIONS
@@ -56,6 +61,7 @@
         copyContainer.addEventListener("click", (e) => {
             var copyText = editor.state.doc.toString();
             navigator.clipboard.writeText(copyText);
+            settingsButtonContainer.click();
             showMessage("Text Copied!");
         });
 
@@ -63,6 +69,7 @@
         tabsContainer.addEventListener("click", (e) => {
             tabsEnabled = !tabsEnabled;
             setTabsHandling(editor, tabsconf, tabsEnabled);
+            settingsButtonContainer.click();
             showMessage(
                 tabsEnabled ? "Tabs handling enabled" : "Tabs handling disabled"
             );
@@ -75,11 +82,27 @@
                     {
                         from: 0,
                         to: editor.state.doc.length,
-                        insert: code,
+                        insert: isTextLocked ? code : code.replaceAll("<EDITABLE>", "").replaceAll("</EDITABLE>", ""),
                     },
                 ],
             });
-            showMessage("Code resetted!");
+            settingsButtonContainer.click();
+            showMessage("Code reset!");
+        });
+
+        // Define the behavior of the text locked button when clicked
+        textLockedContainer.addEventListener("click", (e) => {
+            // Emulate click on reset button
+            resetContainer.click();
+
+            // Toggle the text locked state
+            isTextLocked = !isTextLocked;
+            setEditableFilter(editor, editableconf, code, isTextLocked);
+            showMessage(
+                isTextLocked
+                    ? "Text locked"
+                    : "Text unlocked"
+            );
         });
     });
 </script>
@@ -98,6 +121,7 @@
             class="menu-open"
             name="menu-open"
             id="menu-open"
+            bind:this={settingsButtonContainer}
         />
         <label id="settings-button" class="settings-button" for="menu-open">
             <svg
@@ -173,6 +197,15 @@
                 />
             </svg>
         </div>
+        <div
+            bind:this={textLockedContainer}
+            class="menu-item"
+            style="background-color: {isTextLocked ? '#ff4133' : '#00cc3d'}; {!editableconf || !editableconf.get(editor.state) ? 'display: none !important' : ''}"
+        >
+            <div class="container" >
+                <span class="lock {isTextLocked ? '' : 'unlocked'}" />
+            </div>
+        </div>
     </div>
 </div>
 
@@ -217,6 +250,9 @@
     .menu-item:nth-child(5) {
         transition-duration: 190ms;
     }
+    .menu-item:nth-child(6) {
+        transition-duration: 250ms;
+    }
     .settings-button {
         z-index: 2;
         transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -246,5 +282,87 @@
     .menu-open:checked ~ .menu-item:nth-child(5) {
         transition-duration: 320ms;
         transform: translate3d(0, -50px, 0);
+    }
+    .menu-open:checked ~ .menu-item:nth-child(6) {
+        transition-duration: 400ms;
+        transform: translate3d(0, -100px, 0);
+    }
+
+
+    /* Lock icon CSS */
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .lock {
+        transform: scale(0.5);
+        width: 24px;
+        height: 21px;
+        border: 3px solid white;
+        margin-top: 5px;
+        border-radius: 5px;
+        position: relative;
+        cursor: pointer;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+    }
+    .lock:after {
+        content: "";
+        display: block;
+        background: white;
+        width: 3px;
+        height: 7px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -3.5px 0 0 -2px;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+    }
+    .lock:before {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 10px;
+        bottom: 100%;
+        position: absolute;
+        left: 50%;
+        margin-left: -8px;
+        border: 3px solid white;
+        border-top-right-radius: 50%;
+        border-top-left-radius: 50%;
+        border-bottom: 0;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+    }
+    .lock:hover:before {
+        height: 12px;
+    }
+    .unlocked {
+        transform: rotate(10deg) scale(0.5);
+        margin-top: 8px;
+    }
+    .unlocked:before {
+        bottom: 130%;
+        left: 31%;
+        margin-left: -11.5px;
+        transform: rotate(-45deg);
+    }
+    .unlocked,
+    .unlocked:before {
+        border-color: white;
+    }
+    .unlocked:after {
+        background: white;
+    }
+    .unlocked:hover {
+        transform: rotate(3deg) scale(0.5);
+    }
+    .unlocked:hover:before {
+        height: 10px;
+        left: 40%;
+        bottom: 124%;
+        transform: rotate(-30deg);
     }
 </style>

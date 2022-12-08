@@ -66,7 +66,7 @@ function createTeaWorker(whenReady) {
     if (teaworker === undefined) {
         try {
             if (!offline) {
-                var workerJob = "importScripts('https://unpkg.com/icp-bundle@0.0.3/dist/base/utils/java/classes.js');main();";
+                var workerJob = "importScripts('https://lucademenego99.github.io/icp-bundle/base/utils/java/classes.js');main();";
                 var workerBlob = new Blob([workerJob], { type: "text/javascript" });
                 teaworker = new Worker(URL.createObjectURL(workerBlob));
             } else {
@@ -91,7 +91,7 @@ function createTeaWorker(whenReady) {
         teaworker.postMessage({
             command: 'load-classlib',
             id: 'didload-classlib',
-            url: new URL('../java/classlib.txt', import.meta.url).href,
+            url: offline ? baseUrl + "classlib.txt" : "https://lucademenego99.github.io/icp-bundle/base/utils/java/classlib.txt" // new URL('../java/classlib.txt', import.meta.url).href,
         })
 
         return true
@@ -255,7 +255,7 @@ function compileAndRun(code, questionID, runCreate = true, compileFailedCallback
                         $rt_last_run_args = [];
                         let blob = new Blob([request.code], { type: 'application/javascript' });
                         let URLObject = URL.createObjectURL(blob);
-                        olog('CODE: ' + request.code);
+                        // olog('CODE: ' + request.code);
                         self.importScripts(URLObject);
                         self.postMessage({ command: 'run-finished-setup', id: reqID });
                 

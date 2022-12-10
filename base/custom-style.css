@@ -123,6 +123,17 @@ li:not(:last-child) {
     }
 }
 
+@media screen and (max-width: 600px) {
+    .row {
+        flex-direction: column;
+    }
+
+    .col {
+        flex: unset !important;
+        width: 100% !important;
+    }
+}
+
 @media screen and (max-width: 320px) {
     .reveal .controls {
         bottom: 60px;

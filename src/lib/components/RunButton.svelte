@@ -69,7 +69,7 @@
         if (webworker) {
             console.log(webworker);
             // Handle the webworker's messages
-            if (language == "python") {
+            if (language == "python" || language == "java") {
                 (webworker as SharedWorker).port.onmessage = onWorkerMessage;
                 (webworker as SharedWorker).port.start();
             } else {
@@ -119,6 +119,7 @@
      */
     function onWorkerMessage(message: any) {
         runButtonRunning = false;
+        console.log(message.data);
         if (message.data.error) {
             outputError = true;
             console.log(message.data);
@@ -159,7 +160,7 @@
     function interruptExecution() {
         console.warn("Interrupting Code Execution");
         // Terminate the worker without waiting for the end of the execution
-        if (language == "python") {
+        if (language == "python" || language == "java") {
             (webworker as SharedWorker).port.close();
         } else {
             (webworker as Worker).terminate();
@@ -205,7 +206,7 @@
         };
 
         // Send to the webworker the script to run
-        if (language == "python") {
+        if (language == "python" || language == "java") {
             (webworker as SharedWorker).port.postMessage(message);
         } else {
             (webworker as Worker).postMessage(message);

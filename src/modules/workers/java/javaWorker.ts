@@ -16,7 +16,7 @@ onconnect = async (e) => {
     async function onmessage(message) {
         if (message.data.port) {
             // A worker has been sent to us, handle it
-            if (message.data.worker == "teaworker" && !runtimeInitialized) {
+            if (message.data.worker == "teaworker") {
                 teaworker = message.data.port;
                 teaworker.addEventListener('message', (e) => {
                     if (e.data.command == 'ok' && e.data.id == 'didload-classlib') {
@@ -26,15 +26,17 @@ onconnect = async (e) => {
                 teaworker.start();
         
                 // Bootstrap environment
-                console.log("Posting message load-classlib");
-                teaworker.postMessage({
-                    command: 'load-classlib',
-                    id: 'didload-classlib',
-                    url: message.data.offline ? message.data.baseUrl + "classlib.txt" : "https://lucademenego99.github.io/icp-bundle/base/utils/java/classlib.txt"
-                })
+                if (!runtimeInitialized) {
+                    console.log("Posting message load-classlib");
+                    teaworker.postMessage({
+                        command: 'load-classlib',
+                        id: 'didload-classlib',
+                        url: message.data.offline ? message.data.baseUrl + "classlib.txt" : "https://lucademenego99.github.io/icp-bundle/base/utils/java/classlib.txt"
+                    })
 
-                // Prevent other instanaces of ICP to re-initialize the runtime by setting this flag
-                runtimeInitialized = true;
+                    // Prevent other instanaces of ICP to re-initialize the runtime by setting this flag
+                    runtimeInitialized = true;
+                }
             } else if (message.data.worker == "runworker") {
                     runWorker = message.data.port;
 

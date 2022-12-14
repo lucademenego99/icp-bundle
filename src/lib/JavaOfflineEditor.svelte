@@ -6,17 +6,27 @@
     export let code = "";
 
     import BaseEditor from "./BaseEditor.svelte";
-    import JavaWorker from "../modules/workers/java/javaWorker?url";
-    import JavaRunWorker from "../modules/workers/java/javaRunWorker?url";
-    import TeaWorker from "../modules/workers/java/javaTeaWorkerOffline?url";
     import { onMount } from "svelte";
 
     let webworker: SharedWorker;
 
     onMount(() => {
+
+        /**
+         * All the workers are loaded by default from /utils/java/...js
+         *
+         * It seems there is no better way to make it work:
+         * what we would like to have is an importScripts within javaTeaWorker that loads a local script,
+         * but this inevitably leads to CORS errors.
+         * We cannot even use a relative path, because when importing the workers with ?url
+         * or with ?sharedworker the relative path won't be correct.
+         * 
+         * By creating the workers giving an absolute path to the scripts instead, the importScripts will work.
+        */
+
         webworker = new SharedWorker(
-            JavaWorker,
-            { type: "module", name: "JavaWorker" }
+            "/utils/java/javaWorker.js",
+            { name: "JavaWorker" }
         );
         webworker.port.start();
 
@@ -28,9 +38,11 @@
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
             baseUrl +=  "/utils/java/";
 
-        const teaworker = new SharedWorker(TeaWorker, { name: "JavaTeaWorker" });
+        const teaworker = new SharedWorker("/utils/java/javaTeaWorker.js", {
+            name: "JavaTeaWorker",
+        });
 
-        const workerrun = new SharedWorker(JavaRunWorker, { name: "JavaRunWorker" });
+        const workerrun = new SharedWorker("/utils/java/javaRunWorker.js", { name: "JavaRunWorker" });
 
         webworker.port.postMessage({
             worker: "teaworker",

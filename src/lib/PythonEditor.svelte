@@ -16,6 +16,11 @@
         webworker = new SharedWorker(PythonWorker, {
             name: "PythonWorker",
         });
+        webworker.port.start();
+
+        webworker.port.postMessage({
+            type: "init",
+        });
     });
 </script>
 

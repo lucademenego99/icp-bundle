@@ -1,11 +1,52 @@
+/**
+ * Flag specifying if the runtime has been initialized
+ */
 let runtimeInitialized = false;
+/**
+ * Flag specifying if the runtime is ready to be used
+ */
 let isReady;
+
+/**
+ * Array of messages sent by the runtime
+ * @type {string[]}
+ */
 let javaMessages = [];
+
+/**
+ * Array of errors sent by the runtime
+ * @type {string[]}
+ */
 let javaErrorMessages = [];
+
+/**
+ * Flag specifying if the code has finished running
+ * @type {boolean}
+ */
 let codeFinished = true;
+
+/**
+ * Port allowing to communicate with the worker that compiles the code
+ * @type {MessagePort}
+ */
 let teaworker;
+
+/**
+ * Port allowing to communicate with the worker that runs the code
+ * @type {MessagePort}
+ */
 let runWorker;
+
+/**
+ * Flag specifying if the code is running offline
+ * @type {boolean}
+ */
 let offline = false;
+
+/**
+ * Base URL from which dependencies are loaded
+ * @type {string}
+ */
 let baseUrl;
 
 onconnect = async (e) => {
@@ -20,18 +61,22 @@ onconnect = async (e) => {
                 teaworker = message.data.port;
                 teaworker.addEventListener('message', (e) => {
                     if (e.data.command == 'ok' && e.data.id == 'didload-classlib') {
-                        isReady = true
+                        // Run a sample program to completely initialize the runtime and make the next commands faster
+                        compileAndRun(`public class Main {public static void main(String[] args) {}}`, 1, ({ message, start, end, severity }) => {});
+
+                        // Set the flag isReady to true
+                        isReady = true;
                     }
-                })
+                });
+                // Start the port
                 teaworker.start();
         
                 // Bootstrap environment
                 if (!runtimeInitialized) {
-                    console.log("Posting message load-classlib");
                     teaworker.postMessage({
                         command: 'load-classlib',
                         id: 'didload-classlib',
-                        url: message.data.offline ? message.data.baseUrl + "classlib.txt" : "https://lucademenego99.github.io/icp-bundle/base/utils/java/classlib.txt"
+                        url: message.data.offline ? (message.data.baseUrl + "classlib.txt") : "https://lucademenego99.github.io/icp-bundle/base/utils/java/classlib.txt"
                     })
 
                     // Prevent other instanaces of ICP to re-initialize the runtime by setting this flag
@@ -69,9 +114,12 @@ onconnect = async (e) => {
                 baseUrl = message.data.baseUrl;
                 switch (message.data.language) {
                     case 'java':
+                        if (!isReady) {
+                            javaErrorMessages.push("The runtime is not ready. Please retry in a few seconds.");
+                            break;
+                        }
                         codeFinished = false;
                         compileAndRun(message.data.script, 1, ({ message, start, end, severity }) => {
-                            console.log("COMPILE FAILED CALLBACK IMPLEMENTATION! ", message);
                             javaErrorMessages.push(message);
                         });
                         while (!codeFinished) {
@@ -223,7 +271,8 @@ onconnect = async (e) => {
         if (teaworker) {
             teaworker.end = (msg, terminate = true) => {
                 if (teaworker && terminate) {
-                    teaworker.terminate();
+                    console.log("WORKER IS PROBABLY BROKEN DUE TO AN ERROR");
+                    // teaworker.terminate();
                 }
                 // finishedExecutionCB(false, undefined, options.args)
                 if (msg) {

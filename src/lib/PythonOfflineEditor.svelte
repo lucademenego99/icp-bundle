@@ -12,6 +12,14 @@
     let webworker: SharedWorker;
 
     onMount(() => {
+        let baseUrl =
+                document.location.protocol +
+                "//" +
+                document.location.host +
+                document.location.pathname;
+            baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
+            baseUrl +=  "/utils/python/pyodide/";
+
         // Get the body of the webworker's function
         var workerJob = pythonWorkerCode
             .toString()
@@ -24,6 +32,12 @@
         // The webworker constructor needs an URL: create it from the blob
         webworker = new SharedWorker(window.URL.createObjectURL(workerBlob), {
             name: "PythonWorker",
+        });
+        webworker.port.start();
+
+        webworker.port.postMessage({
+            type: "init",
+            baseUrl: baseUrl
         });
     });
 </script>

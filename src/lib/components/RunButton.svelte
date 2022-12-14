@@ -71,7 +71,6 @@
             // Handle the webworker's messages
             if (language == "python" || language == "java") {
                 (webworker as SharedWorker).port.onmessage = onWorkerMessage;
-                (webworker as SharedWorker).port.start();
             } else {
                 console.log("Initialized worker for language " + language);
                 (webworker as Worker).onmessage = onWorkerMessage;

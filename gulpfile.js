@@ -21,6 +21,26 @@ export default (cb) => {
 
         console.log("Build completed! Setting up offline mode");
 
+        // Copy some files for Java to work offline
+        child_process.exec("cp src/modules/workers/java/javaWorker.ts dist/base/utils/java/javaWorker.js", (err, stdout, stderr) => {
+            if (err) {
+                console.log("[ERROR] moving javaWorker.ts to javaWorker.js");
+                cb(err);
+            }
+        });
+        child_process.exec("cp src/modules/workers/java/javaTeaWorkerOffline.ts dist/base/utils/java/javaTeaWorker.js", (err, stdout, stderr) => {
+            if (err) {
+                console.log("[ERROR] moving javaTeaWorkerOffline.ts to javaTeaWorker.js");
+                cb(err);
+            }
+        });
+        child_process.exec("cp src/modules/workers/java/javaRunWorker.ts dist/base/utils/java/javaRunWorker.js", (err, stdout, stderr) => {
+            if (err) {
+                console.log("[ERROR] moving javaRunWorker.ts to javaRunWorker.js");
+                cb(err);
+            }
+        });
+
         child_process.exec("cd dist/base/ && chmod +x ../../bin/zip.com && ../../bin/zip.com -r redbean.com utils full-offline.iife.js reveal.js reveal.css blood.css white.css custom-style.css && ../../bin/zip.com -0 redbean.com index.html && chmod +x redbean.com", (err, stdout, stderr) => {
             if (err) {
                 // Try to construct the path for windows systems

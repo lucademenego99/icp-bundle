@@ -25,15 +25,15 @@
         const workerrun = new SharedWorker(RunWorker, { name: "JavaRunWorker" });
 
         webworker.port.postMessage({
+            worker: "runworker",
+            port: workerrun.port,
+        }, [workerrun.port]);
+
+        webworker.port.postMessage({
             worker: "teaworker",
             port: teaworker.port,
             offline: false,
         }, [teaworker.port]);
-
-        webworker.port.postMessage({
-            worker: "runworker",
-            port: workerrun.port,
-        }, [workerrun.port]);
     });
 </script>
 

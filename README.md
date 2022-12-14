@@ -50,12 +50,12 @@ Every component has a set of properties that can be passed inside the tags:
 - `type`: *normal* or *vertical*.
 
 To access these components you need to import a bundle in your HTML page. Which bundle to add depends on the language you want to use:
-- all the languages: `dist/base/full.iife.js`;
-- specific language: `dist/base/{language}.iife.js`.
+- all the languages: `base/full.iife.js`;
+- specific language: `base/{language}.iife.js`.
 
-At the moment the latest version is published on npm, so you can access it using the CDN you prefer. For instance:
+Since the package is published on npm, you can access it using the CDN you prefer. However, since CDNs like `unpkg.com` are quite slow with not famous scripts, the latest version of the package is also exposed in Github Pages. So you can include it with:
 ```
-<script src="https://unpkg.com/icp-bundle/dist/base/python.iife.js"></script>
+<script src="https://lucademenego99.github.io/icp-bundle/base/{language}.iife.js"></script>
 ```
 
 
@@ -90,6 +90,6 @@ They can be called using one of the exported names from Javascript:
 
 ## Mentions
 - the typescript plugin included in `src/modules/` has been taken from [prisma/text-editors](https://github.com/prisma/text-editors)
-- run java code in the browser: [teavm-javac](https://github.com/frankbauer/teavm-javac) from [frankbauer](https://github.com/frankbauer)'s fork
+- run java code in the browser: [teavm-javac](https://github.com/frankbauer/teavm-javac) based on [frankbauer](https://github.com/frankbauer)'s fork (but modified to work as a SharedWorker)
 - run python code in the browser: [pyodide](https://pyodide.org/en/stable/)
 - run sql code in the browser: [sql.js](https://github.com/sql-js/sql.js/)

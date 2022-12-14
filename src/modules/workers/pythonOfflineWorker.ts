@@ -1,6 +1,3 @@
-// @ts-nocheck
-
-
 export function pythonWorkerCode() {
     // Global worker variables
     let messages = [];
@@ -18,86 +15,70 @@ export function pythonWorkerCode() {
 
         // Customize the onmessage event
         async function onmessage(message) {
-            // Array with all console.log results
-            messages = [];
-
-            // Set the input
-            input = message.data.input;
-
-            // Evaluate the script and
-            // Send the output:
-            // - debug: console.log results
-            // - result: final result of the script
-            try {
+            if (message.data.type === 'init' && !pythonDownloaded) {
+                importScripts(message.data.baseUrl + "pyodide.js");
+                // @ts-ignore - loadPyodide is imported by the previous importScript
+                pyodideObj = await loadPyodide({
+                    stdin: () => input,
+                    stdout: (text) => {
+                        if (pythonInitCompleted) {
+                            messages.push(text);
+                        } else if (text.includes('Python initialization complete')) {
+                            pythonInitCompleted = true;
+                        }
+                    },
+                    stderr: (text) => {
+                        if (pythonInitCompleted) {
+                            messages.push(text);
+                        } else if (text.includes('Python initialization complete')) {
+                            pythonInitCompleted = true;
+                        }
+                    },
+                });
+                pythonDownloaded = true;
+            } else {
                 if (!pythonDownloaded) {
-                    if (!message.data.offline) {
-                        importScripts("https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js");
-                        pythonDownloaded = true;
-                        // @ts-ignore - loadPyodide is imported by the previous importScript
-                        pyodideObj = await loadPyodide({
-                            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.20.0/full/",
-                            stdin: () => input,
-                            stdout: (text) => {
-                                if (pythonInitCompleted) {
-                                    messages.push(text);
-                                } else if (text.includes('Python initialization complete')) {
-                                    pythonInitCompleted = true;
-                                }
-                            },
-                            stderr: (text) => {
-                                if (pythonInitCompleted) {
-                                    messages.push(text);
-                                } else if (text.includes('Python initialization complete')) {
-                                    pythonInitCompleted = true;
-                                }
-                            },
-                        });
-                    } else {
-                        importScripts(message.data.baseUrl + "pyodide.js");
-                        pythonDownloaded = true;
-                        // @ts-ignore - loadPyodide is imported by the previous importScript
-                        pyodideObj = await loadPyodide({
-                            stdin: () => input,
-                            stdout: (text) => {
-                                if (pythonInitCompleted) {
-                                    messages.push(text);
-                                } else if (text.includes('Python initialization complete')) {
-                                    pythonInitCompleted = true;
-                                }
-                            },
-                            stderr: (text) => {
-                                if (pythonInitCompleted) {
-                                    messages.push(text);
-                                } else if (text.includes('Python initialization complete')) {
-                                    pythonInitCompleted = true;
-                                }
-                            },
-                        });
-                    }
+                    port.postMessage({
+                        "error": "The runtime is still initializing. Please wait a few seconds and try again.",
+                        "line": 0,
+                    });
+                    return;
                 }
-                pyodideObj.globals.clear();
-                await pyodideObj.loadPackagesFromImports(message.data.script);
-                let output = await pyodideObj.runPythonAsync(message.data.script);
 
-
-                let debug = messages.join("\n");
-                // Limit debug to 100000 characters
-                if (debug.length > 100000) {
-                    debug = debug.substring(0, 100000) + "...";
-                }
+                // Array with all console.log results
                 messages = [];
 
-                port.postMessage({
-                    "debug": debug,
-                    "result": output
-                });
-            } catch (e) {
-                console.log("E", e);
-                e = parsePythonError(e);
-                port.postMessage({
-                    "error": e.message,
-                    "line": e.deepest.line + 1,
-                });
+                // Set the input
+                input = message.data.input;
+
+                // Evaluate the script and
+                // Send the output:
+                // - debug: console.log results
+                // - result: final result of the script
+                try {
+                    pyodideObj.globals.clear();
+                    await pyodideObj.loadPackagesFromImports(message.data.script);
+                    let output = await pyodideObj.runPythonAsync(message.data.script);
+
+
+                    let debug = messages.join("\n");
+                    // Limit debug to 100000 characters
+                    if (debug.length > 100000) {
+                        debug = debug.substring(0, 100000) + "...";
+                    }
+                    messages = [];
+
+                    port.postMessage({
+                        "debug": debug,
+                        "result": output
+                    });
+                } catch (e) {
+                    e = parsePythonError(e);
+                    port.postMessage({
+                        "error": e.message,
+                        "line": e.deepest.line + 1,
+                    });
+                }
             }
         }
 

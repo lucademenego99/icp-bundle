@@ -63,9 +63,6 @@ onconnect = async (e) => {
                     if (e.data.command == 'ok' && e.data.id == 'didload-classlib') {
                         // Run a sample program to completely initialize the runtime and make the next commands faster
                         compileAndRun(`public class Main {public static void main(String[] args) {}}`, 1, ({ message, start, end, severity }) => {});
-
-                        // Set the flag isReady to true
-                        isReady = true;
                     }
                 });
                 // Start the port
@@ -87,6 +84,8 @@ onconnect = async (e) => {
 
                     const runListener = (ee) => {
                         if (ee.data.command == 'run-completed') {
+                            // Set the flag isReady to true
+                            isReady = true;
                             // console.log("RUN COMPLETE ", ee.data);
                             codeFinished = true;
                         } else if (ee.data.command == 'stdout') {
@@ -125,17 +124,17 @@ onconnect = async (e) => {
                         while (!codeFinished) {
                             await delay(250);
                         }
-                        if (javaErrorMessages.length > 0) {
-                            javaErrorMessages.pop();
-                            const error = javaErrorMessages.join("\n");
-                            javaErrorMessages = [];
-                            throw new Error(error);
-                        }
                         break;
 
                     default:
                         console.warn("LANGUAGE NOT AVAILABLE");
                         break;
+                }
+                if (javaErrorMessages.length > 0) {
+                    javaErrorMessages.pop();
+                    const error = javaErrorMessages.join("\n");
+                    javaErrorMessages = [];
+                    throw new Error(error);
                 }
                 let debug = javaMessages.join("\n");
                 // Limit debug to 100000 characters

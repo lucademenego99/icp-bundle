@@ -158,11 +158,11 @@
             ? 'calc(var(--output-height) + 10px)'
             : '10px'}; top: 10px; width: 30px; height: 30px; border: 0px; border-radius: .4em; display: flex; justify-content: center; align-items: center; z-index: 99; background-color: transparent; cursor: pointer;">
             {#if isFullscreen}
-            <svg width="46" height="46" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg width="46" height="46" fill="{theme == "dark" ? "white" : "black"}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M5 8h3V5h2v5H5V8Zm3 8H5v-2h5v5H8v-3Zm6 3h2v-3h3v-2h-5v5Zm2-14v3h3v2h-5V5h2Z" clip-rule="evenodd"></path>
             </svg>
             {:else}
-            <svg width="46" height="46" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg width="46" height="46" fill="{theme == "dark" ? "white" : "black"}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M7 10H5V5h5v2H7v3Zm-2 4h2v3h3v2H5v-5Zm12 3h-3v2h5v-5h-2v3ZM14 7V5h5v5h-2V7h-3Z" clip-rule="evenodd"></path>
             </svg>
             {/if}

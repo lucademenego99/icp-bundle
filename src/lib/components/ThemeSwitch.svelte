@@ -36,7 +36,7 @@
         }}
         style="position: absolute; right: {type == 'vertical'
             ? 'calc(var(--output-height) + 10px)'
-            : '10px'}; top: 10px; padding: 4px; width: 30px; height: 30px; border: 0px; border-radius: .4em; display: flex; justify-content: center; align-items: center; z-index: 99; background-color: var(--theme-color); cursor: pointer;"
+            : '10px'}; top: 50px; padding: 4px; width: 30px; height: 30px; border: 0px; border-radius: .4em; display: flex; justify-content: center; align-items: center; z-index: 99; background-color: var(--theme-color); cursor: pointer;"
     >
         {#if theme == "dark"}
             <svg

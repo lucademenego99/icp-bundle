@@ -61,7 +61,6 @@ onconnect = async (e) => {
                 teaworker = message.data.port;
                 teaworker.addEventListener('message', (e) => {
                     if (e.data.command == 'ok' && e.data.id == 'didload-classlib') {
-                        console.log("Classlib loaded");
                         // Run a sample program to completely initialize the runtime and make the next commands faster
                         compileAndRun(`public class Main {public static void main(String[] args) {}}`, 1, ({ message, start, end, severity }) => {});
 

@@ -137,6 +137,8 @@ const languageSelection = {
     java: java(),
     python: python(),
     sql: sql({ upperCaseKeywords: true }),
+    p5: javascript(),
+    processing: java()
 };
 
 /**

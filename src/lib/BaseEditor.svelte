@@ -10,7 +10,9 @@
         | "python"
         | "cpp"
         | "java"
-        | "sql" = "javascript";
+        | "sql"
+        | "p5"
+        | "processing" = "javascript";
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code = "";
@@ -51,6 +53,7 @@
     let messageToShow = "",
         messageShowing = false;
     let isFullscreen = false;
+    let canvas;
 
     /**
      * FUNCTIONS
@@ -82,6 +85,10 @@
     */
     $: {
         if (rootElement) {
+            rootElement.style.setProperty(
+                "--output-height",
+                language == "p5" || language == "processing" ? "50%" : "30%"
+            );
             rootElement.style.setProperty(
                 "--main-output-bg-color",
                 theme == "dark" ? "#333842" : "#f5f5f5"
@@ -191,6 +198,9 @@
             output = event.detail.output;
             outputError = event.detail.outputError;
         }}
+        on:canvasout={(event) => {
+            canvas = event.detail.canvas;
+        }}
     />
 
     <!-- Main Editor Container - powered by CodeMirror -->
@@ -200,6 +210,7 @@
         {theme}
         {code}
         {output}
+        {canvas}
         iserror={outputError}
         on:editormsg={(event) => {
             codeMirrorEditor = event.detail.editor;
@@ -219,7 +230,6 @@
         --run-btn-active-color: #00aa33;
         --run-btn-shadow-color: #00cc3d81;
         --run-btn-active-shadow-color: #00cc3d3d;
-        --output-height: 30%;
     }
 
     /* Reset styles that may appear from upper elements (e.g. with reveal.js) */

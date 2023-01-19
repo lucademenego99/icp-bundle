@@ -11,8 +11,7 @@
 
     let webworker: SharedWorker;
 
-    onMount(() => {
-        // Get the body of the webworker's function
+    function createWorker(): void {
         webworker = new SharedWorker(PythonWorker, {
             name: "PythonWorker",
         });
@@ -21,7 +20,20 @@
         webworker.port.postMessage({
             type: "init",
         });
+    }
+
+    onMount(() => {
+        createWorker();
     });
 </script>
 
-<base-editor {type} {theme} {code} {webworker} language="python" />
+<base-editor
+    {type}
+    {theme}
+    {code}
+    {webworker}
+    language="python"
+    on:recreateworker={(event) => {
+        createWorker();
+    }}
+/>

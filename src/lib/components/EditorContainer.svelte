@@ -65,7 +65,10 @@
         if (canvas) {
             outputContainer.innerHTML = "";
             outputContainer.appendChild(canvas);
-        } else if (outputContainer && outputContainer.getElementsByTagName("canvas").length > 0) {
+        } else if (
+            outputContainer &&
+            outputContainer.getElementsByTagName("canvas").length > 0
+        ) {
             outputContainer.innerHTML = "";
         }
     }
@@ -89,7 +92,10 @@
         Split([editorElement, outputContainer], {
             minSize: 40,
             gutterSize: 5,
-            sizes: language == "p5" || language == "processing" ? [50, 50] : [70, 30],
+            sizes:
+                language == "p5" || language == "processing"
+                    ? [50, 50]
+                    : [70, 30],
             direction: type == "normal" ? "vertical" : "horizontal",
         });
 

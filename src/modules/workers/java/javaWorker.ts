@@ -119,7 +119,7 @@ onconnect = async (e) => {
                         }
                         codeFinished = false;
                         compileAndRun(message.data.script, 1, ({ message, start, end, severity }) => {
-                            javaErrorMessages.push(message);
+                            javaErrorMessages.push(`[${severity.toUpperCase()}] (${start.line}:${end.line}) ${message}`);
                         });
                         while (!codeFinished) {
                             await delay(250);
@@ -131,12 +131,27 @@ onconnect = async (e) => {
                         break;
                 }
                 if (javaErrorMessages.length > 0) {
-                    javaErrorMessages.pop();
-                    const error = javaErrorMessages.join("\n");
-                    javaErrorMessages = [];
-                    throw new Error(error);
+                    // Loop through the error messages, if all messages contain "WARNING" then don't throw an error
+                    let allWarnings = true;
+                    for (let i = 0; i < javaErrorMessages.length; i++) {
+                        if (!javaErrorMessages[i].startsWith("[WARNING]")) {
+                            allWarnings = false;
+                            break;
+                        }
+                    }
+                    if (!allWarnings) {
+                        const error = javaErrorMessages.join("\n");
+                        javaErrorMessages = [];
+                        javaMessages = [];
+                        throw new Error(error);
+                    }
                 }
-                let debug = javaMessages.join("\n");
+                let debug = "";
+                if (javaErrorMessages.length > 0) {
+                    debug += javaErrorMessages.join("\n") + "\n\n";
+                    javaErrorMessages = [];
+                }
+                debug += javaMessages.join("\n");
                 // Limit debug to 100000 characters
                 if (debug.length > 100000) {
                     debug = debug.substring(0, 100000) + "...";
@@ -148,7 +163,7 @@ onconnect = async (e) => {
                 });
             } catch (e) {
                 port.postMessage({
-                    "error": e
+                    "error": e.message
                 });
             }
         }
@@ -206,7 +221,9 @@ onconnect = async (e) => {
 
                 const msg = e.data.text + '\n'
                 if (e.data.severity == 'ERROR') {
+                    codeFinished = true;
                     console.log("ERR 1", msg);
+                    teaworker.removeEventListener('message', myListener)
                 } else {
                     console.log("INFO", msg);
                 }
@@ -229,19 +246,23 @@ onconnect = async (e) => {
 
                 const msg = e.data.humanReadable + '\n'
                 if (e.data.kind == 'ERROR') {
-                    console.log("ERR 2", msg);
+                    codeFinished = true;
+                    teaworker.removeEventListener('message', myListener)
+                    console.log("Compilation Exception", msg);
                 } else {
                     console.log("INFO", msg);
                 }
             } else if (e.data.command == 'error') {
                 if (teaworker) {
+                    teaworker.removeEventListener('message', myListener)
                     teaworker.end('Error:  An internal compiler Error occured')
                 }
-                teaworker = undefined
             } else if (e.data.command == 'compilation-complete') {
                 if (teaworker) {
                     teaworker.removeEventListener('message', myListener)
                 }
+
+                console.log('Compilation complete. Send run command.');
 
                 runWorker.postMessage({
                     command: 'run',
@@ -259,6 +280,7 @@ onconnect = async (e) => {
         }
 
         if (teaworker) {
+            console.log("Start compilation");
             teaworker.postMessage({
                 command: 'compile',
                 id: '' + questionID,
@@ -270,10 +292,8 @@ onconnect = async (e) => {
         if (teaworker) {
             teaworker.end = (msg, terminate = true) => {
                 if (teaworker && terminate) {
-                    console.log("WORKER IS PROBABLY BROKEN DUE TO AN ERROR");
-                    // teaworker.terminate();
+                    console.log("WORKER IS BROKEN");
                 }
-                // finishedExecutionCB(false, undefined, options.args)
                 if (msg) {
                     console.log("ERR", msg + '\n');
                 }

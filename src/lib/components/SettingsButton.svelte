@@ -82,7 +82,11 @@
                     {
                         from: 0,
                         to: editor.state.doc.length,
-                        insert: isTextLocked ? code : code.replaceAll("<EDITABLE>", "").replaceAll("</EDITABLE>", ""),
+                        insert: isTextLocked
+                            ? code
+                            : code
+                                  .replaceAll("<EDITABLE>", "")
+                                  .replaceAll("</EDITABLE>", ""),
                     },
                 ],
             });
@@ -98,11 +102,7 @@
             // Toggle the text locked state
             isTextLocked = !isTextLocked;
             setEditableFilter(editor, editableconf, code, isTextLocked);
-            showMessage(
-                isTextLocked
-                    ? "Text locked"
-                    : "Text unlocked"
-            );
+            showMessage(isTextLocked ? "Text locked" : "Text unlocked");
         });
     });
 </script>
@@ -117,7 +117,6 @@
     <div class="menu">
         <input
             type="checkbox"
-            href="#"
             class="menu-open"
             name="menu-open"
             id="menu-open"
@@ -200,9 +199,13 @@
         <div
             bind:this={textLockedContainer}
             class="menu-item"
-            style="background-color: {isTextLocked ? '#ff4133' : '#00cc3d'}; {!editableconf || !editableconf.get(editor.state) ? 'display: none !important' : ''}"
+            style="background-color: {isTextLocked
+                ? '#ff4133'
+                : '#00cc3d'}; {!editableconf || !editableconf.get(editor.state)
+                ? 'display: none !important'
+                : ''}"
         >
-            <div class="container" >
+            <div class="container">
                 <span class="lock {isTextLocked ? '' : 'unlocked'}" />
             </div>
         </div>
@@ -287,7 +290,6 @@
         transition-duration: 400ms;
         transform: translate3d(0, -100px, 0);
     }
-
 
     /* Lock icon CSS */
     .container {

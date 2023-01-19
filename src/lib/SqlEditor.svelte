@@ -16,4 +16,13 @@
     });
 </script>
 
-<base-editor {type} {theme} {code} {webworker} language="sql" />
+<base-editor
+    {type}
+    {theme}
+    {code}
+    {webworker}
+    language="sql"
+    on:recreateworker={(event) => {
+        webworker = new SqlWorker();
+    }}
+/>

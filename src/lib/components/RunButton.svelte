@@ -1,12 +1,11 @@
 <svelte:options tag="run-button" />
 
-
 <script lang="ts">
     /**
      * IMPORTS
      */
     import { executeRequest, editorToExecute } from "../../stores";
-    import p5 from 'p5';
+    import p5 from "p5";
     import { transformProcessing } from "../../modules/processing/utils";
     import type { EditorView } from "@codemirror/view";
 
@@ -181,6 +180,12 @@
         } else {
             (webworker as Worker).terminate();
         }
+        const event = new CustomEvent("recreateworker", {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+        });
+        ref?.dispatchEvent(event);
         runButtonRunning = false;
     }
 
@@ -223,7 +228,7 @@
                 composed: true,
             });
             ref?.dispatchEvent(event);
-            
+
             return;
         }
 
@@ -306,13 +311,17 @@ ${code}
         ? "right: calc(var(--output-height) + 10px); bottom: 5px"
         : "right: 10px; bottom: calc(var(--output-height) + 10px)"}
 >
-    <main></main>
+    <main />
     <button
         on:click={runCode}
-        disabled={webworker == undefined && language != "p5" && language != "processing"}
+        disabled={webworker == undefined &&
+            language != "p5" &&
+            language != "processing"}
         id="run-button"
         style="width: 40px; height: 40px; border-radius: 50%; background-color: {webworker !=
-        undefined || language == "p5" || language == "processing"
+            undefined ||
+        language == 'p5' ||
+        language == 'processing'
             ? runButtonRunning
                 ? '#ff4133'
                 : '#00CC3D'

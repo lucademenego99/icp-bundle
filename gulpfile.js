@@ -45,18 +45,16 @@ export default (cb) => {
             cb(err);
         }
 
-        // When using p5 or processing, replace "use strict"; with "use strict";\nglobalThis.process = globalThis.process;\n
+        // Replace "use strict"; with "use strict";\nglobalThis.process = globalThis.process;\n
         // This is because the p5-and-processing library uses process, which is undefined in the browser
         // This is a hacky way to fix it
-        if (language == "full" || language == "full-offline" || language == "p5-and-processing") {
-            console.log("Replacing process with globalThis.process");
-            child_process.exec(`sed -i 's/\"use strict\";/\"use strict\";\\nglobalThis.process = globalThis.process;\\n/g' dist/base/${language}.iife.js`, (err, stdout, stderr) => {
-                if (err) {
-                    console.log("[ERROR] replacing process with globalThis.process");
-                    cb(err);
-                }
-            });
-        }
+        console.log("Replacing process with globalThis.process");
+        child_process.exec(`sed -i 's/\"use strict\";/\"use strict\";\\nglobalThis.process = globalThis.process;\\n/g' dist/base/${language}.iife.js`, (err, stdout, stderr) => {
+            if (err) {
+                console.log("[ERROR] replacing process with globalThis.process");
+                cb(err);
+            }
+        });
 
         console.log("Build completed!");
 

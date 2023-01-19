@@ -48,14 +48,13 @@
             </section>
             <section>
                 <h3 class="title">Introduction</h3>
-                <p>The following <span class="emph">web components</span> are exposed by the library</p>
+                <p>The following <span class="emph">web component</span> is exposed by the library</p>
                 <ul style="padding-bottom: 30px;">
                     <li>&lt;base-editor /&gt;</li>
-                    <li>&lt;sql-editor /&gt;</li>
                 </ul>
                 <p>The base editor can be initialized with the following <span class="emph">languages</span>:
                     Javascript,
-                    Typescript, Java, Python</p>
+                    Typescript, Java, Python, SQL, P5.js, Processing</p>
             </section>
             <section>
                 <p class="subtitle">&lt;base-editor <span class="emph">language</span>="javascript" /&gt;</p>
@@ -139,6 +138,54 @@ SELECT designation,COUNT(*) AS nbr, (AVG(salary)) AS avg_salary FROM employees G
 SELECT name,hired_on FROM employees ORDER BY hired_on;"></sql-editor>
                 </div>
             </section>
+            <section>
+                <p class="subtitle">&lt;p5-editor <span class="emph">type</span>="vertical" /&gt;</p>
+                <div class="big-code">
+                  <p5-editor contenteditable="true" type="vertical" code="function setup() {
+    createCanvas(400, 400);
+}
+
+function draw() {
+    if (mouseIsPressed) {
+    fill(0);
+    } else {
+    fill(255);
+    }
+    ellipse(mouseX, mouseY, 80, 80);
+}"></p5-editor>
+                </div>
+              </section>
+              <section>
+                <p class="subtitle">&lt;processing-editor <span class="emph">type</span>="vertical" /&gt;</p>
+                <div class="big-code">
+                  <processing-editor contenteditable="true" type="vertical" code="float xoff = 0.0;
+float xincrement = 0.01; 
+
+void setup() {
+    size(640, 360);
+    background(0);
+    noStroke();
+}
+
+void draw() {
+    // Create an alpha blended background
+    fill(0, 10);
+    rect(0,0,width,height);
+    
+    //float n = random(0,width);  // Try this line instead of noise
+    
+    // Get a noise value based on xoff and scale it according to the window's width
+    float n = noise(xoff)*width;
+    
+    // With each cycle, increment xoff
+    xoff += xincrement;
+    
+    // Draw the ellipse at the value produced by perlin noise
+    fill(200);
+    ellipse(n,height/2, 64, 64);
+}"></processing-editor>
+                </div>
+              </section>
         </div>
     </div>
 

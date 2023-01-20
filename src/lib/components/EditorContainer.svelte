@@ -20,11 +20,14 @@
         | "python"
         | "cpp"
         | "java"
-        | "sql" = "javascript";
+        | "sql"
+        | "p5"
+        | "processing" = "javascript";
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code: string;
     export let output: string;
+    export let canvas: HTMLCanvasElement;
     export let iserror: boolean;
 
     /**
@@ -59,6 +62,18 @@
     }
 
     $: {
+        if (canvas) {
+            outputContainer.innerHTML = "";
+            outputContainer.appendChild(canvas);
+        } else if (
+            outputContainer &&
+            outputContainer.getElementsByTagName("canvas").length > 0
+        ) {
+            outputContainer.innerHTML = "";
+        }
+    }
+
+    $: {
         if (language == "sql" && outputElement) {
             outputElement.innerHTML = output;
         }
@@ -77,7 +92,10 @@
         Split([editorElement, outputContainer], {
             minSize: 40,
             gutterSize: 5,
-            sizes: [70, 30],
+            sizes:
+                language == "p5" || language == "processing"
+                    ? [50, 50]
+                    : [70, 30],
             direction: type == "normal" ? "vertical" : "horizontal",
         });
 

@@ -12,29 +12,50 @@
     import { onMount } from "svelte";
 
     let webworker: SharedWorker;
+    let teaworker: SharedWorker;
 
-    onMount(() => {
-        webworker = new SharedWorker(
-            JavaWorker,
-            { name: "JavaWorker" }
-        );
+    function createWorker(): void {
+        webworker = new SharedWorker(JavaWorker, { name: "JavaWorker" });
         webworker.port.start();
 
-        const teaworker = new SharedWorker(TeaWorker, { name: "JavaTeaWorker" });
+        teaworker = new SharedWorker(TeaWorker, {
+            name: "JavaTeaWorker",
+        });
 
-        const workerrun = new SharedWorker(RunWorker, { name: "JavaRunWorker" });
+        const workerrun = new SharedWorker(RunWorker, {
+            name: "JavaRunWorker",
+        });
 
-        webworker.port.postMessage({
-            worker: "runworker",
-            port: workerrun.port,
-        }, [workerrun.port]);
+        webworker.port.postMessage(
+            {
+                worker: "runworker",
+                port: workerrun.port,
+            },
+            [workerrun.port]
+        );
 
-        webworker.port.postMessage({
-            worker: "teaworker",
-            port: teaworker.port,
-            offline: false,
-        }, [teaworker.port]);
+        webworker.port.postMessage(
+            {
+                worker: "teaworker",
+                port: teaworker.port,
+                offline: false,
+            },
+            [teaworker.port]
+        );
+    }
+
+    onMount(() => {
+        createWorker();
     });
 </script>
 
-<base-editor {type} {theme} {code} {webworker} language="java" />
+<base-editor
+    {type}
+    {theme}
+    {code}
+    {webworker}
+    language="java"
+    on:recreateworker={(event) => {
+        createWorker();
+    }}
+/>

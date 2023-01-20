@@ -5,6 +5,8 @@
      * IMPORTS
      */
     import { executeRequest, editorToExecute } from "../../stores";
+    import p5 from "p5";
+    import { transformProcessing } from "../../modules/processing/utils";
     import type { EditorView } from "@codemirror/view";
 
     type Table = {
@@ -22,7 +24,9 @@
         | "python"
         | "cpp"
         | "java"
-        | "sql";
+        | "sql"
+        | "p5"
+        | "processing";
     export let editor: EditorView;
     export let offline: boolean = false;
     export let webworker: Worker | SharedWorker;
@@ -38,6 +42,7 @@
     let output: string;
     let outputError: boolean;
     let runButtonRunning = false;
+    let p5Instance: p5;
 
     // Dispatch an event "changedout" when the output changes
     // The parent will listen to this event and update the output accordingly
@@ -161,9 +166,26 @@
         // Terminate the worker without waiting for the end of the execution
         if (language == "python" || language == "java") {
             (webworker as SharedWorker).port.close();
+        } else if (language == "p5" || language == "processing") {
+            p5Instance.remove();
+            // const event = new CustomEvent("canvasout", {
+            //     detail: {
+            //         canvas: null,
+            //     },
+            //     bubbles: true,
+            //     cancelable: true,
+            //     composed: true,
+            // });
+            // ref?.dispatchEvent(event);
         } else {
             (webworker as Worker).terminate();
         }
+        const event = new CustomEvent("recreateworker", {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+        });
+        ref?.dispatchEvent(event);
         runButtonRunning = false;
     }
 
@@ -178,6 +200,75 @@
         }
 
         runButtonRunning = true;
+
+        if (language == "p5") {
+            let code = editor.state.doc.toString();
+            const width = editor.dom.getBoundingClientRect().width;
+            const height = editor.dom.getBoundingClientRect().height;
+
+            console.log(width, height);
+
+            // use a regular expression to find the createCanvas() function call
+            const regex = /createCanvas\(([^,]+),\s*([^)]+)\)/;
+
+            // replace the function call with a new function call using the desired arguments
+            code = code.replace(regex, `createCanvas(${width}, ${height})`);
+
+            window.eval(code);
+
+            p5Instance = new p5();
+
+            const canvas = p5Instance.canvas;
+            const event = new CustomEvent("canvasout", {
+                detail: {
+                    canvas,
+                },
+                bubbles: true,
+                cancelable: true,
+                composed: true,
+            });
+            ref?.dispatchEvent(event);
+
+            return;
+        }
+
+        if (language == "processing") {
+            let code = editor.state.doc.toString();
+            // @ts-ignore
+            code = transformProcessing(code);
+            const width = editor.dom.getBoundingClientRect().width;
+            const height = editor.dom.getBoundingClientRect().height;
+
+            code = `
+let width = ${Math.round(width)};
+let height = ${Math.round(height)};
+${code}
+`;
+            console.log(code);
+
+            // use a regular expression to find the createCanvas() function call
+            const regex = /createCanvas\(([^,]+),\s*([^)]+)\)/;
+
+            // replace the function call with a new function call using the desired arguments
+            code = code.replace(regex, `createCanvas(${width}, ${height})`);
+
+            window.eval(code);
+
+            p5Instance = new p5();
+
+            const canvas = p5Instance.canvas;
+            const event = new CustomEvent("canvasout", {
+                detail: {
+                    canvas,
+                },
+                bubbles: true,
+                cancelable: true,
+                composed: true,
+            });
+            ref?.dispatchEvent(event);
+
+            return;
+        }
 
         // Define the baseUrl used for pyodide to load the packages
         // when in offline mode
@@ -220,12 +311,17 @@
         ? "right: calc(var(--output-height) + 10px); bottom: 5px"
         : "right: 10px; bottom: calc(var(--output-height) + 10px)"}
 >
+    <main />
     <button
         on:click={runCode}
-        disabled={webworker == undefined}
+        disabled={webworker == undefined &&
+            language != "p5" &&
+            language != "processing"}
         id="run-button"
         style="width: 40px; height: 40px; border-radius: 50%; background-color: {webworker !=
-        undefined
+            undefined ||
+        language == 'p5' ||
+        language == 'processing'
             ? runButtonRunning
                 ? '#ff4133'
                 : '#00CC3D'

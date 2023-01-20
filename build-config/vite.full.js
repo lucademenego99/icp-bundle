@@ -5,7 +5,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
     build: {
         outDir: 'dist/base/',
-        emptyOutDir: true,
+        emptyOutDir: false,
         lib: {
             entry: 'src/exports/full.ts',
             formats: ['iife'],

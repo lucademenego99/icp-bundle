@@ -11,14 +11,14 @@
 
     let webworker: SharedWorker;
 
-    onMount(() => {
+    function createWorker(): void {
         let baseUrl =
-                document.location.protocol +
-                "//" +
-                document.location.host +
-                document.location.pathname;
-            baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
-            baseUrl +=  "/utils/python/pyodide/";
+            document.location.protocol +
+            "//" +
+            document.location.host +
+            document.location.pathname;
+        baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
+        baseUrl += "/utils/python/pyodide/";
 
         // Get the body of the webworker's function
         var workerJob = pythonWorkerCode
@@ -37,8 +37,12 @@
 
         webworker.port.postMessage({
             type: "init",
-            baseUrl: baseUrl
+            baseUrl: baseUrl,
         });
+    }
+
+    onMount(() => {
+        createWorker();
     });
 </script>
 
@@ -49,4 +53,7 @@
     {webworker}
     offline={true}
     language="python"
+    on:recreateworker={(event) => {
+        createWorker();
+    }}
 />

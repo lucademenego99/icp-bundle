@@ -16,4 +16,13 @@
     });
 </script>
 
-<base-editor {type} {theme} {code} {webworker} language="javascript" />
+<base-editor
+    {type}
+    {theme}
+    {code}
+    {webworker}
+    language="javascript"
+    on:recreateworker={(event) => {
+        webworker = new JavascriptWorker();
+    }}
+/>

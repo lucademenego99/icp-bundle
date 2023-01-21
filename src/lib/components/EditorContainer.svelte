@@ -198,6 +198,7 @@
         background-color: var(--main-output-bg-color);
         color: var(--main-output-text-color);
         height: var(--output-height);
+        overflow: hidden;
     }
 
     #output-title-container {

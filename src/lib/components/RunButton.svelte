@@ -219,6 +219,8 @@
             p5Instance = new p5();
 
             const canvas = p5Instance.canvas;
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
             const event = new CustomEvent("canvasout", {
                 detail: {
                     canvas,
@@ -244,7 +246,6 @@ let width = ${Math.round(width)};
 let height = ${Math.round(height)};
 ${code}
 `;
-            console.log(code);
 
             // use a regular expression to find the createCanvas() function call
             const regex = /createCanvas\(([^,]+),\s*([^)]+)\)/;
@@ -257,6 +258,8 @@ ${code}
             p5Instance = new p5();
 
             const canvas = p5Instance.canvas;
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
             const event = new CustomEvent("canvasout", {
                 detail: {
                     canvas,

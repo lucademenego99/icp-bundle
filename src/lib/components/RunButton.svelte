@@ -203,13 +203,23 @@
 
         if (language == "p5") {
             let code = editor.state.doc.toString();
-            const width = editor.dom.getBoundingClientRect().width;
-            const height = editor.dom.getBoundingClientRect().height;
-
-            console.log(width, height);
+            let width = editor.dom.getBoundingClientRect().width;
+            let height = editor.dom.getBoundingClientRect().height;
 
             // use a regular expression to find the createCanvas() function call
             const regex = /createCanvas\(([^,]+),\s*([^)]+)\)/;
+
+            // Get the width and height from the createCanvas() function call
+            const match = regex.exec(code);
+            const w = parseInt(match[1]);
+            const h = parseInt(match[2]);
+
+            if (w < width) {
+                width = w;
+            }
+            if (h < height) {
+                height = h;
+            }
 
             // replace the function call with a new function call using the desired arguments
             code = code.replace(regex, `createCanvas(${width}, ${height})`);
@@ -219,8 +229,8 @@
             p5Instance = new p5();
 
             const canvas = p5Instance.canvas;
-            canvas.style.width = "100%";
-            canvas.style.height = "100%";
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
             const event = new CustomEvent("canvasout", {
                 detail: {
                     canvas,
@@ -236,10 +246,32 @@
 
         if (language == "processing") {
             let code = editor.state.doc.toString();
+
+            // Remove from code any line that starts with "// "
+            code = code.replace(/^\/\/ .*/gm, "");
+
             // @ts-ignore
             code = transformProcessing(code);
-            const width = editor.dom.getBoundingClientRect().width;
-            const height = editor.dom.getBoundingClientRect().height;
+            let width = editor.dom.getBoundingClientRect().width;
+            let height = editor.dom.getBoundingClientRect().height;
+
+            // use a regular expression to find the createCanvas() function call
+            const regex = /createCanvas\(([^,]+),\s*([^)]+)\)/;
+
+            // Get the width and height from the createCanvas() function call
+            const match = regex.exec(code);
+            const w = parseInt(match[1]);
+            const h = parseInt(match[2]);
+
+            if (w < width) {
+                width = w;
+            }
+            if (h < height) {
+                height = h;
+            }
+
+            // replace the function call with a new function call using the desired arguments
+            code = code.replace(regex, `createCanvas(${width}, ${height})`);
 
             code = `
 let width = ${Math.round(width)};
@@ -247,19 +279,13 @@ let height = ${Math.round(height)};
 ${code}
 `;
 
-            // use a regular expression to find the createCanvas() function call
-            const regex = /createCanvas\(([^,]+),\s*([^)]+)\)/;
-
-            // replace the function call with a new function call using the desired arguments
-            code = code.replace(regex, `createCanvas(${width}, ${height})`);
-
             window.eval(code);
 
             p5Instance = new p5();
 
             const canvas = p5Instance.canvas;
-            canvas.style.width = "100%";
-            canvas.style.height = "100%";
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
             const event = new CustomEvent("canvasout", {
                 detail: {
                     canvas,

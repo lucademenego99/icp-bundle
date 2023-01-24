@@ -8,6 +8,7 @@
     import p5 from "p5";
     import { transformProcessing } from "../../modules/processing/utils";
     import type { EditorView } from "@codemirror/view";
+    import { onMount } from "svelte";
 
     type Table = {
         columns: string[];
@@ -35,6 +36,7 @@
      * ELEMENTS
      */
     let ref: HTMLElement;
+    let isVisible: boolean = true;
 
     /**
      * VARIABLES
@@ -43,6 +45,14 @@
     let outputError: boolean;
     let runButtonRunning = false;
     let p5Instance: p5;
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            isVisible = true;
+        } else {
+            isVisible = false;
+        }
+    });
 
     // Dispatch an event "changedout" when the output changes
     // The parent will listen to this event and update the output accordingly
@@ -57,6 +67,11 @@
             composed: true,
         });
         ref?.dispatchEvent(event);
+    }
+
+    // When using language p5 or processing, stop the execution when the editor is not visible
+    $: if (!isVisible && (language == "p5" || language == "processing") && p5Instance) {
+        interruptExecution();
     }
 
     $: {
@@ -331,6 +346,10 @@ ${code}
             (webworker as Worker).postMessage(message);
         }
     }
+
+    onMount(() => {
+        observer.observe(ref);
+    })
 </script>
 
 <div

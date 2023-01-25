@@ -36,7 +36,8 @@
     let ref: HTMLElement;
     let editorElement: HTMLElement,
         outputContainer: HTMLElement,
-        outputElement: HTMLElement;
+        outputElement: HTMLElement,
+        canvasContainer: HTMLElement;
 
     /**
      * VARIABLES
@@ -63,8 +64,8 @@
 
     $: {
         if (canvas) {
-            outputContainer.innerHTML = "";
-            outputContainer.appendChild(canvas);
+            canvasContainer.innerHTML = "";
+            canvasContainer.appendChild(canvas);
         } else if (
             outputContainer &&
             outputContainer.getElementsByTagName("canvas").length > 0
@@ -144,37 +145,56 @@
             ? "height: 100%; width: var(--output-height); min-height: 0; min-width: 100px;"
             : ""}
     >
-        <div
-            id="output-title-container"
-            style={type == "vertical" ? "height: 3vmin; margin-top: 1vh;" : ""}
-        >
-            <p id="output-title">OUTPUT</p>
-        </div>
-        <!-- Output console.log -->
-        <div
-            id="output-container"
-            style={type == "vertical"
-                ? "height: calc(100% - 3vmin - 1vh);"
-                : "width: 100%;"}
-            class="rounded-scrollbar"
-        >
-            {#if language == "sql"}
+        {#if language == "p5" || language == "processing"}
+            <div
+                id="output-container"
+                style={type == "vertical"
+                    ? "height: 100%; overflow: hidden;"
+                    : "width: 100%;"}
+                class="rounded-scrollbar"
+            >
+                <div bind:this={canvasContainer} style="display: flex; flex-direction: column; width: 100%; height: 70%"></div>
                 <div
-                    bind:this={outputElement}
-                    style={iserror ? "color: var(--error-color);" : ""}
-                    class="output-text"
-                    id="output"
-                />
-            {:else}
-                <p
-                    style={iserror ? "color: var(--error-color);" : ""}
-                    class="output-text"
-                    id="output"
+                    id="output-title-container"
+                    style={type == "vertical" ? "height: 3vmin; margin-top: 1vh;" : ""}
                 >
-                    {output}
-                </p>
-            {/if}
-        </div>
+                    <p id="output-title">CONSOLE</p>
+                </div>
+                <div style="{iserror ? "color: var(--error-color);" : ""} display: flex; flex-direction: column; width: 100%; height: calc(30% - 3vmin - 1vh); padding: 5px; box-sizing: border-box; white-space:pre-wrap; overflow: auto;" class="text-container">{output}</div>
+            </div>
+        {:else}
+            <div
+                id="output-title-container"
+                style={type == "vertical" ? "height: 3vmin; margin-top: 1vh;" : ""}
+            >
+                <p id="output-title">OUTPUT</p>
+            </div>
+            <!-- Output console.log -->
+            <div
+                id="output-container"
+                style={type == "vertical"
+                    ? "height: calc(100% - 3vmin - 1vh);"
+                    : "width: 100%;"}
+                class="rounded-scrollbar"
+            >
+                {#if language == "sql"}
+                    <div
+                        bind:this={outputElement}
+                        style={iserror ? "color: var(--error-color);" : ""}
+                        class="output-text"
+                        id="output"
+                    />
+                {:else}
+                    <p
+                        style={iserror ? "color: var(--error-color);" : ""}
+                        class="output-text"
+                        id="output"
+                    >
+                        {output}
+                    </p>
+                {/if}
+            </div>
+        {/if}
     </div>
 </div>
 

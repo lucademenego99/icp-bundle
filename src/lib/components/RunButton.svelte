@@ -9,11 +9,7 @@
     import { transformProcessing } from "../../modules/processing/utils";
     import type { EditorView } from "@codemirror/view";
     import { onMount } from "svelte";
-
-    type Table = {
-        columns: string[];
-        values: any[][];
-    };
+    import { createHTMLTable } from "../../modules/run/utils";
 
     /**
      * PROPS
@@ -57,20 +53,15 @@
     // Dispatch an event "changedout" when the output changes
     // The parent will listen to this event and update the output accordingly
     $: {
-        const event = new CustomEvent("changedout", {
-            detail: {
-                output,
-                outputError,
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-        });
-        ref?.dispatchEvent(event);
+        generateOutput(output, outputError);
     }
 
     // When using language p5 or processing, stop the execution when the editor is not visible
-    $: if (!isVisible && (language == "p5" || language == "processing") && p5Instance) {
+    $: if (
+        !isVisible &&
+        (language == "p5" || language == "processing") &&
+        p5Instance
+    ) {
         interruptExecution();
     }
 
@@ -103,33 +94,21 @@
      */
 
     /**
-     * Create an HTML table from the output of a SQL.js query
-     * Only used when language == "sql"
-     * @param output The output of the SQLWorker
+     * Generate an error and dispatch it
+     * @param message error message
+     * @param isError true if the error is an error, false if it is a warning
      */
-    function createHTMLTable(output: Table) {
-        const table = document.createElement("table");
-        const thead = document.createElement("thead");
-        const tbody = document.createElement("tbody");
-        table.appendChild(thead);
-        table.appendChild(tbody);
-        const tr = document.createElement("tr");
-        thead.appendChild(tr);
-        output.columns.forEach((column) => {
-            const th = document.createElement("th");
-            th.textContent = column;
-            tr.appendChild(th);
+    function generateOutput(error: string, isError: boolean) {
+        const event = new CustomEvent("changedout", {
+            detail: {
+                output: error,
+                outputError: isError,
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true,
         });
-        output.values.forEach((row) => {
-            const tr = document.createElement("tr");
-            tbody.appendChild(tr);
-            row.forEach((value) => {
-                const td = document.createElement("td");
-                td.textContent = value;
-                tr.appendChild(td);
-            });
-        });
-        return table;
+        ref?.dispatchEvent(event);
     }
 
     /**
@@ -183,15 +162,6 @@
             (webworker as SharedWorker).port.close();
         } else if (language == "p5" || language == "processing") {
             p5Instance.remove();
-            // const event = new CustomEvent("canvasout", {
-            //     detail: {
-            //         canvas: null,
-            //     },
-            //     bubbles: true,
-            //     cancelable: true,
-            //     composed: true,
-            // });
-            // ref?.dispatchEvent(event);
         } else {
             (webworker as Worker).terminate();
         }
@@ -226,8 +196,18 @@
 
             // Get the width and height from the createCanvas() function call
             const match = regex.exec(code);
-            const w = parseInt(match[1]);
-            const h = parseInt(match[2]);
+            let w: number, h: number;
+            if (match) {
+                w = parseInt(match[1]);
+                h = parseInt(match[2]);
+            } else {
+                generateOutput(
+                    "Runtime error: createCanvas() function not found",
+                    true
+                );
+                runButtonRunning = false;
+                return;
+            }
 
             if (w < width) {
                 width = w;
@@ -238,14 +218,27 @@
 
             // replace the function call with a new function call using the desired arguments
             code = code.replace(regex, `createCanvas(${width}, ${height})`);
+            console.log(code);
 
-            window.eval(code);
+            const logs = [];
+            let originalConsoleLog = console.log;
+            console.log = console.log.bind(console, logs);
+
+            try {
+                window.eval(code);
+            } catch (e) {
+                generateOutput(`Runtime error: ${e.message}`, true);
+                runButtonRunning = false;
+                return;
+            }
 
             p5Instance = new p5();
 
             const canvas = p5Instance.canvas;
             canvas.style.width = width + "px";
             canvas.style.height = height + "px";
+
+            // Send the canvas to the output
             const event = new CustomEvent("canvasout", {
                 detail: {
                     canvas,
@@ -255,6 +248,12 @@
                 composed: true,
             });
             ref?.dispatchEvent(event);
+
+            // Put debug logs into output
+            generateOutput(logs.join("\n"), false);
+
+            // Reset console.log function
+            console.log = originalConsoleLog;
 
             return;
         }
@@ -265,42 +264,114 @@
             // Remove from code any line that starts with "// "
             code = code.replace(/^\/\/ .*/gm, "");
 
-            // @ts-ignore
-            code = transformProcessing(code);
+            // if the code does not contain the setup function, add it and embed the code inside it
+            if (!code.includes("setup()")) {
+                code = `void setup() { ${code} }`;
+            }
+
+            try {
+                // Transform the code to p5.js code
+                code = transformProcessing(code);
+            } catch (e) {
+                const lineRegex = /line: (\d+)/;
+                const columnRegex = /column: (\d+)/;
+                const expectingRegex = /--> (.*?) <--/;
+                const foundRegex = /but found --> '(.*?)' <--/;
+
+                if (lineRegex && columnRegex && expectingRegex && foundRegex) {
+                    const lineNumber = e.message.match(lineRegex)[1];
+                    const columnNumber = e.message.match(columnRegex)[1];
+                    const expecting = e.message.match(expectingRegex)[1];
+                    const found = e.message.match(foundRegex)[1];
+
+                    generateOutput(
+                        `Error at line ${lineNumber}, column ${columnNumber}: expecting  "${expecting}" but found  "${found}"`,
+                        true
+                    );
+                } else {
+                    generateOutput(`Unknown error - ${e.message}`, true);
+                }
+
+                runButtonRunning = false;
+                return;
+            }
             let width = editor.dom.getBoundingClientRect().width;
-            let height = editor.dom.getBoundingClientRect().height;
+            let height = editor.dom.getBoundingClientRect().height * 0.7;
 
             // use a regular expression to find the createCanvas() function call
             const regex = /createCanvas\(([^,]+),\s*([^)]+)\)/;
 
-            // Get the width and height from the createCanvas() function call
+            // Check if the createCanvas() is available
             const match = regex.exec(code);
-            const w = parseInt(match[1]);
-            const h = parseInt(match[2]);
+            if (!match) {
+                // Check if the setup function is available
+                if (code.includes("setup ( ) {")) {
+                    console.log("setup function found");
+                    // Insert the createCanvas() function call in the setup function
+                    code = code.replace(
+                        `setup ( ) {`,
+                        `setup() { createCanvas(${width}, ${height});`
+                    );
+                } else {
+                    generateOutput(`Error: setup() function not found`, true);
+                    runButtonRunning = false;
+                    return;
+                }
+            } else {
+                // Get the width and height from the createCanvas() function call
+                const w = parseInt(match[1]);
+                const h = parseInt(match[2]);
 
-            if (w < width) {
-                width = w;
-            }
-            if (h < height) {
-                height = h;
-            }
+                if (w < width) {
+                    width = w;
+                }
+                if (h < height) {
+                    height = h;
+                }
 
-            // replace the function call with a new function call using the desired arguments
-            code = code.replace(regex, `createCanvas(${width}, ${height})`);
+                // replace the function call with a new function call using the desired arguments
+                code = code.replace(regex, `createCanvas(${width}, ${height})`);
+            }
 
             code = `
 let width = ${Math.round(width)};
 let height = ${Math.round(height)};
 ${code}
 `;
+            console.log(code);
+            let logs = [];
+            let originalConsoleLog = console.log;
+            console.log = function (message, ...args) {
+                logs.push(message + " " + args.join(" "));
+            };
 
-            window.eval(code);
+            // Reset setup and draw functions
+            // @ts-ignore
+            if (typeof setup !== "undefined") {
+                // @ts-ignore
+                setup = undefined;
+            }
+            // @ts-ignore
+            if (typeof draw !== "undefined") {
+                // @ts-ignore
+                draw = undefined;
+            }
+
+            try {
+                window.eval(code);
+            } catch (e) {
+                generateOutput(`Runtime error: ${e.message}`, true);
+                runButtonRunning = false;
+                return;
+            }
 
             p5Instance = new p5();
 
             const canvas = p5Instance.canvas;
             canvas.style.width = width + "px";
             canvas.style.height = height + "px";
+
+            // Send the canvas to the output
             const event = new CustomEvent("canvasout", {
                 detail: {
                     canvas,
@@ -311,6 +382,14 @@ ${code}
             });
             ref?.dispatchEvent(event);
 
+            // Put debug logs into output
+            generateOutput(logs.join("\n"), false);
+            console.log = originalConsoleLog;
+
+            // If the code does not contain any draw() function, set the run button to not running
+            if (!code.includes("draw ( )")) {
+                runButtonRunning = false;
+            }
             return;
         }
 
@@ -349,7 +428,7 @@ ${code}
 
     onMount(() => {
         observer.observe(ref);
-    })
+    });
 </script>
 
 <div

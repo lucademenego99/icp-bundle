@@ -37,7 +37,8 @@
     let editorElement: HTMLElement,
         outputContainer: HTMLElement,
         outputElement: HTMLElement,
-        canvasContainer: HTMLElement;
+        canvasContainer: HTMLElement,
+        consoleOutput: HTMLElement;
 
     /**
      * VARIABLES
@@ -100,6 +101,16 @@
             direction: type == "normal" ? "vertical" : "horizontal",
         });
 
+        // Make canvas and console splitted and resizable using split.js
+        if (language == "p5" || language == "processing") {
+            Split([canvasContainer, consoleOutput], {
+                minSize: 40,
+                gutterSize: 5,
+                sizes: [70, 30],
+                direction: "vertical",
+            });
+        }
+
         // Create the CodeMirror editor
         let res;
         if (!codeMirrorEditor) {
@@ -154,13 +165,15 @@
                 class="rounded-scrollbar"
             >
                 <div bind:this={canvasContainer} style="display: flex; flex-direction: column; width: 100%; height: 70%"></div>
-                <div
-                    id="output-title-container"
-                    style={type == "vertical" ? "height: 3vmin; margin-top: 1vh;" : ""}
-                >
-                    <p id="output-title">CONSOLE</p>
+                <div bind:this={consoleOutput} style="height: 30%; position: relative; z-index: 99; background-color: var(--main-output-bg-color);">
+                    <div
+                        id="output-title-container"
+                        style={type == "vertical" ? "height: 3vmin;" : ""}
+                    >
+                        <p id="output-title">CONSOLE</p>
+                    </div>
+                    <div bind:this={outputElement} style="{iserror ? "color: var(--error-color);" : ""} display: flex; flex-direction: column; width: 100%; height: calc(100% - 3vmin); padding: 5px; box-sizing: border-box; white-space:pre-wrap; overflow: auto;" class="output-text">{output}</div>
                 </div>
-                <div style="{iserror ? "color: var(--error-color);" : ""} display: flex; flex-direction: column; width: 100%; height: calc(30% - 3vmin - 1vh); padding: 5px; box-sizing: border-box; white-space:pre-wrap; overflow: auto;" class="text-container">{output}</div>
             </div>
         {:else}
             <div
@@ -266,6 +279,7 @@
     /* Split.js gutter customization */
     .gutter {
         z-index: 99;
+        position: relative;
         background-color: rgb(150, 150, 150);
         background-repeat: no-repeat;
         background-position: 50%;

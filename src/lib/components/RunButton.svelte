@@ -222,7 +222,9 @@
 
             const logs = [];
             let originalConsoleLog = console.log;
-            console.log = console.log.bind(console, logs);
+            console.log = function (message, ...args) {
+                logs.push(message + " " + args.join(" "));
+            };
 
             try {
                 window.eval(code);

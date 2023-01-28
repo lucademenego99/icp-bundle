@@ -10,7 +10,7 @@ export default defineConfig({
             entry: 'src/exports/p5-and-processing.ts',
             formats: ['iife'],
             fileName: 'p5-and-processing',
-            name: 'InteractiveCodePlaygrounds',
+            name: 'P5CodePlaygrounds',
         },
         rollupOptions: {
             output: {

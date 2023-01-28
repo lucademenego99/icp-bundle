@@ -4,15 +4,7 @@
     /**
      * PROPS
      */
-    export let language:
-        | "javascript"
-        | "typescript"
-        | "python"
-        | "cpp"
-        | "java"
-        | "sql"
-        | "p5"
-        | "processing" = "javascript";
+    export let language: Language;
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code = "";
@@ -25,6 +17,7 @@
     import { onMount } from "svelte";
     import type { EditorView } from "@codemirror/view";
     import type { Compartment } from "@codemirror/state";
+    import type { Language } from "../types";
 
     /**
      * Components

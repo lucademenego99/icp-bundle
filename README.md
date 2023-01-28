@@ -42,7 +42,10 @@ The build phase creates the following web components:
 - `<typescript-editor></typescript-editor>`;
 - `<python-editor></python-editor>`;
 - `<java-editor></java-editor>`;
-- `<sql-editor></sql-editor>`.
+- `<sql-editor></sql-editor>`;
+- `<p5-editor></p5-editor>`;
+- `<processing-editor></processing-editor>`;
+- `<standardml-editor></standardml-editor>`.
 
 Every component has a set of properties that can be passed inside the tags:
 - `code`: the initial code snippet the playground should contain;
@@ -67,6 +70,9 @@ The available languages that can be used in the editors are the following:
 | python | ✅ | ✅ |  | ✅ |
 | java | ✅ |  |  | ✅ |
 | sql | ✅ | ✅ |  | ✅ |
+| p5 | ✅ |  |  | ✅ |
+| processing | ✅ |  |  | ✅ |
+| standard-ml | ✅ |  |  | ✅ |
 
 ### Read-only components with predefined editable parts
 Sometimes you may want to embed editor components in which only some parts of them are editable. In order to do it, you can use the specially crafted tokens `<EDITABLE>` and `</EDITABLE>`. For example:
@@ -86,10 +92,13 @@ They can be called using one of the exported names from Javascript:
 - `TypescriptCodePlaygrounds` (if `typescript.iife.js` has been imported);
 - `PythonCodePlaygrounds` (if `python.iife.js` has been imported);
 - `JavaCodePlaygrounds` (if `java.iife.js` has been imported);
-- `SqlCodePlaygrounds` (if `sql.iife.js` has been imported).
+- `SqlCodePlaygrounds` (if `sql.iife.js` has been imported)
+- `P5CodePlaygrounds` (if `p5-and-processing.iife.js` has been imported)
+- `StandardMLCodePlaygrounds` (if `standard-ml.iife.js` has been imported).
 
 ## Mentions
 - the typescript plugin included in `src/modules/` has been taken from [prisma/text-editors](https://github.com/prisma/text-editors)
 - run java code in the browser: [teavm-javac](https://github.com/frankbauer/teavm-javac) based on [frankbauer](https://github.com/frankbauer)'s fork (but modified to work as a SharedWorker)
 - run python code in the browser: [pyodide](https://pyodide.org/en/stable/)
 - run sql code in the browser: [sql.js](https://github.com/sql-js/sql.js/)
+- run standard ml code in the browser: [SOSML](https://github.com/SOSML/SOSML)

@@ -1,19 +1,13 @@
 <svelte:options tag="overlay-message" />
 
 <script lang="ts">
+    import type { Language } from "../../types";
+    
     /**
      * PROPS
      */
     export let type: "normal" | "vertical" = "normal";
-    export let language:
-        | "javascript"
-        | "typescript"
-        | "python"
-        | "cpp"
-        | "java"
-        | "sql"
-        | "p5"
-        | "processing";
+    export let language: Language;
     export let message: string;
     export let show: boolean;
 </script>

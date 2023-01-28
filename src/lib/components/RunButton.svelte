@@ -10,20 +10,13 @@
     import type { EditorView } from "@codemirror/view";
     import { onMount } from "svelte";
     import { createHTMLTable } from "../../modules/run/utils";
+    import type { Language } from "../../types";
 
     /**
      * PROPS
      */
     export let type: "normal" | "vertical" = "normal";
-    export let language:
-        | "javascript"
-        | "typescript"
-        | "python"
-        | "cpp"
-        | "java"
-        | "sql"
-        | "p5"
-        | "processing";
+    export let language: Language;
     export let editor: EditorView;
     export let offline: boolean = false;
     export let webworker: Worker | SharedWorker;

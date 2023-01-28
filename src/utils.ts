@@ -3,6 +3,8 @@ import { javascript } from "@codemirror/lang-javascript";
 import { sql } from "@codemirror/lang-sql";
 import { python } from "@codemirror/lang-python";
 import { lintGutter } from "@codemirror/lint";
+import {StreamLanguage} from "@codemirror/language"
+import {sml} from "@codemirror/legacy-modes/mode/mllike"
 import { EditorView, keymap } from "@codemirror/view";
 import { typescript } from "./modules/typescript";
 import { indentWithTab } from "@codemirror/commands";
@@ -138,7 +140,8 @@ const languageSelection = {
     python: python(),
     sql: sql({ upperCaseKeywords: true }),
     p5: javascript(),
-    processing: java()
+    processing: java(),
+    ml: StreamLanguage.define(sml),
 };
 
 /**

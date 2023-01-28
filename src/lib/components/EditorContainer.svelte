@@ -10,19 +10,12 @@
     import type { EditorView } from "@codemirror/view";
     import type { Compartment } from "@codemirror/state";
     import { executeRequest, editorToExecute } from "../../stores";
+    import type { Language } from "../../types";
 
     /**
      * PROPS
      */
-    export let language:
-        | "javascript"
-        | "typescript"
-        | "python"
-        | "cpp"
-        | "java"
-        | "sql"
-        | "p5"
-        | "processing" = "javascript";
+    export let language: Language = "javascript";
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code: string;

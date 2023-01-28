@@ -183,7 +183,7 @@
                         bind:this={outputElement}
                         style="{iserror
                             ? 'color: var(--error-color);'
-                            : ''} display: flex; flex-direction: column; width: 100%; height: calc(100% - min(1.6vw, 3.2vh); padding: 5px; box-sizing: border-box; white-space:pre-wrap; overflow: auto;"
+                            : ''} display: flex; flex-direction: column; width: 100%; height: calc(100% - min(1.6vw, 3.2vh)); padding: 5px; box-sizing: border-box; white-space:pre-wrap; overflow: auto;"
                         class="output-text"
                     >
                         {output}

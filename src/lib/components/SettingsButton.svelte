@@ -111,8 +111,8 @@
     bind:this={ref}
     id="settings-container"
     style={type == "vertical"
-        ? "right: calc(var(--output-height) + 10px); bottom: 90px"
-        : "right: 10px; bottom: calc(var(--output-height) + 100px)"}
+        ? `right: calc(var(--output-height) + min(0.7vw, 1.4vh) + 1px); bottom: min(4.5vw, 9vh)`
+        : `right: min(0.4vw, 0.8vh); bottom: calc(var(--output-height) + min(4.7vw, 9.4vh))`}
 >
     <div class="menu">
         <input
@@ -125,8 +125,7 @@
         <label id="settings-button" class="settings-button" for="menu-open">
             <svg
                 class="settings"
-                width="16"
-                height="16"
+                style="width: min(0.8vw, 1.6vh); height: min(0.8vw, 1.6vh)"
                 viewBox="0 0 14 14"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -144,8 +143,7 @@
             style="background-color: #00CC3D;"
         >
             <svg
-                width="12"
-                height="14"
+                style="width: min(0.62vw, 1.24vh); height: min(0.72vw, 1.44vh);"
                 viewBox="0 0 12 14"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -166,8 +164,7 @@
             style="background-color: {tabsEnabled ? '#00cc3d' : '#ff4133'}"
         >
             <svg
-                width="14"
-                height="12"
+                style="width: min(0.72vw, 1.44vh); height: min(0.62vw, 1.24vh);"
                 viewBox="0 0 14 12"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -184,8 +181,7 @@
             style="background-color: #ff4133"
         >
             <svg
-                width="13"
-                height="13"
+                style="width: min(0.65vw, 1.3vh); height: min(0.65vw, 1.3vh)"
                 viewBox="0 0 13 13"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -232,9 +228,9 @@
         cursor: pointer;
         background: #5f5f5f;
         border-radius: 100%;
-        width: 38px;
-        height: 38px;
-        margin-left: -38px;
+        width: min(1.85vw, 3.7vh);
+        height: min(1.85vw, 3.7vh);
+        margin-left: max(-1.85vw, -3.7vh);
         position: absolute;
         transition: all ease-in-out 200ms;
         display: flex;
@@ -276,33 +272,35 @@
     }
     .menu-open:checked ~ .menu-item:nth-child(3) {
         transition-duration: 160ms;
-        transform: translate3d(-50px, 0, 0);
+        transform: translate3d(max(-2.5vw, -5vh), 0, 0);
     }
     .menu-open:checked ~ .menu-item:nth-child(4) {
         transition-duration: 240ms;
-        transform: translate3d(-50px, -50px, 0);
+        transform: translate3d(max(-2.5vw, -5vh), max(-2.5vw, -5vh), 0);
     }
     .menu-open:checked ~ .menu-item:nth-child(5) {
         transition-duration: 320ms;
-        transform: translate3d(0, -50px, 0);
+        transform: translate3d(0, max(-2.5vw, -5vh), 0);
     }
     .menu-open:checked ~ .menu-item:nth-child(6) {
         transition-duration: 400ms;
-        transform: translate3d(0, -100px, 0);
+        transform: translate3d(0, max(-5vw, -10vh), 0);
     }
 
     /* Lock icon CSS */
     .container {
+        width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
     }
     .lock {
         transform: scale(0.5);
-        width: 24px;
-        height: 21px;
-        border: 3px solid white;
-        margin-top: 5px;
+        width: 60%;
+        height: 52.5%;
+        border: min(0.25vw, 0.5vh) solid white;
+        margin-top: 12.5%;
         border-radius: 5px;
         position: relative;
         cursor: pointer;
@@ -313,25 +311,25 @@
         content: "";
         display: block;
         background: white;
-        width: 3px;
-        height: 7px;
+        width: 10%;
+        height: 23.3%;
         position: absolute;
         top: 50%;
         left: 50%;
-        margin: -3.5px 0 0 -2px;
+        margin: -11.7% 0 0 -6.7%;
         -webkit-transition: all 0.1s ease-in-out;
         transition: all 0.1s ease-in-out;
     }
     .lock:before {
         content: "";
         display: block;
-        width: 10px;
-        height: 10px;
-        bottom: 100%;
+        width: 33.3%;
+        height: 50%;
+        bottom: 105%;
         position: absolute;
-        left: 50%;
-        margin-left: -8px;
-        border: 3px solid white;
+        left: 40%;
+        margin-left: -26.7%;
+        border: min(0.25vw, 0.5vh) solid white;
         border-top-right-radius: 50%;
         border-top-left-radius: 50%;
         border-bottom: 0;
@@ -339,16 +337,16 @@
         transition: all 0.1s ease-in-out;
     }
     .lock:hover:before {
-        height: 12px;
+        height: 40%;
     }
     .unlocked {
         transform: rotate(10deg) scale(0.5);
-        margin-top: 8px;
+        margin-top: 26.7%;
     }
     .unlocked:before {
-        bottom: 130%;
+        bottom: 120%;
         left: 31%;
-        margin-left: -11.5px;
+        margin-left: -38.3%;
         transform: rotate(-45deg);
     }
     .unlocked,
@@ -362,7 +360,7 @@
         transform: rotate(3deg) scale(0.5);
     }
     .unlocked:hover:before {
-        height: 10px;
+        height: 33.3%;
         left: 40%;
         bottom: 124%;
         transform: rotate(-30deg);

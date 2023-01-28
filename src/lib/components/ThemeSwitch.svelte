@@ -1,10 +1,6 @@
 <svelte:options tag="theme-switch" />
 
 <script lang="ts">
-    import type { Compartment } from "@codemirror/state";
-    import type { EditorView } from "codemirror";
-    import { setDarkMode } from "../../utils";
-
     export let theme: "light" | "dark";
     export let type: "normal" | "vertical";
 
@@ -35,8 +31,8 @@
         setTheme(theme == "light" ? true : false);
     }}
     style="position: absolute; right: {type == 'vertical'
-        ? 'calc(var(--output-height) + 10px)'
-        : '10px'}; top: 50px; padding: 4px; width: 30px; height: 30px; border: 0px; border-radius: .4em; display: flex; justify-content: center; align-items: center; z-index: 99; background-color: var(--theme-color); cursor: pointer;"
+        ? `calc(var(--output-height) + min(0.5vw, 1vh))`
+        : `min(0.5vw, 1vh)`}; top: min(2.5vw, 5vh); padding: min(0.25vw, 0.5vh); width: min(1.7vw, 3.4vh); height: min(1.7vw, 3.4vh); border: 0px; border-radius: .4em; display: flex; justify-content: center; align-items: center; z-index: 99; background-color: var(--theme-color); cursor: pointer;"
 >
     {#if theme == "dark"}
         <svg

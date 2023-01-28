@@ -5,6 +5,15 @@
      * PROPS
      */
     export let type: "normal" | "vertical" = "normal";
+    export let language:
+        | "javascript"
+        | "typescript"
+        | "python"
+        | "cpp"
+        | "java"
+        | "sql"
+        | "p5"
+        | "processing";
     export let message: string;
     export let show: boolean;
 </script>
@@ -12,7 +21,9 @@
 <!-- Overlay Message -->
 <div
     style="{show ? 'opacity: 1;' : 'opacity: 0;'} {type == 'vertical'
-        ? 'width: 50%; left: 35%; top: 50%;'
+        ? language == 'p5' || language == 'processing'
+            ? 'width: 40%; left: 25%; top: 50%;'
+            : 'width: 50%; left: 35%; top: 50%;'
         : ''}"
     id="message"
 >
@@ -28,7 +39,7 @@
         pointer-events: none;
         font-family: monospace;
         z-index: 20;
-        font-size: 2vmin;
+        font-size: min(1.1vw, 2.2vh);
         top: 40%;
         left: 50%;
         transform: translate(-50%, -50%);

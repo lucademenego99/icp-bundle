@@ -437,8 +437,8 @@ ${code}
     bind:this={ref}
     id="play-container"
     style={type == "vertical"
-        ? "right: calc(var(--output-height) + 10px); bottom: 5px"
-        : "right: 10px; bottom: calc(var(--output-height) + 10px)"}
+        ? `right: calc(var(--output-height) + min(0.7vw, 1.4vh) + 1px); bottom: min(0.3vw, 0.6vh)`
+        : `right: min(0.4vw, 0.8vh); bottom: calc(var(--output-height) + min(0.5vw, 1vh))`}
 >
     <main />
     <button
@@ -447,8 +447,7 @@ ${code}
             language != "p5" &&
             language != "processing"}
         id="run-button"
-        style="width: 40px; height: 40px; border-radius: 50%; background-color: {webworker !=
-            undefined ||
+        style="background-color: {webworker != undefined ||
         language == 'p5' ||
         language == 'processing'
             ? runButtonRunning
@@ -458,8 +457,7 @@ ${code}
     >
         {#if runButtonRunning}
             <svg
-                width="10"
-                height="10"
+                style="width: 30%; height: 30%; fill: white;"
                 viewBox="0 0 10 10"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -471,7 +469,7 @@ ${code}
             </svg>
         {:else}
             <svg
-                style="width: 24px; height: 24px; fill: white;"
+                style="width: 70%; height: 70%; fill: white;"
                 viewBox="0 0 24 24"
             >
                 <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
@@ -482,11 +480,18 @@ ${code}
 
 <style>
     #play-container {
+        width: min(2vw, 4vh);
+        height: min(2vw, 4vh);
         position: absolute;
         z-index: 10;
     }
 
     #run-button {
+        width: 100%;
+        height: 100%;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 50%;
         transition: all ease-in 150ms;
         display: flex;
         align-items: center;

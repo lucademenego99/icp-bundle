@@ -147,7 +147,12 @@
 
 <!-- Editor's HTML -->
 <div bind:this={rootElement} id="code-container">
-    <overlay-message {type} show={messageShowing} message={messageToShow} />
+    <overlay-message
+        {type}
+        {language}
+        show={messageShowing}
+        message={messageToShow}
+    />
 
     <!-- Button allowing the user to toggle the current theme (light / dark) -->
     <theme-switch
@@ -168,13 +173,12 @@
             }
         }}
         style="position: absolute; right: {type == 'vertical'
-            ? 'calc(var(--output-height) + 10px)'
-            : '10px'}; top: 10px; width: 30px; height: 30px; border: 0px; border-radius: .4em; display: flex; justify-content: center; align-items: center; z-index: 99; background-color: transparent; cursor: pointer;"
+            ? `calc(var(--output-height) + min(0.5vw, 1vh))`
+            : `min(0.5vw, 1vh)`}; top: min(0.5vw, 1vh); width: min(1.5vw, 3vh); height: min(1.5vw, 3vh); border: 0px; border-radius: .4em; display: flex; justify-content: center; align-items: center; z-index: 99; background-color: transparent; cursor: pointer;"
     >
         {#if isFullscreen}
             <svg
-                width="46"
-                height="46"
+                style="width: min(2.5vw, 5vh); height: min(2.5vw, 5vh);"
                 fill={theme == "dark" ? "white" : "black"}
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
@@ -187,8 +191,7 @@
             </svg>
         {:else}
             <svg
-                width="46"
-                height="46"
+                style="width: min(2.5vw, 5vh); height: min(2.5vw, 5vh);"
                 fill={theme == "dark" ? "white" : "black"}
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"

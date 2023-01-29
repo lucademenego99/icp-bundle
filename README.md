@@ -42,6 +42,7 @@ The build phase creates the following web components:
 - `<typescript-editor></typescript-editor>`;
 - `<python-editor></python-editor>`;
 - `<java-editor></java-editor>`;
+- `<cpp-editor></cpp-editor>`;
 - `<sql-editor></sql-editor>`;
 - `<p5-editor></p5-editor>`;
 - `<processing-editor></processing-editor>`;
@@ -69,6 +70,7 @@ The available languages that can be used in the editors are the following:
 | typescript | ✅ | ✅ | ✅ | ✅ |
 | python | ✅ | ✅ |  | ✅ |
 | java | ✅ |  |  | ✅ |
+| c++ | ✅ |  |  | ✅ |
 | sql | ✅ | ✅ |  | ✅ |
 | p5 | ✅ |  |  | ✅ |
 | processing | ✅ |  |  | ✅ |
@@ -92,6 +94,7 @@ They can be called using one of the exported names from Javascript:
 - `TypescriptCodePlaygrounds` (if `typescript.iife.js` has been imported);
 - `PythonCodePlaygrounds` (if `python.iife.js` has been imported);
 - `JavaCodePlaygrounds` (if `java.iife.js` has been imported);
+- `CppCodePlaygrounds` (if `cpp.iife.js` has been imported);
 - `SqlCodePlaygrounds` (if `sql.iife.js` has been imported)
 - `P5CodePlaygrounds` (if `p5-and-processing.iife.js` has been imported)
 - `StandardMLCodePlaygrounds` (if `standard-ml.iife.js` has been imported).
@@ -99,6 +102,7 @@ They can be called using one of the exported names from Javascript:
 ## Mentions
 - the typescript plugin included in `src/modules/` has been taken from [prisma/text-editors](https://github.com/prisma/text-editors)
 - run java code in the browser: [teavm-javac](https://github.com/frankbauer/teavm-javac) based on [frankbauer](https://github.com/frankbauer)'s fork (but modified to work as a SharedWorker)
+- run c++ code in the browser: [wasm-clang](https://github.com/binji/wasm-clang) and [playcode](https://github.com/InfiniteXyy/playcode)
 - run python code in the browser: [pyodide](https://pyodide.org/en/stable/)
 - run sql code in the browser: [sql.js](https://github.com/sql-js/sql.js/)
 - run standard ml code in the browser: [SOSML](https://github.com/SOSML/SOSML)

@@ -2,6 +2,7 @@ import { java } from "@codemirror/lang-java";
 import { javascript } from "@codemirror/lang-javascript";
 import { sql } from "@codemirror/lang-sql";
 import { python } from "@codemirror/lang-python";
+import { cpp } from "@codemirror/lang-cpp";
 import { lintGutter } from "@codemirror/lint";
 import {StreamLanguage} from "@codemirror/language"
 import {sml} from "@codemirror/legacy-modes/mode/mllike"
@@ -138,6 +139,7 @@ const languageSelection = {
     typescript: typescript(),
     java: java(),
     python: python(),
+    cpp: cpp(),
     sql: sql({ upperCaseKeywords: true }),
     p5: javascript(),
     processing: java(),

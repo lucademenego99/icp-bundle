@@ -259,6 +259,9 @@
             // Remove from code any line that starts with "// "
             code = code.replace(/^\/\/ .*/gm, "");
 
+            // Convert java casting to processing casting
+            code = processingCastingFix(code);
+
             // if the code does not contain the setup function, add it and embed the code inside it
             if (!code.includes("setup()")) {
                 code = `void setup() { ${code} }`;
@@ -419,6 +422,43 @@ ${code}
         } else {
             (webworker as Worker).postMessage(message);
         }
+    }
+
+    function processingCastingFix(code: string): string {
+        // Replace all occurrences of (int) some_function(args...) with int(some_function(args...))
+        code = code.replace(/\(int\) ([^(]+)\(([^)]*)\)/g, "int($1($2))");
+
+        // Replace all occurrences of (float) some_function(args...) with float(some_function(args...))
+        code = code.replace(
+            /\(float\) ([^(]+)\(([^)]*)\)/g,
+            "float($1($2))"
+        );
+
+        // Replace all occurrences of (double) some_function(args...) with double(some_function(args...))
+        code = code.replace(
+            /\(double\) ([^(]+)\(([^)]*)\)/g,
+            "double($1($2))"
+        );
+
+        // Replace all occurrences of (char) some_function(args...) with char(some_function(args...))
+        code = code.replace(/\(char\) ([^(]+)\(([^)]*)\)/g, "char($1($2))");
+
+        // Replace all occurrences of (byte) some_function(args...) with byte(some_function(args...))
+        code = code.replace(/\(byte\) ([^(]+)\(([^)]*)\)/g, "byte($1($2))");
+
+        // Replace all occurrences of (boolean) some_function(args...) with boolean(some_function(args...))
+        code = code.replace(
+            /\(boolean\) ([^(]+)\(([^)]*)\)/g,
+            "boolean($1($2))"
+        );
+
+        // Replace all occurrences of (String) some_function(args...) with String(some_function(args...))
+        code = code.replace(
+            /\(String\) ([^(]+)\(([^)]*)\)/g,
+            "String($1($2))"
+        );
+
+        return code;
     }
 
     onMount(() => {

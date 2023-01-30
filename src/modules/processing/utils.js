@@ -1092,6 +1092,36 @@ class ArrayList extends Array {
 
 function preprocessProcessing(code)
 {
+    // Remove from code anything that comes after "//"
+    code = code.replace(/\/\/.*/g, "");
+
+    // Remove from code any block that starts with "/*" and ends with "*/"
+    code = code.replace(/\/\*[\s\S]*?\*\//g, "");
+
+    // If there is a variable called "size", replace its name with "sz". But only if it's not a function call size()
+    code = code.replace(/(?<!\w)size(?!\s*\()/g, "sz");
+
+    // If a variable mousePressed is used in the code, replace it with mouseIsPressed. But only if it's not a function call mousePressed()
+    code = code.replace(/(?<!\w)mousePressed(?!\s*\()/g, "mouseIsPressed");
+
+    // Convert java casting to processing casting
+    const regexCasting = /\(\s*(int|float|double|char|byte|boolean)\s*\)\s*(\w+)\s*\(([^\)]*)\)/g;
+    code = code.replace(regexCasting, "$1($2($3))");
+
+    // Check if code has a string setup() or any combination of setup, ( and ) with white spaces between them
+    // The same for draw
+    const regexSetup = /setup\s*\(\s*\)/;
+    const regexDraw = /draw\s*\(\s*\)/;
+
+    // if the code does not contain the setup function, add it
+    if (!regexSetup.test(code)) {
+        if (regexDraw.test(code)) {
+            code = "void setup () {}\n" + code;
+        } else {
+            code = `void setup() { ${code} }`;
+        }
+    }
+
     let wrapped = "public class Dummy {" + code + "}";
    
     // hack: Processing allows int/color literals of the form #ff1234 (6 digits

@@ -256,27 +256,6 @@
         if (language == "processing") {
             let code = editor.state.doc.toString();
 
-            // Remove from code any line that starts with "// "
-            code = code.replace(/^\/\/ .*/gm, "");
-
-            // Convert java casting to processing casting
-            const regexCasting = /\(\s*(int|float|double|char|byte|boolean)\s*\)\s*(\w+)\s*\(([^\)]*)\)/g;
-            code = code.replace(regexCasting, "$1($2($3))");
-
-            // Check if code has a string setup() or any combination of setup, ( and ) with white spaces between them
-            // The same for draw
-            const regexSetup = /setup\s*\(\s*\)/;
-            const regexDraw = /draw\s*\(\s*\)/;
-
-            // if the code does not contain the setup function, add it
-            if (!regexSetup.test(code)) {
-                if (regexDraw.test(code)) {
-                    code = "void setup () {}\n" + code;
-                } else {
-                    code = `void setup() { ${code} }`;
-                }
-            }
-
             try {
                 // Transform the code to p5.js code
                 code = transformProcessing(code);

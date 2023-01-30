@@ -45,6 +45,7 @@ onconnect = async (e) => {
     // Run the code
     try {
       if (e.data.type === 'init' && !api) {
+        apiOptions["baseUrl"] = e.data.baseUrl;
         api = new API(apiOptions);
         // Sample run to initialize the runtime
         await api.compileLinkRun('int main() { return 0; }');

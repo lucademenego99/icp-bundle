@@ -3,15 +3,12 @@ import { MemFS } from './memfs'
 import { msToSec } from './shared'
 import { Tar } from './tar'
 
-import clangUrl from './assets/clang.wasm?url'
-import lldUrl from './assets/lld.wasm?url'
-import sysrootUrl from './assets/sysroot.tar?url'
-
 export class API {
   constructor(options) {
     this.moduleCache = {}
     this.hostWrite = options.hostWrite
     this.logHostWrite = options.logHostWrite
+    this.baseUrl = options.baseUrl || ''
     this.showLogs = options.showLogs || false
     this.showTiming = options.showTiming || false
 
@@ -35,9 +32,10 @@ export class API {
     this.memfs = new MemFS({
       hostWrite: this.hostWrite,
       logHostWrite: this.logHostWrite,
+      baseUrl: this.baseUrl,
     })
     this.ready = this.memfs.ready.then(() => {
-      return this.untar(this.memfs, sysrootUrl)
+      return this.untar(this.memfs, this.baseUrl + "sysroot.tar")
     })
   }
 
@@ -91,7 +89,7 @@ export class API {
 
     await this.ready
     this.memfs.addFile(input, contents)
-    const clang = await this.getModule(clangUrl)
+    const clang = await this.getModule(this.baseUrl + "clang.wasm")
     return await this.run(
       clang,
       'clang',
@@ -114,7 +112,7 @@ export class API {
     const crt1 = `${libdir}/crt1.o`
 
     await this.ready
-    const lld = await this.getModule(lldUrl)
+    const lld = await this.getModule(this.baseUrl + "lld.wasm")
     return await this.run(
       lld,
       'wasm-ld',

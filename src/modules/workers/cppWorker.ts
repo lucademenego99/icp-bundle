@@ -31,7 +31,7 @@ onconnect = async (e) => {
   async function onmessage(e) {
     // Check if the runtime is busy. If so, return an error message.
     if (!finished) {
-      port.postMessage({ error: 'Runtime busy. Please retry in a few seconds.' });
+      port.postMessage({ error: 'Runtime is initializing. Please retry in a few seconds. Some dependencies must be downloaded.' });
       return;
     }
 

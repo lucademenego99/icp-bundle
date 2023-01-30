@@ -15,7 +15,7 @@
         webworker = new CppWorker();
         webworker.port.start();
 
-        let baseUrl = "https://lucademenego99.github.io/icp-bundle/base/utils/utils/cpp/";
+        let baseUrl = "https://lucademenego99.github.io/icp-bundle/base/utils/cpp/";
         webworker.port.postMessage({ type: "init", baseUrl });
     }
 

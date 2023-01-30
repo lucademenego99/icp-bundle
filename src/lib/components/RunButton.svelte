@@ -386,7 +386,7 @@ ${code}
 
             // If the code does not contain any draw() function, set the run button to not running
             if (!code.includes("draw ( )")) {
-                runButtonRunning = false;
+                interruptExecution();
             }
             return;
         }

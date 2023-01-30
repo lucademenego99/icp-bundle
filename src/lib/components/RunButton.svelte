@@ -73,7 +73,7 @@
         if (webworker) {
             console.log(webworker);
             // Handle the webworker's messages
-            if (language == "python" || language == "java") {
+            if (language == "python" || language == "java" || language == "cpp") {
                 (webworker as SharedWorker).port.onmessage = onWorkerMessage;
             } else {
                 console.log("Initialized worker for language " + language);
@@ -151,7 +151,7 @@
     function interruptExecution() {
         console.warn("Interrupting Code Execution");
         // Terminate the worker without waiting for the end of the execution
-        if (language == "python" || language == "java") {
+        if (language == "python" || language == "java" || language == "cpp") {
             (webworker as SharedWorker).port.close();
         } else if (language == "p5" || language == "processing") {
             p5Instance.remove();
@@ -414,7 +414,7 @@ ${code}
         };
 
         // Send to the webworker the script to run
-        if (language == "python" || language == "java") {
+        if (language == "python" || language == "java" || language == "cpp") {
             (webworker as SharedWorker).port.postMessage(message);
         } else {
             (webworker as Worker).postMessage(message);

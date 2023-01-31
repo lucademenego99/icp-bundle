@@ -6,13 +6,15 @@
     export let code = "";
 
     import BaseEditor from "./BaseEditor.svelte";
-    import CppWorker from "../modules/workers/cppWorker?sharedworker&inline";
+    import CppWorker from "../modules/workers/cpp/cppWorkerBundle.iife.js?url";
     import { onMount } from "svelte";
 
     let webworker: SharedWorker;
 
     function createWorker(): void {
-        webworker = new CppWorker();
+        webworker = new SharedWorker(CppWorker, {
+            name: "CppWorker",
+        });
         webworker.port.start();
 
         let baseUrl = "https://lucademenego99.github.io/icp-bundle/base/utils/cpp/";

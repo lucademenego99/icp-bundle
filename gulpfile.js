@@ -1,27 +1,13 @@
 import del from 'del';
 import child_process from 'child_process';
 import yargs from 'yargs'
+import fs from 'fs';
 import { hideBin } from 'yargs/helpers'
-
-// Check the language argument
-const args = yargs(hideBin(process.argv)).argv;
-if (args["language"] == undefined) {
-    // If the language argument is not specified, print the help message
-    console.log("Please specify a language to build the project for. For example, to build the project for python, use the following command:");
-    console.log("\tnpm run build -- --language python\n");
-    console.log("To build the project for all languages, use the following command:");
-    console.log("\tnpm run build -- --language full\n");
-    console.log("If you want to run python or java in offline mode, use the following command:");
-    console.log("\tnpm run build -- --language ${language}-offline\n");
-    console.log("The other languages instead already work in offline mode even when built normally.\n");
-    process.exit(1);
-}
-const language = args["language"] == "p5" || args["language"] == "processing" ? "p5-and-processing" : args["language"];
 
 /**
  * Cleanup function - delete some files that are not needed and print some messages
  */
-function cleanup(cb) {
+function cleanup(cb, language) {
     console.log("Deleting some files...");
     del(['dist/base/index.html']);
 
@@ -37,6 +23,21 @@ function cleanup(cb) {
  * Main task - build the project for the specified language
  */
 export default (cb) => {
+    // Check the language argument
+    const args = yargs(hideBin(process.argv)).argv;
+    if (args["language"] == undefined) {
+        // If the language argument is not specified, print the help message
+        console.log("Please specify a language to build the project for. For example, to build the project for python, use the following command:");
+        console.log("\tnpm run build -- --language python\n");
+        console.log("To build the project for all languages, use the following command:");
+        console.log("\tnpm run build -- --language full\n");
+        console.log("If you want to run python or java in offline mode, use the following command:");
+        console.log("\tnpm run build -- --language ${language}-offline\n");
+        console.log("The other languages instead already work in offline mode even when built normally.\n");
+        process.exit(1);
+    }
+    const language = args["language"] == "p5" || args["language"] == "processing" ? "p5-and-processing" : args["language"];
+
     console.log(`Building the project for '${language}' - this may take a while...`);
     
     child_process.exec(`vite build -c=build-config/vite.${language}.js`, (err, stdout, stderr) => {
@@ -91,14 +92,35 @@ export default (cb) => {
                             console.log("[ERROR] zipping dist into redbean.com");
                             cb(err);
                         }
-                        cleanup(cb);
+                        cleanup(cb, language);
                     });
                 } else {
-                    cleanup(cb);
+                    cleanup(cb, language);
                 }
             })
         } else {
-            cleanup(cb);
+            cleanup(cb, language);
         }
+    });
+}
+
+
+// Create a custom task 'prepare-cpp'
+export function prepareCpp(cb) {
+    console.log("Preparing C++ files...");
+    child_process.exec("vite build -c=build-config/vite.prepare-cpp.js", (err, stdout, stderr) => {
+        if (err) {
+            console.log("[ERROR] preparing C++ files");
+            cb(err);
+        }
+        // Get the list of files and directories in the public folder
+        const files = fs.readdirSync("public");
+        // Remove all these files from src/modules/workers/cpp
+        files.forEach(file => {
+            console.log(`Removing ${file} from src/modules/workers/cpp`);
+            del([`src/modules/workers/cpp/${file}`]);
+        });
+        console.log("Finished preparing C++ files!");
+        cb();
     });
 }

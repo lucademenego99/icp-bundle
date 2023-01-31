@@ -1,4 +1,4 @@
-import { API } from '../cpp/api'
+import { API } from './api'
 
 let api;
 let finished = true;
@@ -31,7 +31,8 @@ onconnect = async (e) => {
   async function onmessage(e) {
     // Check if the runtime is busy. If so, return an error message.
     if (!finished) {
-      port.postMessage({ error: 'Runtime is initializing. Please retry in a few seconds. Some dependencies must be downloaded.' });
+      if (e.data.type != 'init')
+        port.postMessage({ error: 'Runtime is initializing. Please retry in a few seconds. Some dependencies must be downloaded.' });
       return;
     }
 

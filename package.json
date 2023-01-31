@@ -27,7 +27,8 @@
   "scripts": {
     "dev": "vite",
     "build": "gulp",
-    "build-all": "gulp --language full; gulp --language java; gulp --language cpp; gulp --language javascript; gulp --language p5-and-processing; gulp --language typescript; gulp --language python; gulp --language sql; gulp --language java-offline; gulp --language python-offline; gulp --language cpp-offline; gulp --language full-offline",
+    "prepare-cpp": "gulp prepareCpp",
+    "build-all": "gulp prepareCpp; gulp --language full; gulp --language java; gulp --language cpp; gulp --language javascript; gulp --language p5-and-processing; gulp --language typescript; gulp --language python; gulp --language sql; gulp --language java-offline; gulp --language python-offline; gulp --language cpp-offline; gulp --language full-offline",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "github-cdn": "npx gh-pages -d dist"

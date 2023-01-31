@@ -18,17 +18,28 @@ Install all the packages:
 npm install
 ```
 
-Build the module:
-```
-npm run build
-```
-
-or run a demo:
+Run a demo:
 ```
 npm run dev
 ```
 
-The build command will generate a `dist/base` folder with the following files:
+Build the entire module:
+```
+npm run build-all
+```
+
+Build for a specific language;
+```
+npm run build -- --language typescript
+
+**Note**: before building for c++, you need to prepare the webworker:
+```
+npm run prepare-cpp
+```
+
+```
+
+The build-all command will generate a `dist/base` folder with the following files:
 - `*.iife.js`: script to be included inside the HTML page using ICP; to reduce the size of the bundle to be downloaded, please use the file corresponding to the language you want to use;
 - `redbean.com`: a redbean web-server ready to be customized to serve ICP slides. [redbean](https://redbean.dev/) is a simple HTTP server that exposes the current folder. It can be executed on Linux, MacOS, Windows, FreeBSD, OpenBSD and NetBSD thanks to the [Cosmopolitan project](https://github.com/jart/cosmopolitan). Please see [icp-create-server](https://github.com/lucademenego99/icp-create-server) for more information on how to use it;
 - `example.html`: an example showcasing the main elements exported by the library;
@@ -41,6 +52,7 @@ The build phase creates the following web components:
 - `<javascript-editor></javascript-editor>`;
 - `<typescript-editor></typescript-editor>`;
 - `<python-editor></python-editor>`;
+- `<cpp-editor></cpp-editor>`;
 - `<java-editor></java-editor>`;
 - `<cpp-editor></cpp-editor>`;
 - `<sql-editor></sql-editor>`;

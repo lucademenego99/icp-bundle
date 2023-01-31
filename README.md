@@ -31,12 +31,12 @@ npm run build-all
 Build for a specific language;
 ```
 npm run build -- --language typescript
+```
 
 **Note**: before building for c++, you need to prepare the webworker:
+
 ```
 npm run prepare-cpp
-```
-
 ```
 
 The build-all command will generate a `dist/base` folder with the following files:

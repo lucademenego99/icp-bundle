@@ -10,6 +10,8 @@
     export let code = "";
     export let offline = false;
     export let webworker: Worker | SharedWorker;
+    export let id = "";
+    export let save = false;
 
     /**
      * IMPORTS
@@ -234,6 +236,8 @@
         {code}
         {output}
         {canvas}
+        {id}
+        {save}
         iserror={outputError}
         on:editormsg={(event) => {
             codeMirrorEditor = event.detail.editor;
@@ -241,6 +245,10 @@
             editableFilterConfiguration =
                 event.detail.editableFilterConfiguration;
             darkModeConfiguration = event.detail.darkModeConfiguration;
+        }}
+        on:changedcode={(event) => {
+            if (save) 
+                localStorage.setItem(id, event.detail.content);
         }}
     />
 </div>

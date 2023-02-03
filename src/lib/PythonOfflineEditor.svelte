@@ -4,6 +4,9 @@
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code = "";
+    export let id = "";
+    export let save = false;
+
 
     import BaseEditor from "./BaseEditor.svelte";
     import { pythonWorkerCode } from "../modules/workers/pythonOfflineWorker";
@@ -51,6 +54,8 @@
     {theme}
     {code}
     {webworker}
+    {id}
+    save={save && id != ""}
     offline={true}
     language="python"
     on:recreateworker={(event) => {

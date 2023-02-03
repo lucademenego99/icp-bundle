@@ -4,6 +4,8 @@
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code = "";
+    export let id = "";
+    export let save = false;
 
     import BaseEditor from "./BaseEditor.svelte";
     import JavaWorker from "../modules/workers/java/javaWorker?url";
@@ -54,6 +56,8 @@
     {theme}
     {code}
     {webworker}
+    {id}
+    save={save && id != ""}
     language="java"
     on:recreateworker={(event) => {
         createWorker();

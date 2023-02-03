@@ -22,6 +22,8 @@
     export let output: string;
     export let canvas: HTMLCanvasElement;
     export let iserror: boolean;
+    export let id: string = "";
+    export let save: boolean = false;
 
     /**
      * ELEMENTS
@@ -102,6 +104,14 @@
                 sizes: [70, 30],
                 direction: "vertical",
             });
+        }
+
+        // If an id is set and save true, try to get the code from local storage
+        if (id && save) {
+            const savedCode = localStorage.getItem(id);
+            if (savedCode) {
+                code = savedCode;
+            }
         }
 
         // Create the CodeMirror editor

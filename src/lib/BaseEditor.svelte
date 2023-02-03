@@ -8,10 +8,12 @@
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code = "";
+    export let userCode = "";
     export let offline = false;
     export let webworker: Worker | SharedWorker;
     export let id = "";
     export let save = false;
+    export let downloadable = false;
 
     /**
      * IMPORTS
@@ -30,6 +32,7 @@
     import EditorContainer from "./components/EditorContainer.svelte";
     import { setDarkMode } from "../utils";
     import ThemeSwitch from "./components/ThemeSwitch.svelte";
+    import DownloadButton from "./components/DownloadButton.svelte";
 
     /**
      * ELEMENTS
@@ -49,6 +52,10 @@
         messageShowing = false;
     let isFullscreen = false;
     let canvas;
+
+    onMount(() => {
+        userCode = code;
+    });
 
     /**
      * FUNCTIONS
@@ -158,6 +165,17 @@
         }}
     />
 
+    <!-- Button allowing the user to download the code snippet -->
+    {#if downloadable}
+        <download-button
+            {language}
+            {id}
+            {theme}
+            {type}
+            code={userCode}
+        />
+    {/if}
+
     <!-- Button allowing the user to toggle fullscreen -->
     <button
         on:click={() => {
@@ -247,6 +265,7 @@
             darkModeConfiguration = event.detail.darkModeConfiguration;
         }}
         on:changedcode={(event) => {
+            userCode = event.detail.content;
             if (save) 
                 localStorage.setItem(id, event.detail.content);
         }}

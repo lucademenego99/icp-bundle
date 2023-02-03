@@ -6,6 +6,7 @@
     export let code = "";
     export let id = "";
     export let save = false;
+    export let downloadable = false;
 
     import BaseEditor from "./BaseEditor.svelte";
     import JavaWorker from "../modules/workers/java/javaWorker?url";
@@ -57,6 +58,7 @@
     {code}
     {webworker}
     {id}
+    {downloadable}
     save={save && id != ""}
     language="java"
     on:recreateworker={(event) => {

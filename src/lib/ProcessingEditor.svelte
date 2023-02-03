@@ -5,6 +5,7 @@
     export let code = "";
     export let id = "";
     export let save = false;
+    export let downloadable = false;
 
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
@@ -15,6 +16,7 @@
     {theme}
     {code}
     {id}
+    {downloadable}
     save={save && id != ""}
     webworker={null}
     language="processing"

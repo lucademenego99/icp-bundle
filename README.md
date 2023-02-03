@@ -63,7 +63,8 @@ The build phase creates the following web components:
 Every component has a set of properties that can be passed inside the tags:
 - `code`: the initial code snippet the playground should contain;
 - `theme`: *light* or *dark*;
-- `type`: *normal* or *vertical*
+- `type`: *normal* or *vertical*;
+- `downloadable`: if set to true, a download button will appear allowing to download the code snippet;
 - `id` and `save`: if save is set to true, the code will be saved in local storage with key=id.
 
 To access these components you need to import a bundle in your HTML page. Which bundle to add depends on the language you want to use:

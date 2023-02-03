@@ -6,7 +6,7 @@
     export let code = "";
     export let id = "";
     export let save = false;
-
+    export let downloadable = false;
 
     import BaseEditor from "./BaseEditor.svelte";
     import { pythonWorkerCode } from "../modules/workers/pythonOfflineWorker";
@@ -55,6 +55,7 @@
     {code}
     {webworker}
     {id}
+    {downloadable}
     save={save && id != ""}
     offline={true}
     language="python"

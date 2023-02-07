@@ -176,7 +176,7 @@
     /**
      * Run the provided code
      */
-    function runCode(_event: Event) {
+    async function runCode(_event: Event) {
         // If the code is already running, interrupt the execution instead
         if (runButtonRunning) {
             interruptExecution();
@@ -225,8 +225,18 @@
                 logs.push(message + " " + args.join(" "));
             };
 
+            // Hacky way to handle runtime errors
+            window.onerror = function (message, source, lineno, colno, error) {
+                generateOutput(`Runtime error: ${message}`, true);
+                runButtonRunning = false;
+            };
+            window.onunhandledrejection = function (event) {
+                event.preventDefault();
+                throw event.reason;
+            };
+            
             try {
-                window.eval(code);
+                await window.eval(code);
             } catch (e) {
                 generateOutput(`Runtime error: ${e.message}`, true);
                 runButtonRunning = false;
@@ -271,7 +281,7 @@
                 const expectingRegex = /--> (.*?) <--/;
                 const foundRegex = /but found --> '(.*?)' <--/;
 
-                if (lineRegex && columnRegex && expectingRegex && foundRegex) {
+                if (lineRegex && columnRegex && expectingRegex && foundRegex && e.message.match(lineRegex) && e.message.match(columnRegex) && e.message.match(expectingRegex) && e.message.match(foundRegex)) {
                     const lineNumber = e.message.match(lineRegex)[1];
                     const columnNumber = e.message.match(columnRegex)[1];
                     const expecting = e.message.match(expectingRegex)[1];
@@ -350,8 +360,18 @@ ${code}
                 draw = undefined;
             }
 
+            // Hacky way to handle runtime errors
+            window.onerror = function (message, source, lineno, colno, error) {
+                generateOutput(`Runtime error: ${message}`, true);
+                runButtonRunning = false;
+            };
+            window.onunhandledrejection = function (event) {
+                event.preventDefault();
+                throw event.reason;
+            };
+            
             try {
-                window.eval(code);
+                await window.eval(code);
             } catch (e) {
                 generateOutput(`Runtime error: ${e.message}`, true);
                 runButtonRunning = false;

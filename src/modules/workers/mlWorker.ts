@@ -59,7 +59,6 @@ onmessage = async (e) => {
 
         // Add trunc
         interpretationResult = interpret("fun trunc x = if x >= 0.0 then floor x else ceil x;", initialState);
-        const startingId = interpretationResult.state.id + 1;
 
         // Split the script: each instruction is delimited by a ;
         const script = e.data.script.split(';');
@@ -74,18 +73,14 @@ onmessage = async (e) => {
                 // Check for warnings
                 let warnings = "";
                 for(let i = 0; i < res.warnings.length; i++) {
-                    warnings += res.warnings[i];
+                    warnings += res.warnings[i].toString().replace("Warning: ", "");
                 }
 
-                result += warnings + (warnings != "" ? "\n" : "") + res.state.toString({stopId: res.state.id});
-            } else if (res.result == ErrorType.INCOMPLETE) {
-                if (i < script.length - 2) {
-                    script[i+1] = script[i] + script[i+1];
-                } else {
-                    throw new Error(res.error);
-                }
+                result += warnings + res.state.toString({stopId: res.state.id});
+            } else if (i < script.length - 2 && res.result != ErrorType.SML) {
+                script[i+1] = script[i] + script[i+1];
             } else {
-                throw new Error(res.error);
+                throw new Error(res.result == ErrorType.SML ? "Exception- " + res.error + " raised" : res.error);
             }
         }
 

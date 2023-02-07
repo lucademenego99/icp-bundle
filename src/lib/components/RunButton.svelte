@@ -73,7 +73,11 @@
         if (webworker) {
             console.log(webworker);
             // Handle the webworker's messages
-            if (language == "python" || language == "java" || language == "cpp") {
+            if (
+                language == "python" ||
+                language == "java" ||
+                language == "cpp"
+            ) {
                 (webworker as SharedWorker).port.onmessage = onWorkerMessage;
             } else {
                 console.log("Initialized worker for language " + language);
@@ -117,6 +121,8 @@
             output =
                 language == "python"
                     ? "[line " + message.data.line + "] " + message.data.error
+                    : language == "ml"
+                    ? message.data.error.message
                     : message.data.error;
         } else {
             outputError = false;

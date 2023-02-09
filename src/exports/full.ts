@@ -7,4 +7,3 @@ export * from '../lib/StandardMLEditor.svelte';
 export * from '../lib/P5jsEditor.svelte';
 export * from '../lib/ProcessingEditor.svelte';
 export * from '../lib/CppEditor.svelte';
-export * from '../utils';

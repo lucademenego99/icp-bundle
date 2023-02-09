@@ -23,7 +23,7 @@
 <base-editor
     syntax={typescript()}
     {type}
-    {theme}
+    theme={localStorage.getItem("icp-default-theme") || theme}
     {code}
     {webworker}
     {id}

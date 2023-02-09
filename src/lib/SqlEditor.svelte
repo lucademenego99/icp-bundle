@@ -23,7 +23,7 @@
 <base-editor
     syntax={sql({ upperCaseKeywords: true })}
     {type}
-    {theme}
+    theme={localStorage.getItem("icp-default-theme") || theme}
     {code}
     {webworker}
     {id}

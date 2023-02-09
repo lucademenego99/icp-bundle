@@ -15,7 +15,7 @@
 <base-editor
     type="vertical"
     syntax={java()}
-    {theme}
+    theme={localStorage.getItem("icp-default-theme") || theme}
     {code}
     {id}
     {downloadable}

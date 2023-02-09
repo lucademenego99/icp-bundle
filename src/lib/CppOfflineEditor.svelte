@@ -39,7 +39,7 @@
 <base-editor
     syntax={cpp()}
     {type}
-    {theme}
+    theme={localStorage.getItem("icp-default-theme") || theme}
     {code}
     {webworker}
     {id}

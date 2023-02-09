@@ -1,3 +1,6 @@
+/**
+ * The language of the code snippet.
+ */
 export type Language = 
     "javascript"
     | "typescript"

@@ -24,7 +24,7 @@
 <base-editor
     syntax={StreamLanguage.define(sml)}
     {type}
-    {theme}
+    theme={localStorage.getItem("icp-default-theme") || theme}
     {code}
     {webworker}
     {id}

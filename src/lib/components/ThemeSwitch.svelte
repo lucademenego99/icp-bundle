@@ -4,6 +4,8 @@
     export let theme: "light" | "dark";
     export let type: "normal" | "vertical";
 
+    import { icpDefaultTheme } from "../../stores";
+
     let rootElement: HTMLElement;
 
     /**
@@ -11,6 +13,12 @@
      * @param darkMode whether the dark mode should be enabled or not
      */
     function setTheme(darkMode: boolean) {
+        // Update the localstorage
+        localStorage.setItem("icp-default-theme", darkMode ? "dark" : "light");
+
+        // Set icpDefaultTheme to the new theme for changes to take effect on the whole app
+        icpDefaultTheme.set(darkMode ? "dark" : "light");
+
         // Emit event to the parent
         const event = new CustomEvent("changedtheme", {
             detail: {
@@ -21,6 +29,15 @@
             composed: true,
         });
         rootElement.dispatchEvent(event);
+    }
+
+    $: {
+        // If a change has been made to the icpDefaultTheme store, update the theme
+        // This is needed because the theme is not updated when the user changes the theme
+        // from another editor
+        if (rootElement && $icpDefaultTheme && $icpDefaultTheme != theme) {
+            setTheme($icpDefaultTheme == "dark" ? true : false);
+        }
     }
 </script>
 

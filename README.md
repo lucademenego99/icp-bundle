@@ -30,7 +30,7 @@ npm run build-all
 
 Build for a specific language;
 ```
-npm run build -- --language typescript
+npm run build -- --language python
 ```
 
 **Note**: before building for c++, you need to prepare the webworker:
@@ -52,7 +52,6 @@ The build phase creates the following web components:
 - `<javascript-editor></javascript-editor>`;
 - `<typescript-editor></typescript-editor>`;
 - `<python-editor></python-editor>`;
-- `<cpp-editor></cpp-editor>`;
 - `<java-editor></java-editor>`;
 - `<cpp-editor></cpp-editor>`;
 - `<sql-editor></sql-editor>`;
@@ -62,7 +61,7 @@ The build phase creates the following web components:
 
 Every component has a set of properties that can be passed inside the tags:
 - `code`: the initial code snippet the playground should contain;
-- `theme`: *light* or *dark*;
+- `theme`: *light* or *dark* (but if the user has selected a default theme, the one chosen by the user will be used);
 - `type`: *normal* or *vertical*;
 - `downloadable`: if set to true, a download button will appear allowing to download the code snippet;
 - `id` and `save`: if save is set to true, the code will be saved in local storage with key=id.
@@ -95,23 +94,6 @@ Sometimes you may want to embed editor components in which only some parts of th
 ```
 <python-editor code="print('<EDITABLE>Hello World!</EDITABLE>')" />
 ```
-
-## Other exposed functions
-
-Apart from these web components, the following functions are exposed:
-- `createEditor(element, language, enableDarkMode, initialText)`: create a CodeMirror editor, returning its instance and a languageConfiguration compartment;
-- `setTabsHandling(editor, tabsConfiguration, enabled)`: set whether or not tabs should be handled inside the code editor (they are not by default).
-
-They can be called using one of the exported names from Javascript:
-- `InteractiveCodePlaygrounds` (if `full.iife.js` has been imported);
-- `JavascriptCodePlaygrounds` (if `javascript.iife.js` has been imported);
-- `TypescriptCodePlaygrounds` (if `typescript.iife.js` has been imported);
-- `PythonCodePlaygrounds` (if `python.iife.js` has been imported);
-- `JavaCodePlaygrounds` (if `java.iife.js` has been imported);
-- `CppCodePlaygrounds` (if `cpp.iife.js` has been imported);
-- `SqlCodePlaygrounds` (if `sql.iife.js` has been imported)
-- `P5CodePlaygrounds` (if `p5-and-processing.iife.js` has been imported)
-- `StandardMLCodePlaygrounds` (if `standard-ml.iife.js` has been imported).
 
 ## Mentions
 - the typescript plugin included in `src/modules/` has been taken from [prisma/text-editors](https://github.com/prisma/text-editors)

@@ -142,7 +142,6 @@
         <div
             class="gutter gutter-vertical gutter-horizontal cm-editor cm-scroller"
         />
-        <div class="cm-tooltip-autocomplete cm-tooltip cm-tooltip-below" />
         <div class="ͼ1">
             <div class="cm-line" />
             <div class="cm-content" />
@@ -316,13 +315,6 @@
 
     .ͼ1 .cm-line {
         padding: 0 min(0.05vw, 0.025vh) 0 min(0.15vw, 0.075vh) !important;
-    }
-
-    .cm-tooltip-autocomplete.cm-tooltip.cm-tooltip-below {
-        position: absolute !important;
-        top: 0 !important;
-        right: 0 !important;
-        width: fit-content !important;
     }
 
     /* Split.js gutter customization */

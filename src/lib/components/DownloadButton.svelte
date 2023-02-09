@@ -20,7 +20,7 @@
         cpp: "cpp",
         processing: "pde",
         p5: "js",
-        standardml: "sml",
+        ml: "ml",
     };
 
     let languageToMimeType = {
@@ -32,7 +32,7 @@
         cpp: "text/x-c++src",
         processing: "text/x-processing",
         p5: "text/javascript",
-        standardml: "text/x-sml",
+        ml: "text/x-sml",
     };
 
     /**

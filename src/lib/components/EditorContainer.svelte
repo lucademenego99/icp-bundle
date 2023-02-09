@@ -11,11 +11,13 @@
     import type { Compartment } from "@codemirror/state";
     import { executeRequest, editorToExecute } from "../../stores";
     import type { Language } from "../../types";
+    import type { LanguageSupport } from "@codemirror/language";
 
     /**
      * PROPS
      */
     export let language: Language = "javascript";
+    export let syntax: LanguageSupport;
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code: string;
@@ -117,7 +119,7 @@
         // Create the CodeMirror editor
         let res;
         if (!codeMirrorEditor) {
-            res = createEditor(editorElement, language, theme == "dark", code);
+            res = createEditor(editorElement, syntax, theme == "dark", code);
         }
 
         // Get access to the editor instance

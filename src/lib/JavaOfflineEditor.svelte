@@ -10,6 +10,7 @@
 
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
+    import { java } from "@codemirror/lang-java";
 
     let webworker: SharedWorker;
 
@@ -72,6 +73,7 @@
 </script>
 
 <base-editor
+    syntax={java()}
     {type}
     {theme}
     {code}

@@ -11,6 +11,7 @@
     import BaseEditor from "./BaseEditor.svelte";
     import PythonWorker from "../modules/workers/pythonWorker?url";
     import { onMount } from "svelte";
+    import { python } from "@codemirror/lang-python";
 
     let webworker: SharedWorker;
 
@@ -31,6 +32,7 @@
 </script>
 
 <base-editor
+    syntax={python()}
     {type}
     {theme}
     {code}

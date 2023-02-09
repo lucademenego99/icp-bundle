@@ -11,6 +11,8 @@
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
     import MLWorker from "../modules/workers/mlWorker?worker&inline";
+    import { StreamLanguage } from "@codemirror/language";
+    import { sml } from "@codemirror/legacy-modes/mode/mllike";
 
     let webworker: Worker;
 
@@ -20,6 +22,7 @@
 </script>
 
 <base-editor
+    syntax={StreamLanguage.define(sml)}
     {type}
     {theme}
     {code}

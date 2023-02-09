@@ -1,13 +1,4 @@
-import { java } from "@codemirror/lang-java";
-import { javascript } from "@codemirror/lang-javascript";
-import { sql } from "@codemirror/lang-sql";
-import { python } from "@codemirror/lang-python";
-import { cpp } from "@codemirror/lang-cpp";
-import { lintGutter } from "@codemirror/lint";
-import {StreamLanguage} from "@codemirror/language"
-import {sml} from "@codemirror/legacy-modes/mode/mllike"
 import { EditorView, keymap } from "@codemirror/view";
-import { typescript } from "./modules/typescript";
 import { indentWithTab } from "@codemirror/commands";
 import { Compartment, EditorState, Prec } from "@codemirror/state";
 import { basicSetup } from "codemirror";
@@ -24,21 +15,21 @@ import { editableSelection, notEditableSelection, readOnlyTransactionFilter } fr
  */
 function createEditor(element, language, enableDarkMode = false, initialText = '') {
     console.log('Creating editor for element', element);
-    // Create a compartment to handle language configuration
-    let languageConfiguration = new Compartment;
 
     // Create a compartment to handle tabs handling
     let tabsConfiguration = new Compartment;
 
+    // Create a compartment to handle the editable mode
     let editableFilterConfiguration = new Compartment;
 
+    // Create a compartment to handle the dark mode
     let darkModeConfiguration = new Compartment;
 
     // Define the extensions of the editor
     let extensions = [
         basicSetup,
         EditorView.lineWrapping,
-        languageConfiguration.of(languageSelection[language]),
+        language,
         tabsConfiguration.of([]),
         darkModeConfiguration.of(enableDarkMode ? oneDark : []),
         // Fire event execute when clicking CTRL+ENTER
@@ -127,24 +118,9 @@ function createEditor(element, language, enableDarkMode = false, initialText = '
 
     // Return the editor and the languages handler
     return {
-        editor, languageConfiguration, tabsConfiguration, editableFilterConfiguration, darkModeConfiguration
+        editor, tabsConfiguration, editableFilterConfiguration, darkModeConfiguration
     }
 }
-
-/**
- * Plugins for CodeMirror, divided by language
- */
-const languageSelection = {
-    javascript: [javascript(), lintGutter()],
-    typescript: typescript(),
-    java: java(),
-    python: python(),
-    cpp: cpp(),
-    sql: sql({ upperCaseKeywords: true }),
-    p5: javascript(),
-    processing: java(),
-    ml: StreamLanguage.define(sml),
-};
 
 /**
  * Tabs handling configuration
@@ -250,7 +226,6 @@ function setEditableFilter(editor, editableFilterConfiguration, code, enabled) {
 
 export {
     createEditor,
-    languageSelection,
     setTabsHandling,
     setEditableFilter,
     setDarkMode

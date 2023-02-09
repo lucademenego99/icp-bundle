@@ -11,6 +11,7 @@
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
     import JavascriptWorker from "../modules/workers/javascriptWorker?worker&inline";
+    import { javascript } from "@codemirror/lang-javascript";
 
     let webworker: Worker;
 
@@ -20,6 +21,7 @@
 </script>
 
 <base-editor
+    syntax={javascript()}
     {type}
     {theme}
     {code}

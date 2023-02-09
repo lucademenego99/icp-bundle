@@ -20,7 +20,6 @@
             cancelable: true,
             composed: true,
         });
-        console.log("Emitting event");
         rootElement.dispatchEvent(event);
     }
 </script>

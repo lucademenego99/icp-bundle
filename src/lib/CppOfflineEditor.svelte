@@ -11,6 +11,7 @@
     import BaseEditor from "./BaseEditor.svelte";
     import CppWorker from "../modules/workers/cpp/cppWorkerBundle.iife.js?url";
     import { onMount } from "svelte";
+    import { cpp } from "@codemirror/lang-cpp";
 
     let webworker: SharedWorker;
 
@@ -36,6 +37,7 @@
 </script>
 
 <base-editor
+    syntax={cpp()}
     {type}
     {theme}
     {code}

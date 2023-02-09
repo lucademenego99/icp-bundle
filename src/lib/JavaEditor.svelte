@@ -13,6 +13,7 @@
     import RunWorker from "../modules/workers/java/javaRunWorker?url";
     import TeaWorker from "../modules/workers/java/javaTeaWorker?url";
     import { onMount } from "svelte";
+    import { java } from "@codemirror/lang-java";
 
     let webworker: SharedWorker;
     let teaworker: SharedWorker;
@@ -53,6 +54,7 @@
 </script>
 
 <base-editor
+    syntax={java()}
     {type}
     {theme}
     {code}

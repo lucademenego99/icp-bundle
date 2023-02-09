@@ -11,6 +11,7 @@
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
     import SqlWorker from "../modules/workers/sqlWorker?worker&inline";
+    import { sql } from "@codemirror/lang-sql";
 
     let webworker: Worker;
 
@@ -20,6 +21,7 @@
 </script>
 
 <base-editor
+    syntax={sql({ upperCaseKeywords: true })}
     {type}
     {theme}
     {code}

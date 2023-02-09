@@ -10,6 +10,7 @@
 
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
+    import { typescript } from "../modules/typescript";
     import TypescriptWorker from "../modules/workers/typescriptWorker?worker&inline";
 
     let webworker: Worker;
@@ -20,6 +21,7 @@
 </script>
 
 <base-editor
+    syntax={typescript()}
     {type}
     {theme}
     {code}

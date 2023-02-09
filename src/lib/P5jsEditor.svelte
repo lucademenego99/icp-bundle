@@ -9,9 +9,11 @@
 
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
+    import { javascript } from "@codemirror/lang-javascript";
 </script>
 
 <base-editor
+    syntax={javascript()}
     type="vertical"
     {theme}
     {code}

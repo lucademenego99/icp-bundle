@@ -9,10 +9,12 @@
 
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
+    import { java } from "@codemirror/lang-java";
 </script>
 
 <base-editor
     type="vertical"
+    syntax={java()}
     {theme}
     {code}
     {id}

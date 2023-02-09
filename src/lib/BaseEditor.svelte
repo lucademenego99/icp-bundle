@@ -5,6 +5,7 @@
      * PROPS
      */
     export let language: Language;
+    export let syntax: LanguageSupport;
     export let type: "normal" | "vertical" = "normal";
     export let theme: "light" | "dark" = "light";
     export let code = "";
@@ -33,6 +34,7 @@
     import { setDarkMode } from "../utils";
     import ThemeSwitch from "./components/ThemeSwitch.svelte";
     import DownloadButton from "./components/DownloadButton.svelte";
+    import type { LanguageSupport } from "@codemirror/language";
 
     /**
      * ELEMENTS
@@ -248,6 +250,7 @@
 
     <!-- Main Editor Container - powered by CodeMirror -->
     <editor-container
+        {syntax}
         {language}
         {type}
         {theme}

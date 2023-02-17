@@ -12,6 +12,9 @@
     import { createHTMLTable } from "../../modules/run/utils";
     import type { Language } from "../../types";
 
+    import * as babel from "@babel/standalone";
+    import protect from '@freecodecamp/loop-protect';
+
     /**
      * PROPS
      */
@@ -360,6 +363,16 @@ ${code}
                 draw = undefined;
             }
 
+            // Check for infinite loops
+            const callback = line => {
+                throw new Error("ATTENZIONE: il tuo codice contiene un ciclo infinito!");
+            };
+            const timeout = 100;
+            babel.registerPlugin('loopProtection', protect(timeout, callback));
+            code = babel.transform(code, {
+                plugins: ['loopProtection'],
+            }).code;
+
             // Hacky way to handle runtime errors
             window.onerror = function (message, source, lineno, colno, error) {
                 generateOutput(`Runtime error: ${message}`, true);
@@ -400,7 +413,7 @@ ${code}
             console.log = originalConsoleLog;
 
             // If the code does not contain any draw() function, set the run button to not running
-            if (!code.includes("draw ( )")) {
+            if (!code.includes("draw()")) {
                 interruptExecution();
             }
             return;

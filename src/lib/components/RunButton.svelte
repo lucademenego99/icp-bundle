@@ -375,6 +375,11 @@ ${code}
 
             // Hacky way to handle runtime errors
             window.onerror = function (message, source, lineno, colno, error) {
+                if (message.toString().includes("ATTENZIONE: il tuo codice contiene un ciclo infinito!")) {
+                    // Based on what the professor asked, we should not show this specific error message
+                    runButtonRunning = false;
+                    return;
+                }
                 generateOutput(`Runtime error: ${message}`, true);
                 runButtonRunning = false;
             };

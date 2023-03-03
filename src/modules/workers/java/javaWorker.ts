@@ -62,12 +62,12 @@ onconnect = async (e) => {
                 teaworker.addEventListener('message', (e) => {
                     if (e.data.command == 'ok' && e.data.id == 'didload-classlib') {
                         // Run a sample program to completely initialize the runtime and make the next commands faster
-                        compileAndRun(`public class Main {public static void main(String[] args) {}}`, 1, ({ message, start, end, severity }) => {});
+                        compileAndRun(`public class Main {public static void main(String[] args) {}}`, 1, ({ message, start, end, severity }) => { });
                     }
                 });
                 // Start the port
                 teaworker.start();
-        
+
                 // Bootstrap environment
                 if (!runtimeInitialized) {
                     teaworker.postMessage({
@@ -80,27 +80,27 @@ onconnect = async (e) => {
                     runtimeInitialized = true;
                 }
             } else if (message.data.worker == "runworker") {
-                    runWorker = message.data.port;
+                runWorker = message.data.port;
 
-                    const runListener = (ee) => {
-                        if (ee.data.command == 'run-completed') {
-                            // Set the flag isReady to true
-                            isReady = true;
-                            // console.log("RUN COMPLETE ", ee.data);
-                            codeFinished = true;
-                        } else if (ee.data.command == 'stdout') {
-                            javaMessages.push(ee.data.line);
-                            // console.log(ee.data.line + '\n')
-                        } else if (ee.data.command == 'stderr') {
-                            javaErrorMessages.push(ee.data.line);
-                            // console.log(ee.data.line + '\n')
-                        } else if (ee.data.command == 'f-FINAL') {
-                            // options.resultData = JSON.parse(ee.data.value)
-                        }
+                const runListener = (ee) => {
+                    if (ee.data.command == 'run-completed') {
+                        // Set the flag isReady to true
+                        isReady = true;
+                        // console.log("RUN COMPLETE ", ee.data);
+                        codeFinished = true;
+                    } else if (ee.data.command == 'stdout') {
+                        javaMessages.push(ee.data.line);
+                        // console.log(ee.data.line + '\n')
+                    } else if (ee.data.command == 'stderr') {
+                        javaErrorMessages.push(ee.data.line);
+                        // console.log(ee.data.line + '\n')
+                    } else if (ee.data.command == 'f-FINAL') {
+                        // options.resultData = JSON.parse(ee.data.value)
                     }
-                    runWorker.addEventListener('message', runListener);
+                }
+                runWorker.addEventListener('message', runListener);
 
-                    runWorker.start();
+                runWorker.start();
             }
         } else {
             // Evaluate the script and
@@ -119,7 +119,7 @@ onconnect = async (e) => {
                         }
                         codeFinished = false;
                         compileAndRun(message.data.script, 1, ({ message, start, end, severity }) => {
-                            javaErrorMessages.push(`[${severity.toUpperCase()}] (${start.line}:${end.line}) ${message}`);
+                            javaErrorMessages.push(`[${severity.toUpperCase()}] (${start.line + 1}:${end.line + 1}) ${message}`);
                         });
                         while (!codeFinished) {
                             await delay(250);

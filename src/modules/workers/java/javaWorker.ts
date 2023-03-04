@@ -182,9 +182,8 @@ onconnect = async (e) => {
 
         const getMainClass = (_code) => {
             let ret = 'Unknown'
-            //above replaces all {} with [], so look for public class <name> []
             const regexpMainClass =
-                /public\s+?class\s+?([a-zA-Z_$0-9]+?)\s*?(\[|\simplements|\sextends)/gm
+                /public\s+class\s+([a-zA-Z_$][a-zA-Z\d_$]*)\s*(?:implements\s+([a-zA-Z_$][a-zA-Z\d_$]*)\s*(?:,\s*[a-zA-Z_$][a-zA-Z\d_$]*)*)?(?:extends\s+([a-zA-Z_$][a-zA-Z\d_$]*)\s*)?\s*\{/gm
             let match;
             while ((match = regexpMainClass.exec(_code)) !== null) {
                 if (match[1]) {

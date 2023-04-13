@@ -54,6 +54,22 @@
     }
 
     /**
+     * Send an event to reset the code output
+     */
+     function resetOutput() {
+        const event = new CustomEvent("changedout", {
+        detail: {
+            output: "",
+            outputError: false,
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+        });
+        ref?.dispatchEvent(event);
+    }
+
+    /**
      * On mount, add the event listeners for every button
      */
     onMount(() => {
@@ -90,6 +106,7 @@
                     },
                 ],
             });
+            resetOutput();
             settingsButtonContainer.click();
             showMessage("Code reset!");
         });

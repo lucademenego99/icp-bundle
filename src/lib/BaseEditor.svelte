@@ -221,6 +221,9 @@
     tabsconf={tabsConfiguration}
     editableconf={editableFilterConfiguration}
     {code}
+    on:changedout={(event) => {
+      output = event.detail.output;
+    }}
     on:showmsg={(event) => {
       showMessage(event.detail);
     }}

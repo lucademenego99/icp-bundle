@@ -5,15 +5,9 @@
    * IMPORTS
    */
   import { executeRequest, editorToExecute } from "../../stores";
-  import p5 from "p5";
-  import { transformProcessing } from "../../modules/processing/utils";
   import type { EditorView } from "@codemirror/view";
   import { onMount } from "svelte";
-  import { createHTMLTable } from "../../modules/run/utils";
   import type { Language } from "../../types";
-
-  import * as babel from "@babel/standalone";
-  import protect from "@freecodecamp/loop-protect";
 
   /**
    * PROPS
@@ -23,6 +17,7 @@
   export let editor: EditorView;
   export let offline: boolean = false;
   export let webworker: Worker | SharedWorker;
+  export let modules: any = {};
 
   /**
    * ELEMENTS
@@ -36,7 +31,7 @@
   let output: string;
   let outputError: boolean;
   let runButtonRunning = false;
-  let p5Instance: p5;
+  let p5Instance: typeof modules["p5"];
 
   const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
@@ -134,7 +129,7 @@
         ) {
           // For each table in output generate the HTML table
           const tables = message.data.result.map(
-            (table) => createHTMLTable(table).outerHTML
+            (table) => modules["createHTMLTable"](table).outerHTML
           );
           output = tables.join("<br>");
         } else {
@@ -241,7 +236,7 @@
         return;
       }
 
-      p5Instance = new p5();
+      p5Instance = new modules["p5"]();
 
       const canvas = p5Instance.canvas;
       canvas.style.width = width + "px";
@@ -272,7 +267,7 @@
 
       try {
         // Transform the code to p5.js code
-        code = transformProcessing(code);
+        code = modules["transformProcessing"](code);
       } catch (e) {
         const lineRegex = /line: (\d+)/;
         const columnRegex = /column: (\d+)/;
@@ -374,8 +369,8 @@ ${code}
         );
       };
       const timeout = 100;
-      babel.registerPlugin("loopProtection", protect(timeout, callback));
-      code = babel.transform(code, {
+      modules["babel"].registerPlugin("loopProtection", modules["protect"](timeout, callback));
+      code = modules["babel"].transform(code, {
         plugins: ["loopProtection"],
       }).code;
 
@@ -406,7 +401,7 @@ ${code}
         return;
       }
 
-      p5Instance = new p5();
+      p5Instance = new modules["p5"]();
 
       const canvas = p5Instance.canvas;
       canvas.style.width = width + "px";

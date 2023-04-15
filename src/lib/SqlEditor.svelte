@@ -12,6 +12,7 @@
     import { onMount } from "svelte";
     import SqlWorker from "../modules/workers/sqlWorker?worker&inline";
     import { sql } from "@codemirror/lang-sql";
+    import { createHTMLTable } from "../modules/run/utils";
 
     let webworker: Worker;
 
@@ -30,6 +31,9 @@
     {downloadable}
     save={save && id != ""}
     language="sql"
+    modules={{
+        "createHTMLTable": createHTMLTable
+    }}
     on:recreateworker={(event) => {
         webworker = new SqlWorker();
     }}

@@ -10,6 +10,7 @@
     import BaseEditor from "./BaseEditor.svelte";
     import { onMount } from "svelte";
     import { javascript } from "@codemirror/lang-javascript";
+    import p5 from "p5";
 </script>
 
 <base-editor
@@ -22,4 +23,7 @@
     save={save && id != ""}
     webworker={null}
     language="p5"
+    modules={{
+        "p5": p5
+    }}
 />

@@ -15,6 +15,7 @@
   export let id = "";
   export let save = false;
   export let downloadable = false;
+  export let modules: any = {};
 
   /**
    * IMPORTS
@@ -236,6 +237,7 @@
     editor={codeMirrorEditor}
     {webworker}
     {offline}
+    {modules}
     on:changedout={(event) => {
       output = event.detail.output;
       outputError = event.detail.outputError;

@@ -108,16 +108,15 @@
    */
   function onWorkerMessage(message: any) {
     runButtonRunning = false;
-    console.log(message.data);
     if (message.data.error) {
       outputError = true;
-      console.log(message.data);
       output =
         language == "python"
           ? "[line " + message.data.line + "] " + message.data.error
           : language == "ml"
           ? message.data.error.message
           : message.data.error;
+      console.log(message.data);
     } else {
       outputError = false;
 
@@ -142,6 +141,7 @@
         output = text;
       }
     }
+    generateOutput(output, outputError);
   }
 
   /**

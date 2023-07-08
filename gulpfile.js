@@ -59,29 +59,6 @@ export default (cb) => {
 
         console.log("Build completed!");
 
-        if (language == "java-offline") {
-            // Copy some files for Java to work offline
-            console.log("Setting up java offline mode.")
-            child_process.exec("cp src/modules/workers/java/javaWorker.ts dist/base/utils/java/javaWorker.js", (err, stdout, stderr) => {
-                if (err) {
-                    console.log("[ERROR] moving javaWorker.ts to javaWorker.js");
-                    cb(err);
-                }
-            });
-            child_process.exec("cp src/modules/workers/java/javaTeaWorkerOffline.ts dist/base/utils/java/javaTeaWorker.js", (err, stdout, stderr) => {
-                if (err) {
-                    console.log("[ERROR] moving javaTeaWorkerOffline.ts to javaTeaWorker.js");
-                    cb(err);
-                }
-            });
-            child_process.exec("cp src/modules/workers/java/javaRunWorker.ts dist/base/utils/java/javaRunWorker.js", (err, stdout, stderr) => {
-                if (err) {
-                    console.log("[ERROR] moving javaRunWorker.ts to javaRunWorker.js");
-                    cb(err);
-                }
-            });
-        }
-
         if (language == "full-offline") {
             console.log("Setting up redbean.com for full offline mode.")
             child_process.exec("cd dist/base/ && chmod +x ../../bin/zip.com && ../../bin/zip.com -r redbean.com utils full-offline.iife.js reveal.js reveal.css blood.css white.css custom-style.css && ../../bin/zip.com -0 redbean.com index.html && chmod +x redbean.com", (err, stdout, stderr) => {
@@ -120,7 +97,65 @@ export function prepareCpp(cb) {
             console.log(`Removing ${file} from src/modules/workers/cpp`);
             del([`src/modules/workers/cpp/${file}`]);
         });
-        console.log("Finished preparing C++ files!");
-        cb();
+        child_process.exec("cp src/modules/workers/cpp/cppWorkerBundle.iife.js public/utils/cpp/cppWorkerBundle.iife.js", (err, stdout, stderr) => {
+            if (err) {
+                console.log("[ERROR] copying worker to public folder");
+                cb(err);
+            }
+            console.log("Finished preparing C++ files!");
+            cb();
+        });
     });
 }
+
+// Create a custom task 'prepare-python'
+export function preparePython(cb) {
+    console.log("Preparing Python files...");
+    child_process.exec("vite build -c=build-config/vite.prepare-python.js", (err, stdout, stderr) => {
+        if (err) {
+            console.log("[ERROR] preparing Python files");
+            cb(err);
+        }
+        // Get the list of files and directories in the public folder
+        const files = fs.readdirSync("public");
+        // Remove all these files from src/modules/workers
+        files.forEach(file => {
+            console.log(`Removing ${file} from src/modules/workers`);
+            del([`src/modules/workers/${file}`]);
+        });
+        child_process.exec("cp src/modules/workers/pythonWorkerBundle.iife.js public/utils/python/pyodide/pythonWorkerBundle.iife.js", (err, stdout, stderr) => {
+            if (err) {
+                console.log("[ERROR] copying worker to public folder");
+                cb(err);
+            }
+            console.log("Finished preparing Python files!");
+            cb();
+        });
+    });
+}
+
+// Create a custom task 'prepare-java'
+export function prepareJava(cb) {
+    console.log("Preparing Java files...");
+    child_process.exec("cp src/modules/workers/java/javaWorker.js public/utils/java/javaWorker.js", (err, stdout, stderr) => {
+        if (err) {
+            console.log("[ERROR] moving javaWorker.js to javaWorker.js");
+            cb(err);
+        }
+        child_process.exec("cp src/modules/workers/java/javaTeaWorkerOffline.js public/utils/java/javaTeaWorker.js", (err, stdout, stderr) => {
+            if (err) {
+                console.log("[ERROR] moving javaTeaWorkerOffline.js to javaTeaWorker.js");
+                cb(err);
+            }
+            child_process.exec("cp src/modules/workers/java/javaRunWorker.js public/utils/java/javaRunWorker.js", (err, stdout, stderr) => {
+                if (err) {
+                    console.log("[ERROR] moving javaRunWorker.js to javaRunWorker.js");
+                    cb(err);
+                }
+                console.log("Finished preparing Java files!");
+                cb();
+            });
+        });
+    });
+}
+

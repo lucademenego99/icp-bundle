@@ -9,7 +9,6 @@
     export let downloadable = false;
 
     import BaseEditor from "./BaseEditor.svelte";
-    import { pythonWorkerCode } from "../modules/workers/pythonOfflineWorker";
     import { onMount } from "svelte";
     import { python } from "@codemirror/lang-python";
 
@@ -24,17 +23,7 @@
         baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
         baseUrl += "/utils/python/pyodide/";
 
-        // Get the body of the webworker's function
-        var workerJob = pythonWorkerCode
-            .toString()
-            .slice(
-                pythonWorkerCode.toString().indexOf("{") + 1,
-                pythonWorkerCode.toString().lastIndexOf("}")
-            );
-        // Generate a blob from it
-        var workerBlob = new Blob([workerJob], { type: "text/javascript" });
-        // The webworker constructor needs an URL: create it from the blob
-        webworker = new SharedWorker(window.URL.createObjectURL(workerBlob), {
+        webworker = new SharedWorker(baseUrl + "pythonWorkerBundle.iife.js", {
             name: "PythonWorker",
         });
         webworker.port.start();

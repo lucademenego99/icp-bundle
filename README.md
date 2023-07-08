@@ -33,10 +33,10 @@ Build for a specific language;
 npm run build -- --language python
 ```
 
-**Note**: before building for c++, you need to prepare the webworker:
+**Note**: before building for c/c++/python/java, you need to prepare the webworker:
 
 ```
-npm run prepare-cpp
+npm run prepare-[cpp/python/java]
 ```
 
 The build-all command will generate a `dist/base` folder with the following files:
@@ -44,6 +44,19 @@ The build-all command will generate a `dist/base` folder with the following file
 - `redbean.com`: a redbean web-server ready to be customized to serve ICP slides. [redbean](https://redbean.dev/) is a simple HTTP server that exposes the current folder. It can be executed on Linux, MacOS, Windows, FreeBSD, OpenBSD and NetBSD thanks to the [Cosmopolitan project](https://github.com/jart/cosmopolitan). Please see [icp-create-server](https://github.com/lucademenego99/icp-create-server) for more information on how to use it;
 - `example.html`: an example showcasing the main elements exported by the library;
 - various css files: styles to make the slides work.
+
+
+## Redbean file
+The resulting Redbean file contains the dependencies to compile and run all programming languages supported by ICPs, so it is quite heavy.
+If you need to prepare a redbean file containing only the dependencies for a specific programming language, you can:
+- take the redbean.com file contained in the public folder;
+- use the zip command line program available in Linux to insert the dependencies you need and the HTML slides;
+- distribute it!
+
+As an example, here are the commands to prepare a Redbean file compatible with Python:
+- zip redbean.com custom-style.css reveal.js python-offline.iife.js reveal.css white.css # Common dependencies
+- zip redbean.com -r utils # Utils folder available in the public directory, containing only the "python" subfolder
+- zip redbean.com index.html # Your HTML slides
 
 
 ## Exported Web Components
@@ -83,7 +96,7 @@ The available languages that can be used in the editors are the following:
 | typescript | ✅ | ✅ | ✅ | ✅ |
 | python | ✅ | ✅ |  | ✅ |
 | java | ✅ |  |  | ✅ |
-| c++ | ✅ |  |  | ✅ |
+| c/c++ | ✅ |  |  | ✅ |
 | sql | ✅ | ✅ |  | ✅ |
 | p5 | ✅ |  |  | ✅ |
 | processing | ✅ |  |  | ✅ |

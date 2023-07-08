@@ -1,7 +1,7 @@
 {
   "name": "icp-bundle",
   "private": false,
-  "version": "0.2.4",
+  "version": "0.2.6",
   "author": "Luca De Menego <lucademenego99@gmail.com>",
   "files": [
     "dist/"
@@ -28,7 +28,9 @@
     "dev": "vite",
     "build": "gulp",
     "prepare-cpp": "gulp prepareCpp",
-    "build-all": "gulp prepareCpp; gulp --language full; gulp --language java; gulp --language cpp; gulp --language standard-ml; gulp --language javascript; gulp --language p5-and-processing; gulp --language typescript; gulp --language python; gulp --language sql; gulp --language java-offline; gulp --language python-offline; gulp --language cpp-offline; gulp --language full-offline",
+    "prepare-python": "gulp preparePython",
+    "prepare-java": "gulp prepareJava",
+    "build-all": "gulp prepareCpp; gulp preparePython; gulp prepareJava; gulp --language full; gulp --language java; gulp --language cpp; gulp --language standard-ml; gulp --language javascript; gulp --language p5-and-processing; gulp --language typescript; gulp --language python; gulp --language sql; gulp --language java-offline; gulp --language python-offline; gulp --language cpp-offline; gulp --language full-offline",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "github-cdn": "npx gh-pages -d dist"

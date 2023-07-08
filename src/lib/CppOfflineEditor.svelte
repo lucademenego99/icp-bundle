@@ -9,18 +9,12 @@
     export let downloadable = false;
 
     import BaseEditor from "./BaseEditor.svelte";
-    import CppWorker from "../modules/workers/cpp/cppWorkerBundle.iife.js?url";
     import { onMount } from "svelte";
     import { cpp } from "@codemirror/lang-cpp";
 
     let webworker: SharedWorker;
 
     function createWorker(): void {
-        webworker = new SharedWorker(CppWorker, {
-            name: "CppWorker",
-        });
-        webworker.port.start();
-
         let baseUrl =
             document.location.protocol +
             "//" +
@@ -28,6 +22,12 @@
             document.location.pathname;
         baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
         baseUrl += "/utils/cpp/";
+
+        webworker = new SharedWorker(baseUrl + "cppWorkerBundle.iife.js", {
+            name: "CppWorker",
+        });
+        webworker.port.start();
+
         webworker.port.postMessage({ type: "init", baseUrl });
     }
 

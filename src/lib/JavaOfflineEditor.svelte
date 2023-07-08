@@ -27,11 +27,6 @@
          * By creating the workers giving an absolute path to the scripts instead, the importScripts will work.
          */
 
-        webworker = new SharedWorker("/utils/java/javaWorker.js", {
-            name: "JavaWorker",
-        });
-        webworker.port.start();
-
         let baseUrl =
             document.location.protocol +
             "//" +
@@ -40,11 +35,16 @@
         baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf("/"));
         baseUrl += "/utils/java/";
 
-        const teaworker = new SharedWorker("/utils/java/javaTeaWorker.js", {
+        webworker = new SharedWorker(baseUrl + "javaWorker.js", {
+            name: "JavaWorker",
+        });
+        webworker.port.start();
+
+        const teaworker = new SharedWorker(baseUrl + "javaTeaWorker.js", {
             name: "JavaTeaWorker",
         });
 
-        const workerrun = new SharedWorker("/utils/java/javaRunWorker.js", {
+        const workerrun = new SharedWorker(baseUrl + "javaRunWorker.js", {
             name: "JavaRunWorker",
         });
 

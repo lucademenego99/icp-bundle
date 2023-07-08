@@ -49,14 +49,14 @@ The build-all command will generate a `dist/base` folder with the following file
 ## Redbean file
 The resulting Redbean file contains the dependencies to compile and run all programming languages supported by ICPs, so it is quite heavy.
 If you need to prepare a redbean file containing only the dependencies for a specific programming language, you can:
-- take the redbean.com file contained in the public folder;
-- use the zip command line program available in Linux to insert the dependencies you need and the HTML slides;
+- take the `redbean.com` file contained in the `public` directory;
+- use the `zip` command line program available in Linux to insert the dependencies you need and the HTML slides;
 - distribute it!
 
 As an example, here are the commands to prepare a Redbean file compatible with Python:
-- zip redbean.com custom-style.css reveal.js python-offline.iife.js reveal.css white.css # Common dependencies
-- zip redbean.com -r utils # Utils folder available in the public directory, containing only the "python" subfolder
-- zip redbean.com index.html # Your HTML slides
+- `zip redbean.com custom-style.css reveal.js python-offline.iife.js reveal.css white.css # Common dependencies`
+- `zip redbean.com -r utils # Utils folder available in the public directory, containing only the "python" subfolder`
+- `zip redbean.com index.html # Your HTML slides`
 
 
 ## Exported Web Components

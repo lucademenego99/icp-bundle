@@ -1,7 +1,7 @@
 {
   "name": "icp-bundle",
   "private": false,
-  "version": "0.2.6",
+  "version": "0.2.7",
   "author": "Luca De Menego <lucademenego99@gmail.com>",
   "files": [
     "dist/"

@@ -9,7 +9,7 @@ export default defineConfig({
         lib: {
             entry: 'src/exports/cpp-offline.ts',
             formats: ['iife'],
-            fileName: 'cpp',
+            fileName: 'cpp-offline',
             name: 'CppCodePlayground',
         },
         rollupOptions: {
